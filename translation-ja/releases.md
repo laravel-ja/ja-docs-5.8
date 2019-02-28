@@ -103,7 +103,7 @@ Laravelの`token`ガードは基本的なAPI認証を提供していますが、
 
 ### メールバリデーションの向上
 
-Laravel5.8では、SwiftMailerが使用している`egulias/email-validator`パッケージを採用し、バリデータのメールバリデーションを向上しました。Laravelの以前のメールバリデーションロジックでは、無効と判断すべき`example@bär.se`などを有効なEメールアドレスと判断していました。
+Laravel5.8では、SwiftMailerが使用している`egulias/email-validator`パッケージを採用し、バリデータのメールバリデーションを向上しました。Laravelの以前のメールバリデーションロジックでは、`example@bär.se`など有効なEメールアドレスを時に無効と判断していました。
 
 ### スケジューラのデフォルトタイムゾーン
 
