@@ -43,7 +43,7 @@
 <a name="introduction"></a>
 ## イントロダクション
 
-[メール送信](/docs/{{version}}/mail)に加え、LaravelはSMS（[Nexmo](https://www.nexmo.com/)使用）、[Slack](https://slack.com)などの、さまざまな複数チャンネルへ渡る通知をサポートしています。通知はWebインターフェイスで表示できるように、データバースに保存することもできます。
+[メール送信](/docs/{{version}}/mail)に加え、LaravelはSMS（[Nexmo](https://www.nexmo.com/)使用）、[Slack](https://slack.com)などの、さまざまな複数チャンネルへ渡る通知をサポートしています。通知はWebインターフェイスで表示できるように、データベースに保存することもできます。
 
 通常、通知はアプリケーションで何かが起きたことをユーザーへ知らせる、短い情報メッセージです。たとえば、課金アプリを作成しているなら、メールとSMSチャンネルで「課金支払い」を送信できます。
 
