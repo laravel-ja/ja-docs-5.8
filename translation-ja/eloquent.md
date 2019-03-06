@@ -430,17 +430,19 @@ Eloquentの`all`メソッドはモデルテーブルの全レコードを結果�
     // nameでフライトを取得するか、存在しなければ作成する
     $flight = App\Flight::firstOrCreate(['name' => 'Flight 10']);
 
-    // nameでフライトを取得するか、存在しなければ指定されたnameとdelayedを含め、インスタンス化する
+    // nameでフライトを取得するか、存在しなければ指定されたname、delayed、arrival_timeを含め、インスタンス化する
     $flight = App\Flight::firstOrCreate(
-        ['name' => 'Flight 10'], ['delayed' => 1]
+        ['name' => 'Flight 10'],
+        ['delayed' => 1, 'arrival_time' => '11:30']
     );
 
     // nameで取得するか、インスタンス化する
     $flight = App\Flight::firstOrNew(['name' => 'Flight 10']);
 
-    // nameで取得するか、nameとdelayedを含めインスタンス化する
+    // Retrieve by name, or instantiate with the name, delayed, and arrival_time attributes...
     $flight = App\Flight::firstOrNew(
-        ['name' => 'Flight 10'], ['delayed' => 1]
+        ['name' => 'Flight 10'],
+        ['delayed' => 1, 'arrival_time' => '11:30']
     );
 
 #### `updateOrCreate`
@@ -451,7 +453,7 @@ Eloquentの`all`メソッドはモデルテーブルの全レコードを結果�
     // 一致するモデルがなければ、作成する。
     $flight = App\Flight::updateOrCreate(
         ['departure' => 'Oakland', 'destination' => 'San Diego'],
-        ['price' => 99]
+        ['price' => 99, 'discounted' => 1]
     );
 
 <a name="deleting-models"></a>

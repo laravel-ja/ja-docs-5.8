@@ -213,8 +213,8 @@ Passportはデフォルトで、一年間有効な、長期間持続するアク
 Passportが内部で使用するモデルは自由に拡張できます。そのためには、`Passport`クラスにより、カスタムモデルをPassportへ指示してください。
 
     use App\Models\Passport\Client;
+    use App\Models\Passport\Token;
     use App\Models\Passport\AuthCode;
-    use App\Models\Passport\TokenModel;
     use App\Models\Passport\PersonalAccessClient;
 
     /**
@@ -228,8 +228,8 @@ Passportが内部で使用するモデルは自由に拡張できます。その
 
         Passport::routes();
 
+        Passport::useTokenModel(Token::class);
         Passport::useClientModel(Client::class);
-        Passport::useTokenModel(TokenModel::class);
         Passport::useAuthCodeModel(AuthCode::class);
         Passport::usePersonalAccessClientModel(PersonalAccessClient::class);
     }

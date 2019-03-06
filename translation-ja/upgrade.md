@@ -116,7 +116,7 @@ Laravel5.8を使用する場合は、明確なパラメータとして`route`ヘ
 
 **影響の可能性： 中程度**
 
-前記により返却値が変更されたことに付け加え、`Illuminate\Cache\Repository`クラスの`put`、`putMany`、`add`メソッドのTTL引数もPSR-16基準をより準拠するように変更しました。デフォルトは`null`で、TTLを指定しない呼び出しの新しい振る舞いは、キャッシュアイテムを永久に保存することになりました。さらに、TTLが０か負数の場合はキャッシュから削除されます。詳細は、[関連するPR](https://github.com/laravel/framework/pull/27217)をご覧ください。
+[前記により返却値が変更された](#the-repository-and-store-contracts)ことに付け加え、`Illuminate\Cache\Repository`クラスの`put`、`putMany`、`add`メソッドのTTL引数もPSR-16基準をより準拠するように変更しました。デフォルトは`null`で、TTLを指定しない呼び出しの新しい振る舞いは、キャッシュアイテムを永久に保存することになりました。さらに、TTLが０か負数の場合はキャッシュから削除されます。詳細は、[関連するPR](https://github.com/laravel/framework/pull/27217)をご覧ください。
 
 `KeyWritten`イベントもこの変更により、[更新されました](https://github.com/laravel/framework/pull/27265)。
 
@@ -161,6 +161,7 @@ Laravel5.8を使用する場合は、明確なパラメータとして`route`ヘ
 
     Cache::lock('foo')->forceRelease();
 
+<a name="the-repository-and-store-contracts"></a>
 #### `Repository`と`Store`契約
 
 **影響の可能性： とても低い**
@@ -359,15 +360,6 @@ Laravel5.4で非推奨になっていた、`Illuminate/Events/Dispatcher`クラ�
      */
     protected function renderHttpException(HttpExceptionInterface $e);
 
-<a name="facades"></a>
-### ファサード
-
-#### ファサードサービスの依存解決
-
-**影響の可能性： 低い**
-
-`getFacadeAccessor`メソッドは、[サービスのコンテナ識別子を表す文字列のみをリターンする](https://github.com/laravel/framework/pull/25525)ようになりました。以前、このメソッドはオブジェクトインスタンスを返していました。
-
 <a name="mail"></a>
 ### メール
 
@@ -488,19 +480,43 @@ Laravel`5.7`で非推奨になっていた、`Illuminate/Routing/UrlGenerator`�
 
 プロバイダを遅延させるかどうかを示すための、サービスプロバイダの`defer`論理プロパティは、[非推奨となりました](https://github.com/laravel/framework/pull/27067)。そのサービスプロバイダを遅延させるように指示するには、`Illuminate\Contracts\Support\DeferrableProvider`契約を実装してください。
 
+#### リードオンリー`env`ヘルパ
+
+**影響の可能性： 低い**
+
+以前の`env`ヘルパは、実行時に変更された環境変数から値を取得していました。Laravel5.8から、環境変数値が変わらないように取り扱います。実行時に環境変数を変更したい場合は、`config`ヘルパを使い取得できる設定値の使用を考慮してください。
+
+以前の振る舞い：
+
+    dump(env('APP_ENV')); // local
+
+    putenv('APP_ENV=staging');
+
+    dump(env('APP_ENV')); // staging
+
+新しい振る舞い：
+
+    dump(env('APP_ENV')); // local
+
+    putenv('APP_ENV=staging');
+
+    dump(env('APP_ENV')); // local
+
 <a name="testing"></a>
 ### テスト
+
+#### `setUp`と`tearDown`メソッド
+
+`setUp`と`tearDown`メソッドは、voidを返却タイプとして要求するようになりました。
+
+    protected function setUp(): void
+    protected function tearDown(): void
 
 #### PHPUnit 8
 
 **影響の可能性： 状況による**
 
 Laravel5.8ではPHPUnit7をデフォルトで使用します。しかしながら、PHP7.2以上が必要なPHPUnit8へアップグレードする選択肢もあります。詳細は、[PHPUnit8のリリースアナウンスメント](https://phpunit.de/announcements/phpunit-8.html)の変更一覧へ一通り目を通してください。
-
-`setUp`と`tearDown`メソッドは、voidを返却タイプとして要求するようになりました。
-
-    protected function setUp(): void
-    protected function tearDown(): void
 
 <a name="validation"></a>
 ### バリデーション

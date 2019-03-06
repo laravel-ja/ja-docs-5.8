@@ -9,6 +9,7 @@
     - [The "Link" Command](#the-link-command)
     - [Securing Sites With TLS](#securing-sites)
 - [Sharing Sites](#sharing-sites)
+- [Site Specific Environment Variables](#site-specific-environment-variables)
 - [Custom Valet Drivers](#custom-valet-drivers)
     - [Local Drivers](#local-drivers)
 - [Other Valet Commands](#other-valet-commands)
@@ -91,7 +92,7 @@ If you need a database, try MySQL by running `brew install mysql@5.7` on your co
 Valet allows you to switch PHP versions using the `valet use php@version` command. Valet will install the specified PHP version via Brew if it is not already installed:
 
     valet use php@7.2
-    
+
     valet use php
 
 <a name="upgrading"></a>
@@ -166,6 +167,17 @@ Valet even includes a command to share your local sites with the world. No addit
 To share a site, navigate to the site's directory in your terminal and run the `valet share` command. A publicly accessible URL will be inserted into your clipboard and is ready to paste directly into your browser. That's it.
 
 To stop sharing your site, hit `Control + C` to cancel the process.
+
+<a name="site-specific-environment-variables"></a>
+## Site Specific Environment Variables
+
+Some applications using other frameworks may depend on server environment variables but do not provide a way for those variables to be configured within your project. Valet allows you to configure site specific environment variables by adding a `.valet-env.php` file within the root of your project. These variables will be added to the `$_SERVER` global array:
+
+    <?php
+
+    return [
+        'WEBSITE_NAME' => 'My Blog',
+    ];
 
 <a name="custom-valet-drivers"></a>
 ## Custom Valet Drivers

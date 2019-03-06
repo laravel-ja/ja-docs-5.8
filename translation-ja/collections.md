@@ -78,6 +78,7 @@
 [contains](#method-contains)
 [containsStrict](#method-containsstrict)
 [count](#method-count)
+[countBy](#method-countBy)
 [crossJoin](#method-crossjoin)
 [dd](#method-dd)
 [diff](#method-diff)
@@ -333,6 +334,27 @@
     $collection->count();
 
     // 4
+
+<a name="method-countBy"></a>
+#### `countBy()` {#collection-method}
+
+`countBy`メソッドはコレクションに出現する値をカウントします。デフォルトでこのメソッドは、出現する全ての要素をカウントします。
+
+    $collection = collect([1, 2, 2, 2, 3]);
+
+    $collection->countBy();
+
+    // collect([1 => 1, 2 => 3, 3 => 1])
+
+`countBy`へコールバックを渡した場合は、カスタム値の全アイテムをカウントします。
+
+    $collection = collect(['alice@gmail.com', 'bob@yahoo.com', 'carlos@gmail.com']);
+
+    $collection->countBy(function ($email) {
+        return substr(strrchr($email, "@"), 1);
+    });
+
+    // collect(['gmail.com' => 2, 'yahoo.com' => 1])
 
 <a name="method-crossjoin"></a>
 #### `crossJoin()` {#collection-method}
@@ -1826,7 +1848,7 @@ sliceメソッドはデフォルトでキー値を保持したまま返します
         ]
     */
 
-> {note} `toArray`はネストしたオブジェクトも全て配列へ変換します。裏の配列をそのまま取得したい場合は、代わりに[`all`](#method-all)メソッドを使用してください。
+> {note} `toArray`は、ネストした`Arrayable`インスタンスのオブジェクト全てを配列へ変換します。裏の配列をそのまま取得したい場合は、代わりに[`all`](#method-all)メソッドを使用してください。
 
 <a name="method-tojson"></a>
 #### `toJson()` {#collection-method}

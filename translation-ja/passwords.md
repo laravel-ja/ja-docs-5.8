@@ -75,7 +75,7 @@ Laravelはパスワードリセットリンクのメールを送信し、ユー�
      *
      * @return PasswordBroker
      */
-    protected function broker()
+    public function broker()
     {
         return Password::broker('name');
     }

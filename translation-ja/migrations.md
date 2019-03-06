@@ -443,7 +443,7 @@ Laravelはデータベース中への「絵文字」保存をサポートする�
 Laravelはデータベースレベルの整合性を強制するために、テーブルに対する外部キー束縛の追加も提供しています。たとえば`users`テーブルの`id`カラムを参照する、`posts`テーブルの`user_id`カラムを定義してみましょう。
 
     Schema::table('posts', function (Blueprint $table) {
-        $table->unsignedInteger('user_id');
+        $table->unsignedBigInteger('user_id');
 
         $table->foreign('user_id')->references('id')->on('users');
     });

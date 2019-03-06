@@ -677,6 +677,16 @@ Supervisorの詳細情報は、[Supervisorドキュメント](http://supervisord
     class AppServiceProvider extends ServiceProvider
     {
         /**
+         * サービスプロバイダの登録
+         *
+         * @return void
+         */
+        public function register()
+        {
+            //
+        }
+
+        /**
          * 全アプリケーションサービスの初期処理
          *
          * @return void
@@ -688,16 +698,6 @@ Supervisorの詳細情報は、[Supervisorドキュメント](http://supervisord
                 // $event->job
                 // $event->exception
             });
-        }
-
-        /**
-         * サービスプロバイダの登録
-         *
-         * @return void
-         */
-        public function register()
-        {
-            //
         }
     }
 

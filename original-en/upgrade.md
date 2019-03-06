@@ -116,7 +116,7 @@ If you are passing an integer to any of these methods, you should update your co
 
 **Likelihood Of Impact: Medium**
 
-In addition to the return value changes from above, the TTL argument of the `put`, `putMany` and `add` method's of the `Illuminate\Cache\Repository` class was updated to conform better with the PSR-16 spec. The new behavior provides a default of `null` so a call without specifying a TTL will result in storing the cache item forever. Additionally, storing cache items with a TTL of 0 or lower will remove items from the cache. See [the related PR](https://github.com/laravel/framework/pull/27217) for more info.
+In addition to [the return value changes from below](#the-repository-and-store-contracts), the TTL argument of the `put`, `putMany` and `add` method's of the `Illuminate\Cache\Repository` class was updated to conform better with the PSR-16 spec. The new behavior provides a default of `null` so a call without specifying a TTL will result in storing the cache item forever. Additionally, storing cache items with a TTL of 0 or lower will remove items from the cache. See [the related PR](https://github.com/laravel/framework/pull/27217) for more info.
 
 The `KeyWritten` event [was also updated](https://github.com/laravel/framework/pull/27265) with these changes.
 
@@ -161,6 +161,7 @@ If you would like to release a lock without respecting its current owner, you ma
 
     Cache::lock('foo')->forceRelease();
 
+<a name="the-repository-and-store-contracts"></a>
 #### The `Repository` and `Store` Contracts
 
 **Likelihood Of Impact: Very Low**
@@ -359,15 +360,6 @@ The `renderHttpException` method signature of the `Illuminate\Foundation\Excepti
      */
     protected function renderHttpException(HttpExceptionInterface $e);
 
-<a name="facades"></a>
-### Facades
-
-#### Facade Service Resolving
-
-**Likelihood Of Impact: Low**
-
-The `getFacadeAccessor` method may now [only return the string value representing the container identifier of the service](https://github.com/laravel/framework/pull/25525). Previously, this method may have returned an object instance.
-
 <a name="mail"></a>
 ### Mail
 
@@ -488,19 +480,43 @@ The impact of this change has been marked as `medium` since the helpers have bee
 
 The `defer` boolean property on the service provider which is/was used to indicate if a provider is deferred [has been deprecated](https://github.com/laravel/framework/pull/27067). In order to mark the service provider as deferred it should implement the `Illuminate\Contracts\Support\DeferrableProvider` contract.
 
+#### Read-Only `env` Helper
+
+**Likelihood Of Impact: Low**
+
+Previously, the `env` helper could retrieve values from environment variables which were changed at runtime. In Laravel 5.8, the `env` helper treats environment variables as immutable. If you would like to change an environment variable at runtime, consider using a configuration value that can be retrieved using the `config` helper:
+
+Previous behavior:
+
+    dump(env('APP_ENV')); // local
+
+    putenv('APP_ENV=staging');
+
+    dump(env('APP_ENV')); // staging
+
+New behavior:
+
+    dump(env('APP_ENV')); // local
+
+    putenv('APP_ENV=staging');
+
+    dump(env('APP_ENV')); // local
+
 <a name="testing"></a>
 ### Testing
+
+#### The `setUp` & `tearDown` Methods
+
+The `setUp` and `tearDown` methods now require a void return type:
+
+    protected function setUp(): void
+    protected function tearDown(): void
 
 #### PHPUnit 8
 
 **Likelihood Of Impact: Optional**
 
 By default, Laravel 5.8 uses PHPUnit 7. However, you may optionally upgrade to PHPUnit 8, which requires PHP >= 7.2. In addition, please read through the entire list of changes in [the PHPUnit 8 release announcement](https://phpunit.de/announcements/phpunit-8.html).
-
-The `setUp` and `tearDown` methods now require a void return type:
-
-    protected function setUp(): void
-    protected function tearDown(): void
 
 <a name="validation"></a>
 ### Validation

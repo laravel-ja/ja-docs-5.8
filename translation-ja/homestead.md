@@ -98,7 +98,7 @@ VirtualBox/VMwareとVagrantをインストールし終えたら、`laravel/homes
 
 #### Homesteadのインストール
 
-リポジトリをクローンし、Homesteadをインストールできます。自分の「ホーム」ディレクトリの中の`Homestead`フォルダへリポジトリをクローンするのことは、自分のLaravel（とPHP）の全プロジェクトをホストしておくHomestead Boxを用意するのだと考えてください。
+ホストマシーンへリポジトリをクローンし、Homesteadをインストールできます。自分の「ホーム」ディレクトリの中の`Homestead`フォルダへリポジトリをクローンするのことは、自分のLaravel（とPHP）の全プロジェクトをホストしておくHomestead Boxを用意するのだと考えてください。
 
     git clone https://github.com/laravel/homestead.git ~/Homestead
 

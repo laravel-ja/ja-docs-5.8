@@ -9,6 +9,7 @@
     - ["Link"コマンド](#the-link-command)
     - [TLSによる安全なサイト](#securing-sites)
 - [サイトの共有](#sharing-sites)
+- [サイト限定環境変数](#site-specific-environment-variables)
 - [カスタムValetドライバ](#custom-valet-drivers)
     - [ローカルドライバ](#local-drivers)
 - [その他のValetコマンド](#other-valet-commands)
@@ -166,6 +167,17 @@ Valetはローカルサイトを世界と共有するコマンドも用意して
 サイトを共有するには、ターミナルでサイトのディレクトリに移動し、`valet share`コマンドを実行します。公開用のURLはクリップボードにコピーされますので、ブラウザに直接ペーストしてください。これだけです。
 
 To stop sharing your site, hit `Control + C` to cancel the process.
+
+<a name="site-specific-environment-variables"></a>
+## サイト限定環境変数
+
+あるアプリケーションでは、サーバ環境変数に依存するフレームワークを使っているが、プロジェクトでそのような変数を設定する手段を提供していないことがあります。Valetでは、プロジェクトのルートに`.valet-env.php`ファイルを追加することで、サイト限定の環境変数を設定できます。
+
+    <?php
+
+    return [
+        'WEBSITE_NAME' => 'My Blog',
+    ];
 
 <a name="custom-valet-drivers"></a>
 ## カスタムValetドライバ

@@ -146,7 +146,7 @@ Envoyでは、複数のサーバに渡りタスクを実行するのも簡単で
 
 `Envoy.blade.php`ファイルのタスクやストーリーを実行するには、実行したいタスクかストーリーの名前を指定し、Envoyの`run`コマンドを実行します。Envoyはタスクを実行し、タスク実行中にサーバからの出力を表示します。
 
-    envoy run task
+    envoy run deploy
 
 <a name="confirming-task-execution"></a>
 ### タスク実行の確認

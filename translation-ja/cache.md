@@ -218,7 +218,9 @@ Redisの設定についての詳細は、[Laravelドキュメントページ](/d
 
     use Illuminate\Support\Facades\Cache;
 
-    if ($lock = Cache::lock('foo', 10)->get()) {
+    $lock = Cache::lock('foo', 10);
+
+    if ($lock->get()) {
         // １０秒間ロックを獲得する
 
         $lock->release();
@@ -234,8 +236,10 @@ Redisの設定についての詳細は、[Laravelドキュメントページ](/d
 
     use Illuminate\Contracts\Cache\LockTimeoutException;
 
+    $lock = Cache::lock('foo', 10);
+
     try {
-        $lock = Cache::lock('foo', 10)->block(5);
+        $lock->block(5);
 
         // 最大５秒待機し、ロックを獲得
     } catch (LockTimeoutException $e) {
@@ -255,7 +259,9 @@ Redisの設定についての詳細は、[Laravelドキュメントページ](/d
     // コントローラ側
     $podcast = Podcast::find($id);
 
-    if ($lock = Cache::lock('foo', 120)->get()) {
+    $lock = Cache::lock('foo', 120);
+
+    if ($lock = $lock->get()) {
         ProcessPodcast::dispatch($podcast, $lock->owner());
     }
 
