@@ -1,7 +1,7 @@
 # ヘルパ
 
 - [イントロダクション](#introduction)
-- [使用可能な関数](#available-methods)
+- [使用可能なメソッド](#available-methods)
 
 <a name="introduction"></a>
 ## イントロダクション
@@ -9,7 +9,7 @@
 Laravelは様々な、グローバル「ヘルパ」PHP関数を用意しています。これらの多くはフレームワーク自身で使用されています。便利なものが見つかれば、皆さんのアプリケーションでも大いに活用してください。
 
 <a name="available-methods"></a>
-## 使用可能な関数
+## 使用可能なメソッド
 
 <style>
     .collection-method-list > p {
@@ -74,19 +74,17 @@ Laravelは様々な、グローバル「ヘルパ」PHP関数を用意してい�
 <div class="collection-method-list" markdown="1">
 
 [\__](#method-__)
-[Str::camel](#method-camel-case)
 [class_basename](#method-class-basename)
 [e](#method-e)
-[Str::endsWith](#method-ends-with)
-[Str::kebab](#method-kebab-case)
 [preg_replace_array](#method-preg-replace-array)
-[Str::snake](#method-snake-case)
-[Str::startsWith](#method-starts-with)
 [Str::after](#method-str-after)
 [Str::before](#method-str-before)
+[Str::camel](#method-camel-case)
 [Str::contains](#method-str-contains)
+[Str::endsWith](#method-ends-with)
 [Str::finish](#method-str-finish)
 [Str::is](#method-str-is)
+[Str::kebab](#method-kebab-case)
 [Str::limit](#method-str-limit)
 [Str::orderedUuid](#method-str-ordered-uuid)
 [Str::plural](#method-str-plural)
@@ -96,12 +94,14 @@ Laravelは様々な、グローバル「ヘルパ」PHP関数を用意してい�
 [Str::replaceLast](#method-str-replace-last)
 [Str::singular](#method-str-singular)
 [Str::slug](#method-str-slug)
+[Str::snake](#method-snake-case)
 [Str::start](#method-str-start)
+[Str::startsWith](#method-starts-with)
 [Str::studly](#method-studly-case)
 [Str::title](#method-title-case)
+[Str::uuid](#method-str-uuid)
 [trans](#method-trans)
 [trans_choice](#method-trans-choice)
-[Str::uuid](#method-str-uuid)
 
 </div>
 
@@ -111,8 +111,8 @@ Laravelは様々な、グローバル「ヘルパ」PHP関数を用意してい�
 
 [action](#method-action)
 [asset](#method-asset)
-[secure_asset](#method-secure-asset)
 [route](#method-route)
+[secure_asset](#method-secure-asset)
 [secure_url](#method-secure-url)
 [url](#method-url)
 
@@ -164,9 +164,9 @@ Laravelは様々な、グローバル「ヘルパ」PHP関数を用意してい�
 [retry](#method-retry)
 [session](#method-session)
 [tap](#method-tap)
-[today](#method-today)
 [throw_if](#method-throw-if)
 [throw_unless](#method-throw-unless)
+[today](#method-today)
 [trait_uses_recursive](#method-trait-uses-recursive)
 [transform](#method-transform)
 [validator](#method-validator)
@@ -779,19 +779,6 @@ NULL値を指定すると、空の配列が返ってきます。
 
     echo __('messages.welcome');
 
-指定した翻訳文字列や翻訳キーが存在しない場合、`__`関数は指定した値をそのまま返します。たとえば、上記の場合に翻訳キーが存在しなければ、`__`関数は`messages.welcome`を返します。
-
-<a name="method-camel-case"></a>
-#### `Str::camel()` {#collection-method}
-
-`Str::camel`関数は、文字列をキャメルケース（`camelCase`）へ変換します。
-
-    use Illuminate\Support\Str;
-
-    $converted = Str::camel('foo_bar');
-
-    // fooBar
-
 <a name="method-class-basename"></a>
 #### `class_basename()` {#collection-method}
 
@@ -810,26 +797,6 @@ NULL値を指定すると、空の配列が返ってきます。
 
     // &lt;html&gt;foo&lt;/html&gt;
 
-<a name="method-ends-with"></a>
-#### `Str::endsWith()` {#collection-method}
-
-`Str::endsWith`関数は、最初の文字列が２つ目の引数の文字列で終わっているか調べます。
-
-    $result = Str::endsWith('This is my name', 'name');
-
-    // true
-
-<a name="method-kebab-case"></a>
-#### `Str::kebab()` {#collection-method}
-
-`Str::kebab`関数は、指定した文字列をケバブ-ケース（`kebab-case`）に変換します。
-
-    use Illuminate\Support\Str;
-
-    $converted = Str::kebab('fooBar');
-
-    // foo-bar
-
 <a name="method-preg-replace-array"></a>
 #### `preg_replace_array()` {#collection-method}
 
@@ -840,28 +807,6 @@ NULL値を指定すると、空の配列が返ってきます。
     $replaced = preg_replace_array('/:[a-z_]+/', ['8:30', '9:00'], $string);
 
     // The event will take place between 8:30 and 9:00
-
-<a name="method-snake-case"></a>
-#### `Str::snake()` {#collection-method}
-
-`Str::snake`関数は文字列をスネークケース（`snake_case`）に変換します。
-
-    use Illuminate\Support\Str;
-
-    $converted = Str::snake('fooBar');
-
-    // foo_bar
-
-<a name="method-starts-with"></a>
-#### `Str::startsWith()` {#collection-method}
-
-`Str::startsWith`関数は指定した文字列が、２番めの文字列で始まっているか調べます。
-
-    use Illuminate\Support\Str;
-
-    $result = Str::startsWith('This is my name', 'This');
-
-    // true
 
 <a name="method-str-after"></a>
 #### `Str::after()` {#collection-method}
@@ -885,10 +830,23 @@ NULL値を指定すると、空の配列が返ってきます。
 
     // 'This is '
 
+指定した翻訳文字列や翻訳キーが存在しない場合、`__`関数は指定した値をそのまま返します。たとえば、上記の場合に翻訳キーが存在しなければ、`__`関数は`messages.welcome`を返します。
+
+<a name="method-camel-case"></a>
+#### `Str::camel()` {#collection-method}
+
+`Str::camel`メソッドは、文字列をキャメルケース（`camelCase`）へ変換します。
+
+    use Illuminate\Support\Str;
+
+    $converted = Str::camel('foo_bar');
+
+    // fooBar
+
 <a name="method-str-contains"></a>
 #### `Str::contains()` {#collection-method}
 
-`Str::contains`関数は指定した文字列が、２つ目の文字列を含んでいるか調べます。（大文字小文字の区別あり）
+`Str::contains`メソッドは指定した文字列が、２つ目の文字列を含んでいるか調べます。（大文字小文字の区別あり）
 
     use Illuminate\Support\Str;
 
@@ -904,10 +862,19 @@ NULL値を指定すると、空の配列が返ってきます。
 
     // true
 
+<a name="method-ends-with"></a>
+#### `Str::endsWith()` {#collection-method}
+
+`Str::endsWith`メソッドは、最初の文字列が２つ目の引数の文字列で終わっているか調べます。
+
+    $result = Str::endsWith('This is my name', 'name');
+
+    // true
+
 <a name="method-str-finish"></a>
 #### `Str::finish()` {#collection-method}
 
-`Str::finish`関数は指定した文字列の最後が、２つ目の引数の値で終了していない場合、その値を追加します。
+`Str::finish`メソッドは指定した文字列の最後が、２つ目の引数の値で終了していない場合、その値を追加します。
 
     use Illuminate\Support\Str;
 
@@ -922,7 +889,7 @@ NULL値を指定すると、空の配列が返ってきます。
 <a name="method-str-is"></a>
 #### `Str::is()` {#collection-method}
 
-`Str::is`関数は指定した文字列がパターンに一致しているかを判定します。アスタリスクが使用されると、ワイルドカードとして利用されます。
+`Str::is`メソッドは指定した文字列がパターンに一致しているかを判定します。アスタリスクが使用されると、ワイルドカードとして利用されます。
 
     use Illuminate\Support\Str;
 
@@ -934,10 +901,21 @@ NULL値を指定すると、空の配列が返ってきます。
 
     // false
 
+<a name="method-kebab-case"></a>
+#### `Str::kebab()` {#collection-method}
+
+`Str::kebab`メソッドは、指定した文字列をケバブ-ケース（`kebab-case`）に変換します。
+
+    use Illuminate\Support\Str;
+
+    $converted = Str::kebab('fooBar');
+
+    // foo-bar
+
 <a name="method-str-limit"></a>
 #### `Str::limit()` {#collection-method}
 
-`Str::limit`関数は、指定した長さへ文字列を切り詰めます。
+`Str::limit`メソッドは、指定した長さへ文字列を切り詰めます。
 
     use Illuminate\Support\Str;
 
@@ -965,7 +943,7 @@ NULL値を指定すると、空の配列が返ってきます。
 <a name="method-str-plural"></a>
 #### `Str::plural()` {#collection-method}
 
-`Str::plural`関数は単数形を複数形へ変換します。この関数は現在英語のみサポートしています。
+`Str::plural`メソッドは単数形を複数形へ変換します。このメソッドは現在英語のみサポートしています。
 
     use Illuminate\Support\Str;
 
@@ -977,7 +955,7 @@ NULL値を指定すると、空の配列が返ってきます。
 
     // children
 
-整数をこの関数の第２引数に指定することで、文字列の単数形と複数形を切り替えて取得できます。
+整数をこのメソッドの第２引数に指定することで、文字列の単数形と複数形を切り替えて取得できます。
 
     use Illuminate\Support\Str;
 
@@ -992,7 +970,7 @@ NULL値を指定すると、空の配列が返ってきます。
 <a name="method-str-random"></a>
 #### `Str::random()` {#collection-method}
 
-`Str::random`関数は指定された長さのランダムな文字列を生成します。この関数は、PHPの`random_bytes`関数を使用します。
+`Str::random`メソッドは指定された長さのランダムな文字列を生成します。このメソッドは、PHPの`random_bytes`関数を使用します。
 
     use Illuminate\Support\Str;
 
@@ -1001,7 +979,7 @@ NULL値を指定すると、空の配列が返ってきます。
 <a name="method-str-replace-array"></a>
 #### `Str::replaceArray()` {#collection-method}
 
-`Str::replaceArray`関数は配列を使い、文字列を指定値へ順番に置き換えます。
+`Str::replaceArray`メソッドは配列を使い、文字列を指定値へ順番に置き換えます。
 
     use Illuminate\Support\Str;
 
@@ -1014,7 +992,7 @@ NULL値を指定すると、空の配列が返ってきます。
 <a name="method-str-replace-first"></a>
 #### `Str::replaceFirst()` {#collection-method}
 
-`Str::replaceFirst`関数は、文字列中で最初に出現した値を指定値で置き換えます。
+`Str::replaceFirst`メソッドは、文字列中で最初に出現した値を指定値で置き換えます。
 
     use Illuminate\Support\Str;
 
@@ -1025,7 +1003,7 @@ NULL値を指定すると、空の配列が返ってきます。
 <a name="method-str-replace-last"></a>
 #### `Str::replaceLast()` {#collection-method}
 
-`Str::replaceLast`関数は、文字列中で最後に出現した値を指定値で置き換えます。
+`Str::replaceLast`メソッドは、文字列中で最後に出現した値を指定値で置き換えます。
 
     use Illuminate\Support\Str;
 
@@ -1036,7 +1014,7 @@ NULL値を指定すると、空の配列が返ってきます。
 <a name="method-str-singular"></a>
 #### `Str::singular()` {#collection-method}
 
-Str::singular`関数は複数形を単数形へ変換します。この関数は、現在英語のみサポートしています。
+Str::singular`メソッドは複数形を単数形へ変換します。このメソッドは、現在英語のみサポートしています。
 
     use Illuminate\Support\Str;
 
@@ -1051,7 +1029,7 @@ Str::singular`関数は複数形を単数形へ変換します。この関数は
 <a name="method-str-slug"></a>
 #### `Str::slug()` {#collection-method}
 
-`Str::slug`関数は指定された文字列から、URLフレンドリーな「スラグ」を生成します。
+`Str::slug`メソッドは指定された文字列から、URLフレンドリーな「スラグ」を生成します。
 
     use Illuminate\Support\Str;
 
@@ -1059,10 +1037,21 @@ Str::singular`関数は複数形を単数形へ変換します。この関数は
 
     // laravel-5-framework
 
+<a name="method-snake-case"></a>
+#### `Str::snake()` {#collection-method}
+
+`Str::snake`メソッドは文字列をスネークケース（`snake_case`）に変換します。
+
+    use Illuminate\Support\Str;
+
+    $converted = Str::snake('fooBar');
+
+    // foo_bar
+
 <a name="method-str-start"></a>
 #### `Str::start()` {#collection-method}
 
-`Str::start`関数は文字列が指定値から始まっていない場合、先頭にその文字列を追加します。
+`Str::start`メソッドは文字列が指定値から始まっていない場合、先頭にその文字列を追加します。
 
     use Illuminate\Support\Str;
 
@@ -1074,10 +1063,21 @@ Str::singular`関数は複数形を単数形へ変換します。この関数は
 
     // /this/string
 
+<a name="method-starts-with"></a>
+#### `Str::startsWith()` {#collection-method}
+
+`Str::startsWith`メソッドは指定した文字列が、２番めの引数の文字列で始まっているか調べます。
+
+    use Illuminate\Support\Str;
+
+    $result = Str::startsWith('This is my name', 'This');
+
+    // true
+
 <a name="method-studly-case"></a>
 #### `Str::studly()` {#collection-method}
 
-`Str::studly`関数は文字列をアッパーキャメルケース（`StudlyCase`）に変換します。
+`Str::studly`メソッドは文字列をアッパーキャメルケース（`StudlyCase`）に変換します。
 
     use Illuminate\Support\Str;
 
@@ -1088,13 +1088,22 @@ Str::singular`関数は複数形を単数形へ変換します。この関数は
 <a name="method-title-case"></a>
 #### `Str::title()` {#collection-method}
 
-`Str::title`関数は、指定された文字列をタイトルケース（`Title Case`）へ変換します。
+`Str::title`メソッドは、指定された文字列をタイトルケース（`Title Case`）へ変換します。
 
     use Illuminate\Support\Str;
 
     $converted = Str::title('a nice title uses the correct case');
 
     // A Nice Title Uses The Correct Case
+
+<a name="method-str-uuid"></a>
+#### `Str::uuid()` {#collection-method}
+
+`Str::uuid`メソッドは、UUID（バージョン４）を生成します。
+
+    use Illuminate\Support\Str;
+
+    return (string) Str::uuid();
 
 <a name="method-trans"></a>
 #### `trans()` {#collection-method}
@@ -1113,15 +1122,6 @@ Str::singular`関数は複数形を単数形へ変換します。この関数は
     echo trans_choice('messages.notifications', $unreadCount);
 
 指定した翻訳キーが存在しない場合、`trans_choice`関数は指定値をそのまま返します。上記の場合に翻訳キーが存在しなければ、`messages.welcome`が返ります。
-
-<a name="method-str-uuid"></a>
-#### `Str::uuid()` {#collection-method}
-
-`Str::uuid`メソッドは、UUID（バージョン４）を生成します。
-
-    use Illuminate\Support\Str;
-
-    return (string) Str::uuid();
 
 <a name="urls"></a>
 ## URL
@@ -1152,19 +1152,19 @@ Str::singular`関数は複数形を単数形へ変換します。この関数は
 
     $url = asset('img/photo.jpg'); // http://example.com/assets/img/photo.jpg
 
-<a name="method-secure-asset"></a>
-#### `secure_asset()` {#collection-method}
-
-`secure_asset`関数はHTTPSを使い、アセットへのURLを生成します。
-
-    $url = secure_asset('img/photo.jpg');
-
 <a name="method-route"></a>
 #### `route()` {#collection-method}
 
 `route`関数は指定された名前付きルートへのURLを生成します。
 
     $url = route('routeName');
+
+<a name="method-secure-asset"></a>
+#### `secure_asset()` {#collection-method}
+
+`secure_asset`関数はHTTPSを使い、アセットへのURLを生成します。
+
+    $url = secure_asset('img/photo.jpg');
 
 ルートにパラメーターを受け付ける場合は第２引数で指定します
 
@@ -1270,13 +1270,6 @@ Str::singular`関数は複数形を単数形へ変換します。この関数は
 
     $password = bcrypt('my-secret-password');
 
-<a name="method-broadcast"></a>
-#### `broadcast()` {#collection-method}
-
-`broadcast`関数は、指定した[イベント](/docs/{{version}}/events)をリスナへ[ブロードキャスト](/docs/{{version}}/broadcasting)します。
-
-    broadcast(new UserRegistered($user));
-
 <a name="method-blank"></a>
 #### `blank()` {#collection-method}
 
@@ -1296,6 +1289,13 @@ Str::singular`関数は複数形を単数形へ変換します。この関数は
     // false
 
 `blank`の逆の動作は、[`filled`](#method-filled)メソッドです。
+
+<a name="method-broadcast"></a>
+#### `broadcast()` {#collection-method}
+
+`broadcast`関数は、指定した[イベント](/docs/{{version}}/events)をリスナへ[ブロードキャスト](/docs/{{version}}/broadcasting)します。
+
+    broadcast(new UserRegistered($user));
 
 <a name="method-cache"></a>
 #### `cache()` {#collection-method}
@@ -1639,13 +1639,6 @@ Str::singular`関数は複数形を単数形へ変換します。この関数は
         'email' => $email,
     ]);
 
-<a name="method-today"></a>
-#### `today()` {#collection-method}
-
-`today`関数は、現在の日付を表す新しい`Illuminate\Support\Carbon`インスタンスを生成します。
-
-    $today = today();
-
 <a name="method-throw-if"></a>
 #### `throw_if()` {#collection-method}
 
@@ -1671,6 +1664,13 @@ Str::singular`関数は複数形を単数形へ変換します。この関数は
         AuthorizationException::class,
         'You are not allowed to access this page'
     );
+
+<a name="method-today"></a>
+#### `today()` {#collection-method}
+
+`today`関数は、現在の日付を表す新しい`Illuminate\Support\Carbon`インスタンスを生成します。
+
+    $today = today();
 
 <a name="method-trait-uses-recursive"></a>
 #### `trait_uses_recursive()` {#collection-method}

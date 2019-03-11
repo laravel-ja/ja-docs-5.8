@@ -327,6 +327,31 @@ Laravel5.8では、複数後のモデル名で不規則変化する単語で終�
 
 Laravelにより提供されている他のリレーションのメソッド名と統一するために、`BelongsTo`の`getForeignKey`と`getQualifiedForeignKey`メソッドは、`getForeignKeyName`と`getQualifiedForeignKeyName`へ名前が変わりました。
 
+### 環境
+
+**影響の可能性： 低い**
+
+`.env`ファイルのパースに利用している、[phpdotenv](https://github.com/vlucas/phpdotenv)パッケージが新しいメジャーバージョンをリリースしました。そのため、`env`ヘルパ画の戻り値に影響が起きます。クオートされていない`#`文字は、値の一部ではなくコメントとして扱われるようになりました。
+
+以前の振る舞い：
+
+    ENV_VALUE=foo#bar
+
+    env('ENV_VALUE'); // foo#bar
+
+新しい振る舞い：
+
+    ENV_VALUE=foo#bar
+    env('ENV_VALUE'); // foo
+
+もとの振る舞いにするには、環境変数をクオートしてください。
+
+    ENV_VALUE="foo#bar"
+
+    env('ENV_VALUE'); // foo#bar
+
+より詳細な情報は、[phpdotenvアップグレードガイド](https://github.com/vlucas/phpdotenv/blob/master/UPGRADING.md)を参照してください。
+
 <a name="events"></a>
 ### イベント
 
