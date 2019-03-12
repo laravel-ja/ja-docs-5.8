@@ -8,6 +8,7 @@
 <div class="content-list" markdown="1">
 - [キャッシュ持続時間が秒指定に](#cache-ttl-in-seconds)
 - [キャッシュロックの安全性向上](#cache-lock-safety-improvements)
+- [環境変数のパース](#environment-variable-parsing)
 - [Markdownファイルのディレクトリ変更](#markdown-file-directory-change)
 - [Nexmo／Slack通知チャンネル](#nexmo-slack-notification-channels)
 </div>
@@ -327,9 +328,10 @@ Laravel5.8では、複数後のモデル名で不規則変化する単語で終�
 
 Laravelにより提供されている他のリレーションのメソッド名と統一するために、`BelongsTo`の`getForeignKey`と`getQualifiedForeignKey`メソッドは、`getForeignKeyName`と`getQualifiedForeignKeyName`へ名前が変わりました。
 
-### 環境
+<a name="#environment-variable-parsing"></a>
+### Environment Variable Parsing
 
-**影響の可能性： 低い**
+**Likelihood Of Impact: High**
 
 `.env`ファイルのパースに利用している、[phpdotenv](https://github.com/vlucas/phpdotenv)パッケージが新しいメジャーバージョンをリリースしました。そのため、`env`ヘルパ画の戻り値に影響が起きます。クオートされていない`#`文字は、値の一部ではなくコメントとして扱われるようになりました。
 

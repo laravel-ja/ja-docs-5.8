@@ -931,7 +931,7 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 `select`文に`withCount`を組み合わせる場合は、`select`文の後で`withCount`を呼び出してください。
 
-    $query = App\Post::select(['title', 'body'])->withCount('comments');
+    $posts = App\Post::select(['title', 'body'])->withCount('comments');
 
     echo $posts[0]->title;
     echo $posts[0]->body;

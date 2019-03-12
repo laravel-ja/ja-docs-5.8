@@ -779,6 +779,8 @@ NULL値を指定すると、空の配列が返ってきます。
 
     echo __('messages.welcome');
 
+指定した翻訳文字列や翻訳キーが存在しない場合、`__`関数は指定した値をそのまま返します。たとえば、上記の場合に翻訳キーが存在しなければ、`__`関数は`messages.welcome`を返します。
+
 <a name="method-class-basename"></a>
 #### `class_basename()` {#collection-method}
 
@@ -829,8 +831,6 @@ NULL値を指定すると、空の配列が返ってきます。
     $slice = Str::before('This is my name', 'my name');
 
     // 'This is '
-
-指定した翻訳文字列や翻訳キーが存在しない場合、`__`関数は指定した値をそのまま返します。たとえば、上記の場合に翻訳キーが存在しなければ、`__`関数は`messages.welcome`を返します。
 
 <a name="method-camel-case"></a>
 #### `Str::camel()` {#collection-method}
@@ -1159,13 +1159,6 @@ Str::singular`メソッドは複数形を単数形へ変換します。このメ
 
     $url = route('routeName');
 
-<a name="method-secure-asset"></a>
-#### `secure_asset()` {#collection-method}
-
-`secure_asset`関数はHTTPSを使い、アセットへのURLを生成します。
-
-    $url = secure_asset('img/photo.jpg');
-
 ルートにパラメーターを受け付ける場合は第２引数で指定します
 
     $url = route('routeName', ['id' => 1]);
@@ -1173,6 +1166,13 @@ Str::singular`メソッドは複数形を単数形へ変換します。このメ
 `route`関数はデフォルトとして絶対URLを生成します。相対URLを生成したい場合は、第３引数に`false`を渡してください。
 
     $url = route('routeName', ['id' => 1], false);
+
+<a name="method-secure-asset"></a>
+#### `secure_asset()` {#collection-method}
+
+`secure_asset`関数はHTTPSを使い、アセットへのURLを生成します。
+
+    $url = secure_asset('img/photo.jpg');
 
 <a name="method-secure-url"></a>
 #### `secure_url()` {#collection-method}
