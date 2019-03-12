@@ -329,9 +329,9 @@ Laravel5.8では、複数後のモデル名で不規則変化する単語で終�
 Laravelにより提供されている他のリレーションのメソッド名と統一するために、`BelongsTo`の`getForeignKey`と`getQualifiedForeignKey`メソッドは、`getForeignKeyName`と`getQualifiedForeignKeyName`へ名前が変わりました。
 
 <a name="#environment-variable-parsing"></a>
-### Environment Variable Parsing
+### 環境変数のパース
 
-**Likelihood Of Impact: High**
+**影響の可能性： 高い**
 
 `.env`ファイルのパースに利用している、[phpdotenv](https://github.com/vlucas/phpdotenv)パッケージが新しいメジャーバージョンをリリースしました。そのため、`env`ヘルパ画の戻り値に影響が起きます。クオートされていない`#`文字は、値の一部ではなくコメントとして扱われるようになりました。
 
