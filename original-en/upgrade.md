@@ -140,7 +140,7 @@ If you are using the `Cache::lock()->get(Closure)` method of interacting with lo
 
 However, if you are manually calling `Cache::lock()->release()`, you must update your code to maintain an instance of the lock. Then, after you are done performing your task, you may call the `release` method on **the same lock instance**. For example:
 
-    if ($lock = Cache::lock('foo', 10)->get()) {
+    if (($lock = Cache::lock('foo', 10))->get()) {
         // Perform task...
 
         $lock->release();
@@ -151,7 +151,7 @@ Sometimes, you may wish to acquire a lock in one process and release it in anoth
     // Within Controller...
     $podcast = Podcast::find(1);
 
-    if ($lock = Cache::lock('foo', 120)->get()) {
+    if (($lock = Cache::lock('foo', 120))->get()) {
         ProcessPodcast::dispatch($podcast, $lock->owner());
     }
 
@@ -171,6 +171,14 @@ In order to be fully compliant with `PSR-16` the return values of the `put` and 
 
 <a name="collections"></a>
 ### Collections
+
+#### The `add` Method
+
+**Likelihood Of Impact: Very Low**
+
+The `add` method [has been moved](https://github.com/laravel/framework/pull/27082) from the Eloquent collection class to the base collection class. If you are extending `Illuminate\Support\Collection` and your extended class has an `add` method, make sure the method signature matches its parent:
+
+    public function add($item);
 
 #### The `firstWhere` Method
 
@@ -263,6 +271,14 @@ As a result, the `->>` operator is no longer supported or necessary.
 
 As of Laravel 5.8 the [oldest supported SQLite version](https://github.com/laravel/framework/pull/25995) is SQLite 3.7.11. If you are using an older SQLite version, you should update it (SQLite 3.8.8+ is recommended).
 
+#### Migrations & `bigIncrements`
+
+**Likelihood Of Impact: None**
+
+[As of Laravel 5.8](https://github.com/laravel/framework/pull/26472), migration stubs use the `bigIncrements` method on ID columns by default. Previously, ID columns were created using the `increments` method.
+
+This will not affect any existing code in your project; however, be aware that foreign key columns must be of the same type. Therefore, a column created using the `increments` method can not reference a column created using the `bigIncrements` method.
+
 <a name="eloquent"></a>
 ### Eloquent
 
@@ -322,13 +338,13 @@ The `deleted_at` property [will now be automatically casted](https://github.com/
 
     protected $casts = ['deleted_at' => 'string'];
 
-#### BelongsTo `getForeignKey` Method
+#### BelongsTo `getForeignKey` & `getOwnerKey` Methods
 
 **Likelihood Of Impact: Low**
 
-The `getForeignKey` and `getQualifiedForeignKey` methods of the `BelongsTo` relationship have been renamed to `getForeignKeyName` and `getQualifiedForeignKeyName` respectively, making the method names consistent with the other relationships offered by Laravel.
+The `getForeignKey`, `getQualifiedForeignKey`, and `getOwnerKey` methods of the `BelongsTo` relationship have been renamed to `getForeignKeyName`, `getQualifiedForeignKeyName`, and `getOwnerKeyName` respectively, making the method names consistent with the other relationships offered by Laravel.
 
-<a name="#environment-variable-parsing"></a>
+<a name="environment-variable-parsing"></a>
 ### Environment Variable Parsing
 
 **Likelihood Of Impact: High**
@@ -585,7 +601,7 @@ The `getPresenceVerifierFor` method of the `Illuminate\Validation\Validator` cla
 
 **Likelihood Of Impact: Very Low**
 
-The email validation rule now checks if the email is [RFC5630](https://tools.ietf.org/html/rfc6530) compliant, making the validation logic consistent with the logic used by SwiftMailer. In Laravel `5.7`, the `email` rule only verified that the email was [RFC822](https://tools.ietf.org/html/rfc822) compliant.
+The email validation rule now checks if the email is [RFC6530](https://tools.ietf.org/html/rfc6530) compliant, making the validation logic consistent with the logic used by SwiftMailer. In Laravel `5.7`, the `email` rule only verified that the email was [RFC822](https://tools.ietf.org/html/rfc822) compliant.
 
 Therefore, when using Laravel 5.8, emails that were previously incorrectly considered invalid will now be considered valid (e.g `hej@bär.se`).  Generally, this should be considered a bug fix; however, it is listed as a breaking change out of caution. [Please let us know if you encounter any issues surrounding this change](https://github.com/laravel/framework/pull/26503).
 

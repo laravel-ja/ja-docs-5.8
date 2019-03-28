@@ -37,7 +37,7 @@
 
 Laravel Cashier Braintreeは[Braintree's](https://www.braintreepayments.com)によるサブスクリプション（定期課金）サービスの読みやすく、スラスラと記述できるインターフェイスを提供します。これにより書くのが恐ろしくなるような、サブスクリプション支払いのための決まりきったコードのほとんどが処理できます。基本的なサブスクリプション管理に加え、Cashierはクーポン、サブスクリプションの変更、サブスクリプション数、キャンセル猶予期間、さらにインボイスのPDF発行まで行います。
 
-> {note} このドキュメントはCashierのBraintree統合について説明しています。Stripeを使用する場合は、[こちら](/docs/{{version}}/braintree)をお読みください。
+> {note} このドキュメントはCashierのBraintree統合について説明しています。Stripeを使用する場合は、[こちら](/docs/{{version}}/billing)をお読みください。
 
 > {note} サブスクリプションを提供せず、「一回だけ」の支払いを取り扱う場合は、Cashierを使用してはいけません。BraintreeのSDKを直接使用してください。
 

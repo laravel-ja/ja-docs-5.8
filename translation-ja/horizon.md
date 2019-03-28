@@ -1,6 +1,7 @@
 # Laravel Horizon
 
 - [イントロダクション](#introduction)
+- [Horizonのアップグレード](#upgrading)
 - [インストール](#installation)
     - [設定](#configuration)
     - [ダッシュボードの認可](#dashboard-authorization)
@@ -39,6 +40,15 @@ Laravelが[失敗したキュー済みのジョブ](/docs/{{version}}/queues#dea
     php artisan queue:failed-table
 
     php artisan migrate
+
+<a name="upgrading"></a>
+#### Horizonのアップグレード
+
+Horizonの新しいメジャーバージョンへアップグレードする場合は、[アップグレードガイド](https://github.com/laravel/horizon/blob/master/UPGRADE.md)を注意深く読み込むことが重要です。
+
+付け加えて、Horizonのアセットを再公開も必要です。
+
+    php artisan horizon:assets
 
 <a name="configuration"></a>
 ### 設定

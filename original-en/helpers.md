@@ -195,13 +195,18 @@ Laravel includes a variety of global "helper" PHP functions. Many of these funct
 <a name="method-array-add"></a>
 #### `Arr::add()` {#collection-method .first-collection-method}
 
-The `Arr::add` method adds a given key / value pair to an array if the given key doesn't already exist in the array:
+The `Arr::add` method adds a given key / value pair to an array if the given key doesn't already exist in the array or is set to `null`:
 
     use Illuminate\Support\Arr;
 
     $array = Arr::add(['name' => 'Desk'], 'price', 100);
 
     // ['name' => 'Desk', 'price' => 100]
+
+    $array = Arr::add(['name' => 'Desk', 'price' => null], 'price', 100);
+
+    // ['name' => 'Desk', 'price' => 100]
+
 
 <a name="method-array-collapse"></a>
 #### `Arr::collapse()` {#collection-method}
@@ -867,6 +872,8 @@ You may also pass an array of values to determine if the given string contains a
 
 The `Str::endsWith` method determines if the given string ends with the given value:
 
+    use Illuminate\Support\Str;
+
     $result = Str::endsWith('This is my name', 'name');
 
     // true
@@ -1306,9 +1313,9 @@ The `cache` function may be used to get values from the [cache](/docs/{{version}
 
     $value = cache('key', 'default');
 
-You may add items to the cache by passing an array of key / value pairs to the function. You should also pass the number of minutes or duration the cached value should be considered valid:
+You may add items to the cache by passing an array of key / value pairs to the function. You should also pass the number of seconds or duration the cached value should be considered valid:
 
-    cache(['key' => 'value'], 5);
+    cache(['key' => 'value'], 300);
 
     cache(['key' => 'value'], now()->addSeconds(10));
 

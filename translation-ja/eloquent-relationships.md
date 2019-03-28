@@ -335,7 +335,7 @@ Eloquentは、`Comment`モデルに対する外部キーを自動的に決める
 <a name="defining-custom-intermediate-table-models"></a>
 ### カスタム中間テーブルモデルの定義
 
-リレーションの中間テーブルを表す、カスタムモデルを定義したい場合は、リレーション定義で`using`メソッドを呼び出します。カスタム多対多ピボットモデルは、`Illuminate\Database\Eloquent\Relations\Pivot`クラス、一方のカスタムポリモーフィック多対多ピボットモデルは、`Illuminate\Database\Eloquent\Relations\MorphPivot`クラスを拡張する必要があります。例として、カスタム`UserRole`ピボットモデルを使用する、`Role`を定義してみましょう。
+リレーションの中間テーブルを表す、カスタムモデルを定義したい場合は、リレーション定義で`using`メソッドを呼び出します。カスタム多対多ピボットモデルは、`Illuminate\Database\Eloquent\Relations\Pivot`クラス、一方のカスタムポリモーフィック多対多ピボットモデルは、`Illuminate\Database\Eloquent\Relations\MorphPivot`クラスを拡張する必要があります。例として、カスタム`RoleUser`ピボットモデルを使用する、`Role`を定義してみましょう。
 
     <?phpDefining Custom Intermediate Table Models
 
@@ -350,11 +350,11 @@ Eloquentは、`Comment`モデルに対する外部キーを自動的に決める
          */
         public function users()
         {
-            return $this->belongsToMany('App\User')->using('App\UserRole');
+            return $this->belongsToMany('App\User')->using('App\RoleUser');
         }
     }
 
-`UserRole`定義時に、`Pivot`クラスを拡張します。
+`RoleUser`定義時に、`Pivot`クラスを拡張します。
 
     <?php
 
@@ -362,12 +362,12 @@ Eloquentは、`Comment`モデルに対する外部キーを自動的に決める
 
     use Illuminate\Database\Eloquent\Relations\Pivot;
 
-    class UserRole extends Pivot
+    class RoleUser extends Pivot
     {
         //
     }
 
-中間テーブルからカラムを取得するために、`using`と`withPivot`を組み合わせられます。たとえば、`withPivot`メソッドにカラム名を渡すことにより、`UserRole`ピボットテーブルから`created_by`と`updated_by`カラムを取得してみましょう。
+中間テーブルからカラムを取得するために、`using`と`withPivot`を組み合わせられます。たとえば、`withPivot`メソッドにカラム名を渡すことにより、`RoleUser`ピボットテーブルから`created_by`と`updated_by`カラムを取得してみましょう。
 
     <?php
 
@@ -383,7 +383,7 @@ Eloquentは、`Comment`モデルに対する外部キーを自動的に決める
         public function users()
         {
             return $this->belongsToMany('App\User')
-                            ->using('App\UserRole')
+                            ->using('App\RoleUser')
                             ->withPivot([
                                 'created_by',
                                 'updated_by'

@@ -195,13 +195,18 @@ Laravelは様々な、グローバル「ヘルパ」PHP関数を用意してい�
 <a name="method-array-add"></a>
 #### `Arr::add()` {#collection-method .first-collection-method}
 
-`Arr::add`メソッドは指定されたキー／値のペアをそのキーが存在していない場合、配列に追加します。
+`Arr::add`メソッドは指定されたキー／値のペアをそのキーが存在していない場合と`null`がセットされている場合に、配列に追加します。
 
     use Illuminate\Support\Arr;
 
     $array = Arr::add(['name' => 'Desk'], 'price', 100);
 
     // ['name' => 'Desk', 'price' => 100]
+
+    $array = Arr::add(['name' => 'Desk', 'price' => null], 'price', 100);
+
+    // ['name' => 'Desk', 'price' => 100]
+
 
 <a name="method-array-collapse"></a>
 #### `Arr::collapse()` {#collection-method}
@@ -867,6 +872,8 @@ NULL値を指定すると、空の配列が返ってきます。
 
 `Str::endsWith`メソッドは、最初の文字列が２つ目の引数の文字列で終わっているか調べます。
 
+    use Illuminate\Support\Str;
+
     $result = Str::endsWith('This is my name', 'name');
 
     // true
@@ -1306,9 +1313,9 @@ Str::singular`メソッドは複数形を単数形へ変換します。このメ
 
     $value = cache('key', 'default');
 
-関数にキー／値ペアの配列を渡すと、アイテムをキャッシュへ追加します。さらに分数、もしくはキャッシュ値が有効であると推定される期限を渡すこともできます。
+関数にキー／値ペアの配列を渡すと、アイテムをキャッシュへ追加します。さらに秒数、もしくはキャッシュ値が有効であると推定される期限を渡すこともできます。
 
-    cache(['key' => 'value'], 5);
+    cache(['key' => 'value'], 300);
 
     cache(['key' => 'value'], now()->addSeconds(10));
 

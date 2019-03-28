@@ -334,19 +334,22 @@ Laravelのサービスコンテナにより、アプリケーションへ依存�
 
     class ExampleTest extends TestCase
     {
-        public function testAvatarUpload()
+        public function testAlbumUpload()
         {
-            Storage::fake('avatars');
+            Storage::fake('photos');
 
-            $response = $this->json('POST', '/avatar', [
-                'avatar' => UploadedFile::fake()->image('avatar.jpg')
+            $response = $this->json('POST', '/photos', [
+                UploadedFile::fake()->image('photo1.jpg'),
+                UploadedFile::fake()->image('photo2.jpg')
             ]);
 
-            // ファイルが保存されたことをアサート
-            Storage::disk('avatars')->assertExists('avatar.jpg');
+            // ひとつ以上のファイルが保存されたことをアサート
+            Storage::disk('photos')->assertExists('photo1.jpg');
+            Storage::disk('photos')->assertExists(['photo1.jpg', 'photo2.jpg']);
 
-            // ファイルが存在しないことをアサート
-            Storage::disk('avatars')->assertMissing('missing.jpg');
+            // ひとつ以上のファイルが保存されなかったことをアサート
+            Storage::disk('photos')->assertMissing('missing.jpg');
+            Storage::disk('photos')->assertMissing(['missing.jpg', 'non-existing.jpg']);
         }
     }
 

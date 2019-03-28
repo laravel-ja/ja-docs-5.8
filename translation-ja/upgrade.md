@@ -140,7 +140,7 @@ Laravel5.8を使用する場合は、明確なパラメータとして`route`ヘ
 
 しかし、みなさんが自分で`Cache::lock()->release()`を呼び出している場合、ロックのインスタンスを保持するようにコードを変更する必要があります。そのため、タスクを実行し終えた後、**同じロックインスタンス**の`release`メソッドを呼び出してください。
 
-    if ($lock = Cache::lock('foo', 10)->get()) {
+    if (($lock = Cache::lock('foo', 10))->get()) {
         // タスクの実行…
 
         $lock->release();
@@ -151,7 +151,7 @@ Laravel5.8を使用する場合は、明確なパラメータとして`route`ヘ
     // コントローラ側
     $podcast = Podcast::find(1);
 
-    if ($lock = Cache::lock('foo', 120)->get()) {
+    if (($lock = Cache::lock('foo', 120))->get()) {
         ProcessPodcast::dispatch($podcast, $lock->owner());
     }
 
@@ -171,6 +171,14 @@ Laravel5.8を使用する場合は、明確なパラメータとして`route`ヘ
 
 <a name="collections"></a>
 ### コレクション
+
+#### `add`メソッド
+
+**影響の可能性： とても低い**
+
+`add`メソッドは、Eloquentのコレクションクラスから、ベースコレクションクラスへ[移動しました](https://github.com/laravel/framework/pull/27082)。`Illuminate\Support\Collection`を拡張し、拡張したクラスに`add`メソッドがある場合は、メソッドの用法が親クラスと一致するようにしてください。
+
+    public function add($item);
 
 #### `firstWhere`メソッド
 
@@ -263,6 +271,14 @@ MySQLとMariaDBを使用している場合、クエリビルダはクオート�
 
 Laravel5.8が[サポートする一番古いSQLiteバージョン](https://github.com/laravel/framework/pull/25995)はSQLite3.7.11です。より古いSQLiteバージョンを使用している場合は、アップデートしてください。SQLite3.8.8以上を推奨します。
 
+#### マイグレーションと`bigIncrements`
+
+**影響の可能性： なし**
+
+[Laravel5.8](https://github.com/laravel/framework/pull/26472)では、マイグレーションスタブのデフォルトとして、IDカラムに`bigIncrements`を使います。以前のバージョンでは、IDカラムは`increments`メソッドを使用し、生成されていました。
+
+これは既存のプロジェクトのコードへ、影響を与えません。しかしながら、外部キーを同じタイプにするように気を付けてください。`increments`メソッドを使用して生成されたカラムは、`bigIncrements`メソッドを使って生成したカラムを参照できないためです。
+
 <a name="eloquent"></a>
 ### Eloquent
 
@@ -322,13 +338,13 @@ Laravel5.8では、複数後のモデル名で不規則変化する単語で終�
 
     protected $casts = ['deleted_at' => 'string'];
 
-#### BelongsToの`getForeignKey`メソッド
+#### BelongsToの`getForeignKey`と`getOwnerKey`メソッド
 
 **影響の可能性： 低い**
 
-Laravelにより提供されている他のリレーションのメソッド名と統一するために、`BelongsTo`の`getForeignKey`と`getQualifiedForeignKey`メソッドは、`getForeignKeyName`と`getQualifiedForeignKeyName`へ名前が変わりました。
+Laravelにより提供されている他のリレーションのメソッド名と統一するために、`BelongsTo`の`getForeignKey`、`getQualifiedForeignKey`、`getOwnerKey`メソッドは、`getForeignKeyName`、`getQualifiedForeignKeyName`、`getOwnerKeyName`へ名前が変わりました。
 
-<a name="#environment-variable-parsing"></a>
+<a name="environment-variable-parsing"></a>
 ### 環境変数のパース
 
 **影響の可能性： 高い**
@@ -585,7 +601,7 @@ Laravel5.8ではPHPUnit7をデフォルトで使用します。しかしなが�
 
 **影響の可能性： とても低い**
 
-メールのバリデーションルールをメールが[RFC5630](https://tools.ietf.org/html/rfc6530)準拠するかをチェックするようになりました。SwiftMailerが使用しているバリデーションロジックと統一しました。Laravel`5.7`では、`email`ルールはメールが[RFC822](https://tools.ietf.org/html/rfc822)を準拠しているかのみを検証していました。
+メールのバリデーションルールをメールが[RFC6530](https://tools.ietf.org/html/rfc6530)準拠するかをチェックするようになりました。SwiftMailerが使用しているバリデーションロジックと統一しました。Laravel`5.7`では、`email`ルールはメールが[RFC822](https://tools.ietf.org/html/rfc822)を準拠しているかのみを検証していました。
 
 これにより、Laravel5.8を使用すると以前は誤って有効でないと判断したメールを有効と判断するようになりました。（例：`hej@bär.se`）一般的にはバグフィックスとして考えるべきでしょう。しかしながら、これは注意の必要な互換性のない変更としてリストされています。[この変更により、問題が起きたらお知らせください](https://github.com/laravel/framework/pull/26503)。
 

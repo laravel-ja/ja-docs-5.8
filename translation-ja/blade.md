@@ -195,6 +195,12 @@ JavaScriptの変数を初期化するために、配列をビューに渡してJ
         var app = @json($array);
     </script>
 
+`@json`ディレクティブは、Vueコンポーネントや`data-*`属性を生成するのにも便利に使えます。
+
+    <example-component :some-prop='@json($array)'></example-component>
+
+> {note} Using `@json` in element attributes requires that it be surrounded by single quotes.
+
 #### HTMLエンティティエンコーディング
 
 Blade（およびLaravelの`e`ヘルパ）はデフォルトで、HTMLエンティティをdouble encodeします。double encodeを無効にするには、`AppServiceProvider`の`boot`メソッドで、`Blade::withoutDoubleEncoding`メソッドを呼び出してください。
@@ -410,8 +416,10 @@ Blade（およびLaravelの`e`ヘルパ）はデフォルトで、HTMLエンテ�
 `$loop->iteration`  |  現在の繰り返し数（初期値1）
 `$loop->remaining`  |  繰り返しの残り数
 `$loop->count`  |  繰り返し中の配列の総アイテム数
-`$loop->first`  |  ループの最初の繰り返しか
-`$loop->last`  |  ループの最後の繰り返しか
+`$loop->first`  |  ループの最初の繰り返しか判定
+`$loop->last`  |  ループの最後の繰り返しか判定
+`$loop->even`  |  これは偶数回目の繰り返しか判定
+`$loop->odd`  |  これは気数回目の繰り返しか判定
 `$loop->depth`  |  現在のループのネストレベル
 `$loop->parent`  |  ループがネストしている場合、親のループ変数
 

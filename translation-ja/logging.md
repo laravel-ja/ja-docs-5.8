@@ -42,6 +42,7 @@ Monologはデフォルトで`production`や`local`のような、現在の環境
 `single` | シングルファイル／パスベースのロガーチャンネル（`StreamHandler`）
 `daily` | `RotatingFileHandler`ベースの毎日ファイルを切り替えるMonologドライバ
 `slack` | `SlackWebhookHandler`ベースのMonologドライバ
+`papertrail` | `SyslogUdpHandler`ベースのMonologドライバ
 `syslog` | `SyslogHandler`ベースのMonologドライバ
 `errorlog` | `ErrorLogHandler`ベースのMonologドライバ
 `monolog` | サポートしているMonologハンドラをどれでも使用できる、Monologファクトリドライバ
@@ -56,8 +57,12 @@ Monologはデフォルトで`production`や`local`のような、現在の環境
 名前 | 説明 | デフォルト値
 ------------- | ------------- | -------------
 `bubble` | 処理後に他のチャンネルへメッセージをバブルアップさせるか | `true`
-`permission` | ログファイルのパーミッション | `644`
+`permission` | ログファイルのパーミッション | `0644`
 `locking` | 書き込む前にログファイルのロックを試みる | `false`
+
+#### Papertrailチャンネルの設置
+
+`papertrail`チャンネルでは、`url`と`port`設定オプションが必要です。[Papertrail](https://help.papertrailapp.com/kb/configuration/configuring-centralized-logging-from-php-apps/#send-events-from-php-app)から、それらの値を入手できます。
 
 #### Slackチャンネルの設定
 

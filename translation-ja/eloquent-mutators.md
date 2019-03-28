@@ -158,9 +158,9 @@
 <a name="attribute-casting"></a>
 ## 属性キャスト
 
-モデルの`$casts`プロパティは属性を一般的なデータタイプへキャストする便利な手法を提供します。`$casts`プロパティは配列で、キーにはキャストする属性名を指定し、値にはそのカラムに対してキャストしたいタイプを指定します。サポートしているキャストタイプは`integer`、`real`、`float`、`double`、`decimal:<桁数>`、`string`、`boolean`、`object`、`array`、`collection`、`date`、`datetime`、`timestamp`です。`decimal`へキャストする場合は、桁数をたとえば`decimal:2`のように定義してください。
+モデルの`$casts`プロパティは属性を一般的なデータタイプへキャストする便利な手法を提供します。`$casts`プロパティは配列で、キーにはキャストする属性名を指定し、値にはそのカラムに対してキャストしたいタイプを指定します。サポートしているキャストタイプは`integer`、`real`、`float`、`double`、`decimal:<桁数>`、`string`、`boolean`、`object`、`array`、`collection`、`date`、`datetime`、`timestamp`です。`decimal`へキャストする場合は、桁数を`decimal:2`のように定義してください。
 
-例としてデータベースには整数の`0`と`1`で保存されている`is_admin`属性を論理値にキャストしてみましょう。
+属性キャストのデモンストレーションとして、データベースには整数の`0`と`1`で保存されている`is_admin`属性を論理値にキャストしてみましょう。
 
     <?php
 

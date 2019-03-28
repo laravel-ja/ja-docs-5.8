@@ -54,6 +54,10 @@ JSONでAPIを作成する場合にはモデルとリレーションを配列やJ
         return App\User::all();
     });
 
+#### リレーション
+
+EloquentモデルがJSONへ変換される場合、JSONオブジェクトへ属性として自動的にリレーションがロードされます。また、Eloquentのリレーションメソッドは「キャメルケース」で定義しますが、リレーションのJSON属性は「スネークケース」になります。
+
 <a name="hiding-attributes-from-json"></a>
 ## JSONに含めない属性
 
