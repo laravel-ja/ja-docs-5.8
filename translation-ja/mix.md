@@ -105,7 +105,7 @@ Mixは[Webpack](https://webpack.js.org)上の設定レイヤーですから、La
 
     mix.sass('resources/sass/app.scss', 'public/css');
 
-`less`メソッドでも、複数のSassファイルを別々のCSSファイルへコンパイルできますし、結果のCSSの出力ディレクトリをカスタマイズ可能です。
+`less`メソッドと同様に、複数のSassファイルを別々のCSSファイルへコンパイルできますし、結果のCSSの出力ディレクトリをカスタマイズ可能です。
 
     mix.sass('resources/sass/app.sass', 'public/css')
        .sass('resources/sass/admin.sass', 'public/css/admin');
