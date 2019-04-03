@@ -46,7 +46,15 @@ HomesteadはWindowsやMac、Linuxシステム上で実行でき、Nginx Webサ�
 <a name="included-software"></a>
 ### 含まれるソフトウェア
 
-<div class="content-list" markdown="1">
+<style>
+    #software-list > ul {
+        column-count: 3; -moz-column-count: 3; -webkit-column-count: 3;
+        column-gap: 5em; -moz-column-gap: 5em; -webkit-column-gap: 5em;
+        line-height: 1.9;
+    }
+</style>
+
+<div id="software-list" markdown="1">
 - Ubuntu 18.04
 - Git
 - PHP 7.3

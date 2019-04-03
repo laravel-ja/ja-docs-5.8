@@ -158,7 +158,7 @@ Laravelのイベントブロードキャストは、サーバサイドのLaravel
     /**
      * イベントをブロードキャストすべき、チャンネルの取得
      *
-     * @return array
+     * @return \Illuminate\Broadcasting\PrivateChannel
      */
     public function broadcastOn()
     {

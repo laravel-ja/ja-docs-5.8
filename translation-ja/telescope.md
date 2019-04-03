@@ -38,8 +38,6 @@ Laravel TelescopeはLaravelフレームワークのエレガントなデバッ�
 <a name="installation"></a>
 ## インストレーション
 
-> {note} Telescope requires Laravel 5.7.7+.
-
 LaravelプロジェクトへTelescopeをインストールするには、Composerを使用します。
 
     composer require laravel/telescope

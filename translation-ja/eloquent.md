@@ -700,7 +700,7 @@ Eloquentではクロージャを使ったグローバルスコープも定義で
         /**
          * 人気のあるユーザーだけに限定するクエリスコープ
          *
-         * @param \Illuminate\Database\Eloquent\Builder $query
+         * @param  \Illuminate\Database\Eloquent\Builder  $query
          * @return \Illuminate\Database\Eloquent\Builder
          */
         public function scopePopular($query)
@@ -711,7 +711,7 @@ Eloquentではクロージャを使ったグローバルスコープも定義で
         /**
          * アクティブなユーザーだけに限定するクエリスコープ
          *
-         * @param \Illuminate\Database\Eloquent\Builder $query
+         * @param  \Illuminate\Database\Eloquent\Builder  $query
          * @return \Illuminate\Database\Eloquent\Builder
          */
         public function scopeActive($query)
@@ -751,8 +751,8 @@ Eloquentではクロージャを使ったグローバルスコープも定義で
         /**
          * 指定したタイプのユーザーだけを含むクエリのスコープ
          *
-         * @param  \Illuminate\Database\Eloquent\Builder $query
-         * @param  mixed $type
+         * @param  \Illuminate\Database\Eloquent\Builder  $query
+         * @param  mixed  $type
          * @return \Illuminate\Database\Eloquent\Builder
          */
         public function scopeOfType($query, $type)

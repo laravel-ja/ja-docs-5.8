@@ -127,7 +127,7 @@ Laravelでは`timezone`メソッドを使うことで、一つのスケジュー
 
 ### 中間テーブル／ピボットモデルイベント
 
-以前のバージョンのLaravelでは、多対多リレーションのカスタム中間テーブル／ピボット（"pivot"）モデルのアタッチ（attach）、デタッチ（detach）、同期（sync）時にEloquentモデルイベントはディスパッチされませんでした。Laravel5.8の[カスタム中間テーブルモデル](/docs/{{version}}/eloquent-relationships#defining-custom-intermediate-table-models)を使用する場合、これらのイベントがディスパッチされるようになりました。
+以前のバージョンのLaravelでは、多対多リレーションのカスタム中間テーブル／ピボット（"pivot"）モデルのアタッチ（attach）、デタッチ（detach）、同期（sync）時に、[Eloquentモデルイベント](/docs/{{version}}/eloquent#events)はディスパッチされませんでした。Laravel5.8の[カスタム中間テーブルモデル](/docs/{{version}}/eloquent-relationships#defining-custom-intermediate-table-models)を使用する場合、適切なモデルイベントがディスパッチされるようになりました。
 
 ### Artisan callの向上
 
