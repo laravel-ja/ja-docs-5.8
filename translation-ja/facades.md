@@ -232,7 +232,7 @@ Laravelアプリケーション中で、ファサードとは、コンテナを�
 以下は全ファサードと実際のクラスの一覧です。これは特定のファサードを元にし、APIドキュメントを素早く探したい場合に便利な道具になります。対応する[サービスコンテナ結合キー](/docs/{{version}}/container)も記載しています。
 
 ファサード  |  クラス  |  サービスコンテナ結合
-------------- | ------------- | -------------
+------------- | --------------------------------------------- | -------------
 App  |  [Illuminate\Foundation\Application](https://laravel.com/api/{{version}}/Illuminate/Foundation/Application.html)  |  `app`
 Artisan  |  [Illuminate\Contracts\Console\Kernel](https://laravel.com/api/{{version}}/Illuminate/Contracts/Console/Kernel.html)  |  `artisan`
 Auth  |  [Illuminate\Auth\AuthManager](https://laravel.com/api/{{version}}/Illuminate/Auth/AuthManager.html)  |  `auth`
