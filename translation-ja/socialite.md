@@ -15,7 +15,7 @@
 
 典型的なフォームベースの認証に付け加え、Laravelは[Laravel Socialite](https://github.com/laravel/socialite)(=名士)による、OAuthプロバイダによるシンプルで便利な認証方法も提供しています。Socialiteは現在、Facebook、Twitter、LinkedIn、Google、GitHub、GitLab、Bitbucketによる認証をサポートしています。
 
-> {tip} 他のプラットフォームのアダプタは、コミュニティにより管理されている[Socialiteプロバイダ](https://socialiteproviders.github.io/)Webサイトで一覧できます。
+> {tip} 他のプラットフォームのアダプタは、コミュニティにより管理されている[Socialiteプロバイダ](https://socialiteproviders.netlify.com/)Webサイトで一覧できます。
 
 <a name="upgrading-socialite"></a>
 ## Socialiteのアップデート

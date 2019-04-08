@@ -347,14 +347,14 @@ WHEREの結合にチェーンで`or`節をクエリに追加できます。`orWh
 
 #### その他のWHERE節
 
-**whereBetween**
+**whereBetween / orWhereBetween**
 
 `whereBetween`メソッドはカラムの値が２つの値の間である条件を加えます。
 
     $users = DB::table('users')
                         ->whereBetween('votes', [1, 100])->get();
 
-**whereNotBetween**
+**whereNotBetween / orWhereNotBetween**
 
 `whereNotBetween`メソッドは、カラムの値が２つの値の間ではない条件を加えます。
 
@@ -362,7 +362,7 @@ WHEREの結合にチェーンで`or`節をクエリに追加できます。`orWh
                         ->whereNotBetween('votes', [1, 100])
                         ->get();
 
-**whereIn / whereNotIn**
+**whereIn / whereNotIn / orWhereIn / orWhereNotIn**
 
 `whereIn`メソッドは指定した配列の中にカラムの値が含まれている条件を加えます。
 
@@ -376,7 +376,7 @@ WHEREの結合にチェーンで`or`節をクエリに追加できます。`orWh
                         ->whereNotIn('id', [1, 2, 3])
                         ->get();
 
-**whereNull / whereNotNull**
+**whereNull / whereNotNull / orWhereNull / orWhereNotNull**
 
 `whereNull`メソッドは指定したカラムの値が`NULL`である条件を加えます。
 
@@ -422,7 +422,7 @@ WHEREの結合にチェーンで`or`節をクエリに追加できます。`orWh
                     ->whereTime('created_at', '=', '11:20:45')
                     ->get();
 
-**whereColumn**
+**whereColumn / orWhereColumn**
 
 `whereColumn`メソッドは２つのカラムが同値である確認をするのに使います。
 

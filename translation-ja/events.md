@@ -4,6 +4,7 @@
 - [イベント／リスナ登録](#registering-events-and-listeners)
     - [イベント／リスナ生成](#generating-events-and-listeners)
     - [任意のイベント登録](#manually-registering-events)
+    - [イベントディスカバリ](#event-discovery)
 - [イベント定義](#defining-events)
 - [リスナ定義](#defining-listeners)
 - [イベントリスナのキュー投入](#queued-event-listeners)
@@ -70,6 +71,43 @@ Laravelアプリケーションに含まれている`EventServiceProvider`は、
     Event::listen('event.*', function ($eventName, array $data) {
         //
     });
+
+<a name="event-discovery"></a>
+### イベントディスカバリ
+
+> {note} イベントディスカバリは、Laravel5.8.9以降で利用できます。
+
+`EventServiceProvider`の`$listen`配列へ、自分でイベントとリスナを登録する代わりに、自動的にイベントを検出させることができます。イベントディスカバリを有効にすると、Laravelはアプリケーションの`Listeners`ディレクトリをスキャンし、自動的にイベントとリスナを見つけ出して登録します。さらに、`EventServiceProvider`で明示的に定義されたイベントリストも今まで通りに登録します。
+
+イベントディスカバリはデフォルトで無効になっています。アプリケーションの`EventServiceProvider`にある`shouldDiscoverEvents`をオーバーライドすることで、有効にできます。
+
+    /**
+     * イベントとリスナーを自動的に検出するか指定
+     *
+     * @return bool
+     */
+    public function shouldDiscoverEvents()
+    {
+        return true;
+    }
+
+アプリケーションのListenersディレクトリ中の全リスナーが、デフォルトでスキャンされます。スキャンする追加のディレクトリを定義したい場合は、`EventServiceProvider`の`discoverEventsWithin`をオーバーライドしてください。
+
+    /**
+     * イベントを見つけるために使用するリスナディレクトリの取得
+     *
+     * @return array
+     */
+    protected function discoverEventsWithin()
+    {
+        return [
+            $this->app->path('Listeners'),
+        ];
+    }
+
+実働時はリクエストのたびに、すべてのリスナをフレームワークにスキャンさせるのは好ましくないでしょう。アプリケーションのイベントとリスナの全目録をキャッシュする、`event:cache` Artisanコマンドを実行すべきです。この目録はフレームワークによるイベント登録処理をスピードアップするために使用されます。`event:clear`コマンドにより、このキャッシュは破棄されます。
+
+> {tip} `event:list`コマンドで、アプリケーションに登録されたすべてのイベントとリスナを一覧表示できます。
 
 <a name="defining-events"></a>
 ## イベント定義

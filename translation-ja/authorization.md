@@ -64,26 +64,6 @@ Laravelは組み込み済みの[認証](/docs/{{version}}/authentication)サー�
         Gate::define('update-post', 'App\Policies\PostPolicy@update');
     }
 
-#### リソースゲート
-
-`resource`メソッドを使用すれば、一度に複数のゲートを定義できます。
-
-    Gate::resource('posts', 'App\Policies\PostPolicy');
-
-これは次のゲート定義とまったく同じです。
-
-    Gate::define('posts.view', 'App\Policies\PostPolicy@view');
-    Gate::define('posts.create', 'App\Policies\PostPolicy@create');
-    Gate::define('posts.update', 'App\Policies\PostPolicy@update');
-    Gate::define('posts.delete', 'App\Policies\PostPolicy@delete');
-
-`view`、`create`、`update`、`delete`アビリティが、デフォルトで定義されます。`resource`メソッドに第３引数として配列を渡し、デフォルトのアビリティのオーバーライドが可能です。配列のキーでアビリティの名前、値でメソッド名を定義します。例として、新しく`posts.image`と`posts.photo`のゲート定義を２つだけ作成してみましょう。
-
-    Gate::resource('posts', 'PostPolicy', [
-        'image' => 'updateImage',
-        'photo' => 'updatePhoto',
-    ]);
-
 <a name="authorizing-actions-via-gates"></a>
 ### アクションの認可
 

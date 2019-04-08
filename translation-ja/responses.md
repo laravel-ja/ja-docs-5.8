@@ -65,6 +65,20 @@
                     'X-Header-Two' => 'Header Value',
                 ]);
 
+##### キャッシュコントロール・ミドルウェア
+
+ルートグループへ`Cache-Control`ヘッダを簡単に指定できるように、Laravelは`cache.headers`を用意しています。ディレクティブのリストの中で`etag`が指定されていると、レスポンスコンテンツのMD5ハッシュが、ETag識別子へ自動的にセットされます。
+
+    Route::middleware('cache-control:public,max-age=2628000;etag')->group(function() {
+        Route::get('privacy', function () {
+            // ...
+        });
+
+        Route::get('terms', function () {
+            // ...
+        });
+    });
+
 <a name="attaching-cookies-to-responses"></a>
 #### クッキーの付加
 

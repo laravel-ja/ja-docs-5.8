@@ -10,6 +10,7 @@
     - [オンデマンド通知](#on-demand-notifications)
 - [メール通知](#mail-notifications)
     - [メールメッセージのフォーマット](#formatting-mail-messages)
+    - [送信者のカスタマイズ](#customizing-the-sender)
     - [受信者のカスタマイズ](#customizing-the-recipient)
     - [件名のカスタマイズ](#customizing-the-subject)
     - [テンプレートのカスタマイズ](#customizing-the-templates)
@@ -233,6 +234,24 @@ Laravelの各通知は、（通常、`app/Notifications`ディレクトリに設
         return (new MailMessage)
                     ->error()
                     ->subject('Notification Subject')
+                    ->line('...');
+    }
+
+<a name="customizing-the-sender"></a>
+### 送信者のカスタマイズ
+
+デフォルトのメール送信者／Fromアドレスは、`config/mail.php`設定ファイルで定義されています。しかし、特定の通知でFromアドレスを指定する場合は、`from`メソッドで指定します。
+
+    /**
+     * 通知のメールプレゼンテーションを取得
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+                    ->from('test@example.com', 'Example')
                     ->line('...');
     }
 

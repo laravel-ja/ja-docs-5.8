@@ -10,6 +10,7 @@
     - [On-Demand Notifications](#on-demand-notifications)
 - [Mail Notifications](#mail-notifications)
     - [Formatting Mail Messages](#formatting-mail-messages)
+    - [Customizing The Sender](#customizing-the-sender)
     - [Customizing The Recipient](#customizing-the-recipient)
     - [Customizing The Subject](#customizing-the-subject)
     - [Customizing The Templates](#customizing-the-templates)
@@ -233,6 +234,24 @@ Some notifications inform users of errors, such as a failed invoice payment. You
         return (new MailMessage)
                     ->error()
                     ->subject('Notification Subject')
+                    ->line('...');
+    }
+
+<a name="customizing-the-sender"></a>
+### Customizing The Sender
+
+By default, the email's sender / from address is defined in the `config/mail.php` configuration file. However, you may specify the from address for a specific notification using the `from` method:
+
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+                    ->from('test@example.com', 'Example')
                     ->line('...');
     }
 
