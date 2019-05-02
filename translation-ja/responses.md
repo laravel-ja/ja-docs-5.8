@@ -69,7 +69,7 @@
 
 ルートグループへ`Cache-Control`ヘッダを簡単に指定できるように、Laravelは`cache.headers`を用意しています。ディレクティブのリストの中で`etag`が指定されていると、レスポンスコンテンツのMD5ハッシュが、ETag識別子へ自動的にセットされます。
 
-    Route::middleware('cache-control:public,max-age=2628000;etag')->group(function() {
+    Route::middleware('cache.headers:public;max_age=2628000;etag')->group(function() {
         Route::get('privacy', function () {
             // ...
         });

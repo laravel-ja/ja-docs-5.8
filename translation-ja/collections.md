@@ -85,6 +85,7 @@
 [diffAssoc](#method-diffassoc)
 [diffKeys](#method-diffkeys)
 [dump](#method-dump)
+[duplicates](#method-duplicates)
 [each](#method-each)
 [eachSpread](#method-eachspread)
 [every](#method-every)
@@ -498,6 +499,17 @@
     */
 
 コレクションをダンプした後にスクリプトを停止したい場合は、代わりに[`dd`](#method-dd)メソッドを使用してください。
+
+<a name="method-duplicates"></a>
+#### `duplicates()` {#collection-method}
+
+`duplicates`メソッドはコレクション中の重複値を返します。
+
+    $collection = collect(['a', 'b', 'a', 'c', 'b']);
+
+    $collection->duplicates();
+
+    // [ 2 => 'a', 4 => 'b' ]
 
 <a name="method-each"></a>
 #### `each()` {#collection-method}

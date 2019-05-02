@@ -296,8 +296,9 @@ Valetでサポートされていない、他のフレームワークやCMSでPHP
 コマンド |  説明
 -----------|-----------------------------------------------------------------------------------
 `valet forget` | "park"された（サイト検索の親ディレクトリとして登録されたJ)ディレクトリでこのコマンドを実行し、サイト検索対象のディレクトリリストから外します。
+`valet log` | View a list of logs which are written written by Valet's services.
 `valet paths` | "park"されたすべてのパスを表示します。
 `valet restart` | Valetデーモンをリスタートします。
 `valet start` | Valetデーモンをスタートします。
 `valet stop` | Valetデーモンを停止します。
-`valet uninstall` | Valetデーモンを完全にアンインストールします。
+`valet uninstall` | Valetデーモンをアンインストールします。

@@ -147,7 +147,7 @@ The `Storage` facade may be used to interact with any of your configured disks. 
 
     Storage::put('avatars/1', $fileContents);
 
-If your applications interacts with multiple disks, you may use the `disk` method on the `Storage` facade to work with files on a particular disk:
+If your application interacts with multiple disks, you may use the `disk` method on the `Storage` facade to work with files on a particular disk:
 
     Storage::disk('s3')->put('avatars/1', $fileContents);
 
@@ -380,7 +380,7 @@ The `makeDirectory` method will create the given directory, including any needed
 
 #### Delete A Directory
 
-Finally, the `deleteDirectory` may be used to remove a directory and all of its files:
+Finally, the `deleteDirectory` method may be used to remove a directory and all of its files:
 
     Storage::deleteDirectory($directory);
 

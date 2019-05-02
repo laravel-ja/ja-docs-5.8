@@ -156,6 +156,20 @@ HTTPリクエストに「ネスト」したパラメーターが含まれてい�
 
     <!-- ポスト作成フォーム -->
 
+#### `@error`ディレクティブ
+
+`@error` [Blade](/docs/{{version}}/blade)ディレクティブは、指定した属性のバリデーションエラーメッセージがあるかを簡単に判定するために使用します。`@error`ディレクティブの中でエラーメッセージを表示するために、`$message`変数をエコーすることも可能です。
+
+    <!-- /resources/views/post/create.blade.php -->
+
+    <label for="title">Post Title</label>
+
+    <input type="text" class="@error('title') is-invalid @enderror">
+
+    @error('title')
+        <div class="alert alert-danger">{{ $message }}</div>
+    @enderror
+
 <a name="a-note-on-optional-fields"></a>
 ### オプションフィールドに対する注意
 
@@ -578,6 +592,7 @@ Laravelは`TrimStrings`と`ConvertEmptyStringsToNull`ミドルウェアをアプ
 [全指定フィールド非存在時必須](#rule-required-without-all)
 [同一](#rule-same)
 [サイズ](#rule-size)
+[条件によるルール付加](#conditionally-adding-rules)
 [文字列開始](#rule-starts-with)
 [文字列](#rule-string)
 [タイムゾーン](#rule-timezone)

@@ -380,7 +380,7 @@ LaravelのFlysystem統合では、複数のプラットフォームにおける�
 
 #### ディレクトリ削除
 
-最後の`deleteDirectory`は、ディレクトリと中に含まれている全ファイルを削除するために使用されます。
+最後に、`deleteDirectory`メソッドは、ディレクトリと中に含まれている全ファイルを削除するために使用されます。
 
     Storage::deleteDirectory($directory);
 

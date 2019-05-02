@@ -189,7 +189,7 @@ Passportを実働サーバへ最初にデプロイするとき、`passport:keys`
 <a name="token-lifetimes"></a>
 ### トークン持続時間
 
-Passportはデフォルトで、一年間有効な、長期間持続するアクセストークンを発行します。トークンの持続時間をもっと短くしたい場合は、`tokensExpireIn`と`refreshTokensExpireIn`メソッドを使ってください。これらのメソッドは、`AuthServiceProvider`の`boot`メソッドから呼び出してください。
+Passportはデフォルトで、一年間有効な長期間持続するアクセストークンを発行します。トークンの持続時間をもっと短くしたい場合は、`tokensExpireIn`と`refreshTokensExpireIn`、`personalAccessTokensExpireIn`メソッドを使ってください。これらのメソッドは、`AuthServiceProvider`の`boot`メソッドから呼び出してください。
 
     /**
      * 全認証／認可の登録
@@ -205,6 +205,8 @@ Passportはデフォルトで、一年間有効な、長期間持続するアク
         Passport::tokensExpireIn(now()->addDays(15));
 
         Passport::refreshTokensExpireIn(now()->addDays(30));
+
+        Passport::personalAccessTokensExpireIn(now()->addMonths(6));
     }
 
 <a name="overriding-default-models"></a>
@@ -558,8 +560,6 @@ OAuth2のパスワードグラントはモバイルアプリケーションの�
 ## パーソナルアクセストークン
 
 ときどき、あなたのユーザーが典型的なコードリダイレクションフローに従うのではなく、自分たち自身でアクセストークンを発行したがることもあるでしょう。あなたのアプリケーションのUIを通じて、ユーザー自身のトークンを発行を許可することにより、あなたのAPIをユーザーに経験してもらう事ができますし、全般的なアクセストークン発行するシンプルなアプローチとしても役立つでしょう。
-
-> {note} パーソナルアクセストークンは常に長期間有効です。`tokensExpireIn`や`refreshTokensExpireIn`メソッドを使用しても、有効期間を変更できません。
 
 <a name="creating-a-personal-access-client"></a>
 ### パーソナルアクセスクライアントの作成

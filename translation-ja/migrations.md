@@ -66,7 +66,7 @@ Laravelの`Schema`[ファサード](/docs/{{version}}/facades)は、テーブル
         public function up()
         {
             Schema::create('flights', function (Blueprint $table) {
-                $table->increments('id');
+                $table->bigIncrements('id');
                 $table->string('name');
                 $table->string('airline');
                 $table->timestamps();
@@ -144,7 +144,7 @@ Laravelの`Schema`[ファサード](/docs/{{version}}/facades)は、テーブル
 新しいデータベーステーブルを作成するには、`Schema`ファサードの`create`メソッドを使用します。`create`メソッドは引数を２つ取ります。最初はテーブルの名前で、２つ目は新しいテーブルを定義するために使用する`Blueprint`オブジェクトを受け取る「クロージャ」です。
 
     Schema::create('users', function (Blueprint $table) {
-        $table->increments('id');
+        $table->bigIncrements('id');
     });
 
 テーブル作成時には、テーブルのカラムを定義するためにスキーマビルダの[カラムメソッド](#creating-columns)をどれでも利用できます。
@@ -166,7 +166,7 @@ Laravelの`Schema`[ファサード](/docs/{{version}}/facades)は、テーブル
 デフォルト接続以外のデータベース接続でスキーマ操作を行いたい場合は、`connection`メソッドを使ってください。
 
     Schema::connection('foo')->create('users', function (Blueprint $table) {
-        $table->increments('id');
+        $table->bigIncrements('id');
     });
 
 テーブルのオプションを定義するため、以下のコマンドがスキーマビルダで使用できます。

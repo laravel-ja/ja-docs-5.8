@@ -280,7 +280,13 @@ Laravelスケジューラはスケジュールしたタスクが生成する出�
              ->sendOutputTo($filePath)
              ->emailOutputTo('foo@example.com');
 
-> {note} `emailOutputTo`、`sendOutputTo`、`appendOutputTo`メソッドは、`command`と`exec`メソッドに対して排他的です。
+コマンド失敗時に出力をメール送信したい場合は、`emailOnFailure`メソッドを使用します。
+
+    $schedule->command('foo')
+             ->daily()
+             ->emailOnFailure('foo@example.com');
+
+> {note} `emailOutputTo`、 `emailOnFailure`、`sendOutputTo`、`appendOutputTo`メソッドは、`command`と`exec`メソッドに対してどれか一つしか指定できません。
 
 <a name="task-hooks"></a>
 ## タスクフック
@@ -294,6 +300,17 @@ Laravelスケジューラはスケジュールしたタスクが生成する出�
              })
              ->after(function () {
                  // タスク終了時…
+             });
+
+`onSuccess`と`onFailure`メソッドにより、そのスケジュールタスクが成功・失敗した時に特定のコードを実行できます。
+
+    $schedule->command('emails:send')
+             ->daily()
+             ->onSuccess(function () {
+                 // タスク成功時…
+             })
+             ->onFailure(function () {
+                 // タスク失敗時…
              });
 
 #### URLへのPing
@@ -311,6 +328,13 @@ Laravelスケジューラはスケジュールしたタスクが生成する出�
              ->daily()
              ->pingBeforeIf($condition, $url)
              ->thenPingIf($condition, $url);
+
+`pingOnSuccess`と`pingOnFailure`メソッドは、タスクが成功・失敗したときに指定URLへPingするために使用します。
+
+    $schedule->command('emails:send')
+             ->daily()
+             ->pingOnSuccess($successUrl)
+             ->pingOnFailure($failureUrl);
 
 これらのPingメソッドすべてで、Guzzle HTTPライブラリが必要です。Composerパッケージマネージャを使用して、プロジェクトにGuzzleを追加できます。
 

@@ -62,7 +62,7 @@ Telescopeをローカル環境でのみ使用する場合は、`--dev`フラグ�
 
 `telescope:install`実行後、`app`設定ファイルから`TelescopeServiceProvider`サービスプロバイダの登録を削除する必要があります。`app`設定ファイルで登録する代わりに、このサービスプロバイダを`AppServiceProvider`の`register`メソッドで登録してください。
 
-    use Laravel\Telescope\TelescopeServiceProvider;
+    use App\Providers\TelescopeServiceProvider;
 
     /**
      * 全アプリケーションサービスの登録

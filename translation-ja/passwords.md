@@ -59,6 +59,11 @@ Laravelはパスワードリセットリンクのメールを送信し、ユー�
 
     use Illuminate\Support\Facades\Auth;
 
+    /**
+     * パスワードリセットの間、使用されるガードの取得
+     *
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     */
     protected function guard()
     {
         return Auth::guard('guard-name');

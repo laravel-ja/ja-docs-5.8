@@ -17,6 +17,7 @@
 - [フォーム](#forms)
     - [CSRFフィールド](#csrf-field)
     - [Methodフィールド](#method-field)
+    - [バリデーションエラー](#validation-errors)
 - [サブビューの読み込み](#including-sub-views)
     - [コレクションのレンダビュー](#rendering-views-for-collections)
 - [スタック](#stacks)
@@ -82,6 +83,10 @@ Bladeを使用する主な利点は、**テンプレートの継承**と**セク
 この例の`sidebar`セクションでは、レイアウトのサイドバーの内容をコンテンツに上書きするのではなく追加するために`@@parent`ディレクティブを使用しています。`@@parent`ディレクティブはビューをレンダするときに、レイアウトの内容に置き換わります。
 
 > {tip} 直前の例とは異なり、この`sidebar`セクションは`@show`の代わりに`@endsection`で終わっています。`@endsection`ディレクティブはセクションを定義するだけに対し、`@show`は定義しつつ、そのセクションを**即時にその場所に取り込みます**。
+
+`@yield`ディレクティブは、デフォルト値を第２引数に受け取ります。この値は埋め込み対象のセクションが未定義の場合にレンダされます。
+
+    @yield('content', View::make('view.name'))
 
 Bladeビューはグローバルな`view`ヘルパを使用し、ルートから返すことができます。
 
@@ -465,6 +470,21 @@ HTMLフォームでは、`PUT`、`PATCH`、`DELETE`リクエストを作成で�
 
         ...
     </form>
+
+<a name="validation-errors"></a>
+### バリデーションエラー
+
+`@error`ディレクティブは、指定した属性の[バリデーションエラーメッセージ](/docs/{{version}}/validation#quick-displaying-the-validation-errors)があるかを簡単に判定するために使用します。`@error`ディレクティブの中でエラーメッセージを表示するために、`$message`変数をエコーすることも可能です。
+
+    <!-- /resources/views/post/create.blade.php -->
+
+    <label for="title">Post Title</label>
+
+    <input type="text" class="@error('title') is-invalid @enderror">
+
+    @error('title')
+        <div class="alert alert-danger">{{ $message }}</div>
+    @enderror
 
 <a name="including-sub-views"></a>
 ## サブビューの読み込み

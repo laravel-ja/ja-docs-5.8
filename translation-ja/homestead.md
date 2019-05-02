@@ -16,6 +16,7 @@
     - [SSH接続](#connecting-via-ssh)
     - [データベース接続](#connecting-to-databases)
     - [データベースのバックアップ](#database-backups)
+    - [データベーススナップショット](#database-snapshots)
     - [サイトの追加](#adding-additional-sites)
     - [環境変数](#environment-variables)
     - [Cronスケジュール設定](#configuring-cron-schedules)
@@ -26,6 +27,9 @@
     - [複数のPHPバージョン](#multiple-php-versions)
     - [Webサービス](#web-servers)
     - [メール](#mail)
+- [デバッグとプロファイリング](#debugging-and-profiling)
+    - [XdebugによるWebリクエストのデバッグ](#debugging-web-requests)
+    - [CLIアプリケーションのデバッグ](#debugging-cli-applications)
 - [ネットワークインターフェイス](#network-interfaces)
 - [Homesteadの拡張](#extending-homestead)
 - [Homesteadの更新](#updating-homestead)
@@ -61,9 +65,8 @@ HomesteadはWindowsやMac、Linuxシステム上で実行でき、Nginx Webサ�
 - PHP 7.2
 - PHP 7.1
 - Nginx
-- Apache (オプション)
 - MySQL
-- MariaDB (オプション)
+- lmmによるMySQLとMariaDBデータベーススナップショット
 - Sqlite3
 - PostgreSQL
 - Composer
@@ -72,14 +75,38 @@ HomesteadはWindowsやMac、Linuxシステム上で実行でき、Nginx Webサ�
 - Memcached
 - Beanstalkd
 - Mailhog
-- Neo4j (Optional)
-- MongoDB (Optional)
-- Elasticsearch (オプション)
+- avahi
 - ngrok
+- Xdebug
+- XHProf / Tideways / XHGui
 - wp-cli
-- Zend Z-Ray
-- Go
 - Minio
+</div>
+
+<a name="optional-software"></a>
+### オプションのソフトウェア
+
+<style>
+    #software-list > ul {
+        column-count: 3; -moz-column-count: 3; -webkit-column-count: 3;
+        column-gap: 5em; -moz-column-gap: 5em; -webkit-column-gap: 5em;
+        line-height: 1.9;
+    }
+</style>
+
+<div id="software-list" markdown="1">
+- Apache
+- Crystal & Lucky Framework
+- Dot Net Core
+- Elasticsearch
+- Go
+- MariaDB
+- MongoDB
+- Neo4j
+- Oh My Zsh
+- Ruby & Rails
+- Webdriver & Laravel Dusk Utilities
+- Zend Z-Ray
 </div>
 
 <a name="installation-and-setup"></a>
@@ -115,7 +142,7 @@ VirtualBox/VMwareとVagrantをインストールし終えたら、`laravel/homes
     cd ~/Homestead
 
     // クローンしたいリリースバージョン
-    git checkout v8.0.1
+    git checkout v8.3.1
 
 Homesteadリポジトリをクローンしたら、`Homestead.yaml`設定ファイルを生成するために、`bash init.sh`コマンドをHomesteadディレクトリで実行します。
 
@@ -158,7 +185,7 @@ Homesteadリポジトリをクローンしたら、`Homestead.yaml`設定ファ�
           to: /home/vagrant/code
           type: "nfs"
 
-> {note} NFSを使用する場合は、[vagrant-winnfsd](https://github.com/winnfsd/vagrant-winnfsd)プラグインのインストールを考慮してください。このプラグインは、Homestead下のファイルとディレクトリのユーザー／グループパーミッションを正しく維持します。
+> {note} Windows上でNFSを使用する場合は、[vagrant-winnfsd](https://github.com/winnfsd/vagrant-winnfsd)プラグインのインストールを考慮してください。このプラグインは、Homestead下のファイルとディレクトリのユーザー／グループパーミッションを正しく維持します。
 
 さらに、Vagrantの[同期フォルダ](https://www.vagrantup.com/docs/synced-folders/basic_usage.html)でサポートされている任意のオプションを、`options`キーの下に列挙して渡すことができます。
 
@@ -180,9 +207,12 @@ Nginxには詳しくない？　問題ありません。`sites`プロパティ�
 
 `sites`プロパティをHomestead boxのプロビジョニング後に変更した場合、仮想マシンのNginx設定を更新するため、`vagrant reload --provision`を再実行する必要があります。
 
-#### hostsファイル
+<a name="hostname-resolution"></a>
+#### ホスト名の解決
 
-Nginxサイトの"domains"に追加したサイトをあなたのコンピューターの`hosts`ファイルにも追加してください。`hosts`ファイルはローカルドメインへのリクエストをHomestead環境へ転送してくれます。MacとLinuxでは、`/etc/hosts`にこのファイルがあります。Windows環境では、`C:\Windows\System32\drivers\etc\hosts`です。次の行のように追加してください。
+Homesteadでは自動的にホストを解決できるように、`mDNS`によりホスト名を公開しています。`Homestead.yaml`ファイルで、`hostname: homestead`とセットすれば、このホストは`homestead.local`で使用できます。MacOS、iOS、Linuxディストリビューションでは`mDNS`がデフォルトでサポートされています。Windowsでは、[Bonjour Print Services for Windows](https://support.apple.com/kb/DL999?viewlocale=en_US&locale=en_US)をインストールする必要があります。
+
+自動ホスト名を一番活用できるのは、Homesteadを「プロジェクトごと」にインストールした場合でしょう。もし、一つのHomesteadインスタンスで複数のサイトをホストしている場合は、`hosts`ファイルにWebサイトの「ドメイン」を追加してください。`hosts`ファイルはHomesteadへのリクエストをHomestead環境へ転送してくれます。MacとLinuxでは、`/etc/hosts`にこのファイルがあります。Windows環境では、`C:\Windows\System32\drivers\etc\hosts`です。次の行のように追加してください。
 
     192.168.10.10  homestead.test
 
@@ -216,7 +246,7 @@ Windows:
 
     vendor\bin\homestead make
 
-次に`vagrant up`コマンドを端末で実行し、ブラウザで`http://homestead.test`のプロジェクトへアクセスしてください。`/etc/hosts`ファイルに`homestead.test`か、自分で選んだドメインのエントリーを追加する必要があることを忘れないでください。
+次に`vagrant up`コマンドを端末で実行し、ブラウザで`http://homestead.test`のプロジェクトへアクセスしてください。自動[ホスト名解決](#hostname-resolution)を使わない場合は、`/etc/hosts`ファイルに`homestead.test`か、自分で選んだドメインのエントリーを追加する必要があることを忘れないでください。
 
 <a name="installing-mariadb"></a>
 ### MariaDBのインストール
@@ -329,6 +359,21 @@ Homesteadでは、Vagrant boxを壊した時点で、自動的にデータベー
     backup: true
 
 一度設定すれば、Homesteadは`vagrant destroy`コマンドが実行されると、データベースを`mysql_backup`、`postgres_backup`ディレクトリへエクスポートします。これらのディレクトリは、Homesteadをクローンしたフォルダ中、もしくは[プロジェクトごとのインストール](#per-project-installation)を利用している場合は、プロジェクトルートの中で見つけられます。
+
+<a name="database-snapshots"></a>
+### データベーススナップショット
+
+Homesteadでは、MySQLやMariaDBの状態をスナップショットし、[Logical MySQL Manager](https://github.com/Lullabot/lmm)を使いブランチ操作可能です。たとえば、複数のギガバイトデータベースに関わるサイトをイメージしてください。データベースをインポートし、スナップショットを取ります。何か操作し、ローカルにテスト状況を構築した後に、元の状態へ素早くリストアできるのです。
+
+内部では、LVMのコピーオンライト(COW)サポートによる、簡単なスナップショット機能をLMMは使用しています。実践上これが意味するのは、テーブルのある一行を更新すると、その変更はディスクに書き込まれるだけであり、リストア時に大変な時間とディスクスペースを省略できるということです。
+
+`lmm`はLVMを操作するため、`root`で実行する必要があります。実行可能なコマンドを確認するには、Vagrant Box内で`sudo lmm`を実行してください。コマンドのワークフローは次のようになるでしょう。
+
+1. デフォルトの`master` lmmブランチへデータベースをインポートする。
+1. 無変更状態のデータベーススナップショットを`sudo lmm branch prod-YYYY-MM-DD`で保存する。
+1. データベースを変更する。
+1. `sudo lmm merge prod-YYYY-MM-DD`を実行し、すべての変更を元に戻す。
+1. `sudo lmm delete <branch>`で、不必要なブランチを削除する。
 
 <a name="adding-additional-sites"></a>
 ### サイトの追加
@@ -522,6 +567,65 @@ HomesteadはNginxをデフォルトのWebサーバとして利用しています
 
 Homesteadは、デフォルトで`1025`ポートをリッスンする、Postfixメールトランスファーエージェントを用意しています。そのため、`localhost`の`1025`ポートに対して、`smtp`メールドライバーを使用するように、アプリケーションへ指示できます。その結果、すべての送信メールはPostfixにより処理され、Mailhogにより補足されます。送信済みメールを確認するには、Webブラウザで[http://localhost:8025](http://localhost:8025)を開いてください。
 
+<a name="debugging-and-profiling"></a>
+## デバッグとプロファイリング
+
+<a name="debugging-web-requests"></a>
+### XdebugによるWebリクエストのデバッグ
+
+Homesteadは[Xdebug](https://xdebug.org)を使用するステップデバッグをサポートしています。例えば、ブラウザからWebページをロードし、実行中のコードのインスペクションと変更ができるようにPHPをIDEに接続します。
+
+To enable debugging, run the following commands inside your Vagrant box: デバッグを有効にするには、Vagrant Boxの中で以下のコマンドを実行してください。
+
+    sudo phpenmod xdebug
+
+    # 使用するPHPバージョンに合わせて次のコマンドを使用してください
+    sudo systemctl restart php7.3-fpm
+
+次に、IDEのデバッグを有効にするための指示に従ってください。最後に、拡張か[bookmarklet](https://www.jetbrains.com/phpstorm/marklets/)を使い、Xdebugを起動するようにブラウザを設定します。
+
+> {note} XdebugはPHPの実行を極端に遅くしてしまいます。Xdebugを無効にするには、Vagrant Boxで`sudo phpdismod xdebug`を実行し、FPMサービスを再起動します。
+
+<a name="debugging-cli-applications"></a>
+### CLIアプリケーションのデバッグ
+
+PHP CLIアプリケーションをデバッグするには、Vagrant Box内で、`xphp`シェルエイリアスを使用してください。
+
+    xphp path/to/script
+
+#### Xdebugの自動スタート
+
+Webサーバーへのリクエストを生成する機能テストのデバッグの場合、デバッグを開始するためにカスタムヘッダーやクッキーを付与するようにテストを変更するよりは、自動的に起動するほうが簡単です。Xdebugを自動的に起動するように強制するには、Vagrant Boxの中で以下のように`/etc/php/7.#/fpm/conf.d/20-xdebug.ini`を変更してください。
+
+    ; Homestead.ymlで別のIPアドレスのサブセットを指定している場合は、このアドレスを合わせてください
+    xdebug.remote_host = 192.168.10.1
+    xdebug.remote_autostart = 1
+
+### XHGuiを使用した、PHPパフォーマンスのプロファイリング
+
+[XHGui](https://www.github.com/perftools/xhgui)はPHPアプリケーションのパフォーマンスを表示してくれるユーザーインターフェイスです。XHGuiを有効にするには、サイト設定に`xhgui: 'true'`を追加してください。
+
+    sites:
+        -
+            map: your-site.test
+            to: /home/vagrant/code/web
+            type: "apache"
+            xhgui: 'true'
+
+サイトが既に存在する場合は、設定を更新した後に`vagrant provision`を必ず実行してください。
+
+Webリクエストをプロファイルするには、リクエストのクエリパラメータに`xhgui=on`を付加してください。XHGuiは以降のリクエストでこのクエリリクエスト値を付ける必要がないように、リクエストへ自動的にクッキーを追加します。アプリケーションのプロファイル結果を見るには、`http://your-site.test/xhgui`をブラウザで開いてください。
+
+XHGuiを使用してCLIリクエストのプロファイルを取る場合は、コマンドの前に`XHGUI=on`を付けてください。
+
+    XHGUI=on path/to/script
+
+CLIプロファイル結果は、Webのプロファイル結果と同じ方法で確認できます。
+
+プロファイルはスクリプトの実行を低下させるため、実際のリクエストの２倍ほどの実時間になることに注意しましょう。そのため、実際の数字ではなく、常に向上パーセンテージで比較してください。また、デバッガで中断している時間も実行時間に含まれることを認識しておきましょう。
+
+パフォーマンスのプロファイルは非常にディスクスペースを喰うため、数日で自動的に削除されます。
+
 <a name="network-interfaces"></a>
 ## ネットワークインターフェイス
 
@@ -567,7 +671,7 @@ Homesteadをカスタマイズすると、Ubuntuはパッケージのオリジ�
 
     git fetch
 
-    git checkout v8.0.1
+    git checkout v8.2.0
 
 上記のコマンドにより、最新のHomesteadコードがGitHubリポジトリよりpullされ、最新のタグをフェッチし、タグ付けされた最新のリリースをチェックアウトします。安定リリースバージョンの最新版は、[GitHubリリースページ](https://github.com/laravel/homestead/releases)で見つけてください。
 

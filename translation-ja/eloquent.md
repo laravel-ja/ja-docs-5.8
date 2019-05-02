@@ -877,22 +877,22 @@ Eloquentイベントの定義とマップができたら、[イベントリス�
     class AppServiceProvider extends ServiceProvider
     {
         /**
-         * アプリケーションサービスの初期起動処理
-         *
-         * @return void
-         */
-        public function boot()
-        {
-            User::observe(UserObserver::class);
-        }
-
-        /**
-         * サービスプロバイダの登録
+         * サービスプロバイダーの登録
          *
          * @return void
          */
         public function register()
         {
             //
+        }
+
+        /**
+         * 全アプリケーションサービスの初期起動
+         *
+         * @return void
+         */
+        public function boot()
+        {
+            User::observe(UserObserver::class);
         }
     }

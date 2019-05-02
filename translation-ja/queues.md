@@ -604,6 +604,19 @@ Supervisorの詳細情報は、[Supervisorドキュメント](http://supervisord
 
     php artisan queue:work redis --tries=3
 
+さらに、`--delay`オプションを使用し、失敗してから再試行するまでに何秒待てばよいかをLaravelへ指定できます。デフォルトでは、時間を置かずに再試行します。
+
+    php artisan queue:work redis --tries=3 --delay=3
+
+ジョブごとに失敗したジョブの再試行までの遅延を設定したい場合は、キュー投入するジョブクラスで`retryAfter`プロパティを定義してください。
+
+    /**
+     * ジョブを再試行するまでに待つ秒数
+     *
+     * @var int
+     */
+    public $retryAfter = 3;
+
 <a name="cleaning-up-after-failed-jobs"></a>
 ### ジョブ失敗後のクリーンアップ
 

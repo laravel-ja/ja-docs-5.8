@@ -28,6 +28,8 @@ Laravel's database query builder provides a convenient, fluent interface to crea
 
 The Laravel query builder uses PDO parameter binding to protect your application against SQL injection attacks. There is no need to clean strings being passed as bindings.
 
+> {note} PDO does not support binding column names. Therefore, you should never allow user input to dictate the column names referenced by your queries, including "order by" columns, etc. If you must allow the user to select certain columns to query against, always validate the column names against a white-list of allowed columns.
+
 <a name="retrieving-results"></a>
 ## Retrieving Results
 
@@ -74,6 +76,10 @@ If you just need to retrieve a single row from the database table, you may use t
 If you don't even need an entire row, you may extract a single value from a record using the `value` method. This method will return the value of the column directly:
 
     $email = DB::table('users')->where('name', 'John')->value('email');
+
+To retrieve a single row by its `id` column value, use the `find` method:
+
+    $user = DB::table('users')->find(3);
 
 #### Retrieving A List Of Column Values
 

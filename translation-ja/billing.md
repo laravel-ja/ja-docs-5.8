@@ -8,6 +8,7 @@
     - [Billableモデル](#billable-model)
     - [APIキー](#api-keys)
     - [通貨設定](#currency-configuration)
+    - [Webフック](#webhooks)
 - [定期サブスクリプション](#subscriptions)
     - [サブスクリプション作成](#creating-subscriptions)
     - [サブスクリプション状態の確認](#checking-subscription-status)
@@ -106,7 +107,7 @@ Cashierを使用する前に、[データベースを準備](/docs/{{version}}/m
 最後に、Stripeキーを`services.php`設定ファイルへ設定します。Stripe APIキーはStripeのコントロールパネルから取得します。
 
     'stripe' => [
-        'model'  => App\User::class,
+        'model' => App\User::class,
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
         'webhook' => [
@@ -123,6 +124,11 @@ Cashierのデフォルト通貨は米ドル(USD)です。サービスプロバ�
     use Laravel\Cashier\Cashier;
 
     Cashier::useCurrency('eur', '€');
+
+<a name="webhooks"></a>
+### Webフック
+
+CashierがすべてのStripeイベントを確実に処理処理できるように、[CashierのWebフック処理の設定](#handling-stripe-webhooks)を行うことを強くおすすめします。
 
 <a name="subscriptions"></a>
 ## サブスクリプション

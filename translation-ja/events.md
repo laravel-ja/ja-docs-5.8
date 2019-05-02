@@ -360,12 +360,12 @@ Laravelアプリケーションに含まれている`EventServiceProvider`は、
         /**
          * ユーザーログインイベント処理
          */
-        public function onUserLogin($event) {}
+        public function handleUserLogin($event) {}
 
         /**
          * ユーザーログアウトイベント処理
          */
-        public function onUserLogout($event) {}
+        public function handleUserLogout($event) {}
 
         /**
          * 購読するリスナの登録
@@ -376,12 +376,12 @@ Laravelアプリケーションに含まれている`EventServiceProvider`は、
         {
             $events->listen(
                 'Illuminate\Auth\Events\Login',
-                'App\Listeners\UserEventSubscriber@onUserLogin'
+                'App\Listeners\UserEventSubscriber@handleUserLogin'
             );
 
             $events->listen(
                 'Illuminate\Auth\Events\Logout',
-                'App\Listeners\UserEventSubscriber@onUserLogout'
+                'App\Listeners\UserEventSubscriber@handleUserLogout'
             );
         }
     }

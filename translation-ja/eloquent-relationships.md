@@ -985,7 +985,7 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 #### 複数のリレーションに対するEagerロード
 
-一回の操作で異なった複数のリレーションをEagerロードする必要がある場合もあります。その場合でも、ただ`with`メソッドに引数を追加で渡すだけです。
+一回の操作で異なった複数のリレーションをEagerロードする必要がある場合もあります。その場合でも、`with`メソッドに引数を追加で渡すだけです。
 
     $books = App\Book::with(['author', 'publisher'])->get();
 
@@ -997,11 +997,43 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 #### 特定カラムのEagerロード
 
-検索しているリレーションの中で全てのカラムが必要とは限りません。そのため、Eloquentではリレーションの中で検索したいカラムを特定することができます。
+検索しているリレーションの中で全てのカラムが必要とは限りません。そのため、Eloquentではリレーションの中で取得したいカラムを指定することができます。
 
-    $users = App\Book::with('author:id,name')->get();
+    $books = App\Book::with('author:id,name')->get();
 
-> {note} この機能を使う際には、 検索したいカラムと一緒に `id` カラムを含めなければなりません。
+> {note} この機能を使用する場合は`id`カラムと、取得するカラムリスト中の関連付けられた外部キーカラムすべてを常に含める必要があります。
+
+#### デフォルトのEagerロード
+
+あるモデル取得時、常にリレーションを取得したい場合もあります。そのためには、モデルに`$with`プロパティを定義します。
+
+    <?php
+
+    namespace App;
+
+    use Illuminate\Database\Eloquent\Model;
+
+    class Book extends Model
+    {
+        /**
+         * 常にロードするリレーション
+         *
+         * @var array
+         */
+        protected $with = ['author'];
+
+        /**
+         * 本を書いた著者の取得
+         */
+        public function author()
+        {
+            return $this->belongsTo('App\Author');
+        }
+    }
+
+`$with`プロパティで指定したリレーションを一つのクエリで削除したい場合は、`without`メソッドを使用します。
+
+    $books = App\Book::without('author')->get();
 
 <a name="constraining-eager-loads"></a>
 ### Eagerロードへの制約
@@ -1167,7 +1199,7 @@ Eloquentは新しいモデルをリレーションに追加するために便利
 <a name="default-models"></a>
 #### デフォルトモデル
 
-`belongsTo`リレーションでは、指定したリレーションが`null`の場合に返却するデフォルトモデルを定義できます。このパターンは、頻繁に[Nullオブジェクトパターン](https://en.wikipedia.org/wiki/Null_Object_pattern)と呼ばれ、コードから条件のチェックを省くのに役立ちます。以下の例では、ポストに従属する`user`がない場合に、空の`App\User`モデルを返しています。
+`belongsTo`、`hasOne`、`hasOneThrough`、`morphOne`リレーションでは、指定したリレーションが`null`の場合に返却するデフォルトモデルを定義できます。このパターンは、頻繁に[Nullオブジェクトパターン](https://en.wikipedia.org/wiki/Null_Object_pattern)と呼ばれ、コードから条件のチェックを省くのに役立ちます。以下の例では、ポストに従属する`user`がない場合に、空の`App\User`モデルを返しています。
 
     /**
      * ポストの著者を取得
