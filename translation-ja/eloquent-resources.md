@@ -324,23 +324,23 @@ API構築時、Eloquentモデルと、アプリケーションユーザーに対
     class AppServiceProvider extends ServiceProvider
     {
         /**
-         * サービスの初期起動後に、登録内容を処理
-         *
-         * @return void
-         */
-        public function boot()
-        {
-            Resource::withoutWrapping();
-        }
-
-        /**
-         * コンテナに結合を登録
+         * コンテナ結合の登録
          *
          * @return void
          */
         public function register()
         {
             //
+        }
+
+        /**
+         * 全アプリケーションサービスの初期処理
+         *
+         * @return void
+         */
+        public function boot()
+        {
+            Resource::withoutWrapping();
         }
     }
 

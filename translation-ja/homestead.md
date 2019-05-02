@@ -696,7 +696,7 @@ Homesteadをカスタマイズすると、Ubuntuはパッケージのオリジ�
 デフォルトのHomestead設定は、`natdnshostresolver`設定を`on`にしています。これにより、HomesteadはホストのオペレーティングシステムのDNS設定を利用します。この動作をオーバーライドしたい場合は、`Homestead.yaml`へ以下の行を追加してください。
 
     provider: virtualbox
-    natdnshostresolver: off
+    natdnshostresolver: 'off'
 
 #### Windowsでのシンボリックリンク
 

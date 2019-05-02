@@ -187,7 +187,17 @@ Laravelは[Carbon](https://github.com/briannesbitt/Carbon)（日付と時刻を�
     class AppServiceProvider extends ServiceProvider
     {
         /**
-         * サービスの登録後、起動を行う
+         * コンテナ結合の登録
+         *
+         * @return void
+         */
+        public function register()
+        {
+            //
+        }
+
+        /**
+         * 全アプリケーションサービスの初期処理
          *
          * @return void
          */
@@ -196,15 +206,5 @@ Laravelは[Carbon](https://github.com/briannesbitt/Carbon)（日付と時刻を�
             Carbon::serializeUsing(function ($carbon) {
                 return $carbon->format('U');
             });
-        }
-
-        /**
-         * コンテナに結合する
-         *
-         * @return void
-         */
-        public function register()
-        {
-            //
         }
     }

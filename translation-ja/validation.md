@@ -1236,7 +1236,17 @@ Laravelは様々な便利なバリデーションルールを提供していま�
     class AppServiceProvider extends ServiceProvider
     {
         /**
-         * アプリケーションサービスの初期処理
+         * 全アプリケーションサービスの登録
+         *
+         * @return void
+         */
+        public function register()
+        {
+            //
+        }
+
+        /**
+         * 全アプリケーションサービスの初期起動
          *
          * @return void
          */
@@ -1245,16 +1255,6 @@ Laravelは様々な便利なバリデーションルールを提供していま�
             Validator::extend('foo', function ($attribute, $value, $parameters, $validator) {
                 return $value == 'foo';
             });
-        }
-
-        /**
-         * サービスプロバイダ登録
-         *
-         * @return void
-         */
-        public function register()
-        {
-            //
         }
     }
 

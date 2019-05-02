@@ -247,26 +247,26 @@ Laravelに組み込まれている`LoginController`を使用していれば、�
     class SessionServiceProvider extends ServiceProvider
     {
         /**
-         * サービス起動処理の事前登録
-         *
-         * @return void
-         */
-        public function boot()
-        {
-            Session::extend('mongo', function ($app) {
-                // SessionHandlerInterfaceの実装を返す…
-                return new MongoSessionHandler;
-            });
-        }
-
-        /**
-         * コンテナへ結合を登録する
+         * コンテナ結合の登録
          *
          * @return void
          */
         public function register()
         {
             //
+        }
+
+        /**
+         * 全アプリケーションサービスの初期起動
+         *
+         * @return void
+         */
+        public function boot()
+        {
+            Session::extend('mongo', function ($app) {
+                // Return implementation of SessionHandlerInterface...
+                return new MongoSessionHandler;
+            });
         }
     }
 

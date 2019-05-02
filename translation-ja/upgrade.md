@@ -48,7 +48,7 @@
 
 **影響の可能性： とても低い**
 
-`Illuminate/Contracts/Foundation/Application`契約で利用法が規定されている`environment`メソッドは[変更されました](https://github.com/laravel/framework/pull/26296)。アプリケーションでこの契約を実装している場合は、メソッドの使用法を更新してください。
+`Illuminate\Contracts\Foundation\Application`契約で利用法が規定されている`environment`メソッドは[変更されました](https://github.com/laravel/framework/pull/26296)。アプリケーションでこの契約を実装している場合は、メソッドの使用法を更新してください。
 
     /**
      * アプリケーション環境の取得もしくは判定
@@ -62,7 +62,7 @@
 
 **影響の可能性： とても低い**
 
-`bootstrapPath`、`configPath`、`databasePath`、`environmentPath`、`resourcePath`、`storagePath`、`resolveProvider`、`bootstrapWith`、`configurationIsCached`、`detectEnvironment`、`environmentFile`、`environmentFilePath`、`getCachedConfigPath`、`getCachedRoutesPath`、`getLocale`、`getNamespace`、`getProviders`、`hasBeenBootstrapped`、`loadDeferredProviders`、`loadEnvironmentFrom`、`routesAreCached`、`setLocale`、`shouldSkipMiddleware`、`terminate`メソッドが[`Illuminate/Contracts/Foundation/Application`契約に追加されました](https://github.com/laravel/framework/pull/26477)。
+`bootstrapPath`、`configPath`、`databasePath`、`environmentPath`、`resourcePath`、`storagePath`、`resolveProvider`、`bootstrapWith`、`configurationIsCached`、`detectEnvironment`、`environmentFile`、`environmentFilePath`、`getCachedConfigPath`、`getCachedRoutesPath`、`getLocale`、`getNamespace`、`getProviders`、`hasBeenBootstrapped`、`loadDeferredProviders`、`loadEnvironmentFrom`、`routesAreCached`、`setLocale`、`shouldSkipMiddleware`、`terminate`メソッドが[`Illuminate\Contracts\Foundation\Application`契約に追加されました](https://github.com/laravel/framework/pull/26477)。
 
 このインターフェイスを実装している可能性はとても低いと思われますが、実装している場合はこれらのメソッドを追加してください。
 
@@ -203,7 +203,7 @@ Laravel5.8を使用する場合は、明確なパラメータとして`route`ヘ
 
 **影響の可能性： とても低い**
 
-`terminate`メソッドが[`Illuminate/Contracts/Console/Kernel`契約へ追加されました](https://github.com/laravel/framework/pull/26393)。このインターフェイスを実装している場合は、このメソッドを追加してください。
+`terminate`メソッドが[`Illuminate\Contracts\Console\Kernel`契約へ追加されました](https://github.com/laravel/framework/pull/26393)。このインターフェイスを実装している場合は、このメソッドを追加してください。
 
 <a name="container"></a>
 ### コンテナ
@@ -377,7 +377,7 @@ Laravelにより提供されている他のリレーションのメソッド名�
 
 **影響の可能性： 低い**
 
-Laravel5.4で非推奨になっていた、`Illuminate/Events/Dispatcher`クラスの`fire`メソッドが、[削除されました](https://github.com/laravel/framework/pull/26392)。
+Laravel5.4で非推奨になっていた、`Illuminate\Events\Dispatcher`クラスの`fire`メソッドが、[削除されました](https://github.com/laravel/framework/pull/26392)。
 代わりに、`dispatch`メソッドを使用してください。
 
 <a name="exception-handling"></a>
@@ -489,11 +489,12 @@ Redisキュードライバの"blocking pop"機能の使用が安全になりま�
 
 `previous`メソッドが、[`Illuminate\Contracts\Routing\UrlGenerator`契約へ追加されました](https://github.com/laravel/framework/pull/25616)。このインターフェイスを実装している場合は、メソッドを追加してください。
 
-#### `Illuminate/Routing/UrlGenerator`の`cachedSchema`プロパティ
+#### `Illuminate\Routing\UrlGenerator`の`cachedSchema`プロパティ
+
 
 **影響の可能性： とても低い**
 
-Laravel`5.7`で非推奨になっていた、`Illuminate/Routing/UrlGenerator`の`$cachedSchema`プロパティ名が、`$cachedScheme`へ[変更されました](https://github.com/laravel/framework/pull/26728)。
+Laravel`5.7`で非推奨になっていた、`Illuminate\Routing\UrlGenerator`の`$cachedSchema`プロパティ名が、`$cachedScheme`へ[変更されました](https://github.com/laravel/framework/pull/26728)。
 
 <a name="sessions"></a>
 ### セッション

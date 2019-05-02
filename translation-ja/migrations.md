@@ -247,6 +247,7 @@ Laravelの`Schema`[ファサード](/docs/{{version}}/facades)は、テーブル
 `$table->point('position');`  |  POINTカラム
 `$table->polygon('positions');`  |  POLYGONカラム
 `$table->rememberToken();`  |  VARCHAR(100)でNULL値可能な`remember_token`を追加
+`$table->set('flavors', ['strawberry', 'vanilla']);`  |  SETカラム
 `$table->smallIncrements('id');`  |  符号なしSMALLINTを使用した自動増分ID（主キー）
 `$table->smallInteger('votes');`  |  SMALLINTカラム
 `$table->softDeletes();`  |  ソフトデリートのためにNULL値可能な`deleted_at` TIMESTAMPカラム追加

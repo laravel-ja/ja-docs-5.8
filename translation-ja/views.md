@@ -79,23 +79,23 @@
     class AppServiceProvider extends ServiceProvider
     {
         /**
-         * アプリケーションサービスの初期処理
-         *
-         * @return void
-         */
-        public function boot()
-        {
-            View::share('key', 'value');
-        }
-
-        /**
-         * サービスプロバイダ登録
+         * 全アプリケーションサービスの登録
          *
          * @return void
          */
         public function register()
         {
             //
+        }
+
+        /**
+         * 全アプリケーションサービスの初期起動
+         *
+         * @return void
+         */
+        public function boot()
+        {
+            View::share('key', 'value');
         }
     }
 
@@ -116,7 +116,17 @@
     class ViewServiceProvider extends ServiceProvider
     {
         /**
-         * コンテナ結合の登録
+         * 全アプリケーションサービスの登録
+         *
+         * @return void
+         */
+        public function register()
+        {
+            //
+        }
+
+        /**
+         * 全アプリケーションサービスの初期起動
          *
          * @return void
          */
@@ -131,16 +141,6 @@
             View::composer('dashboard', function ($view) {
                 //
             });
-        }
-
-        /**
-         * サービスプロバイダ登録
-         *
-         * @return void
-         */
-        public function register()
-        {
-            //
         }
     }
 

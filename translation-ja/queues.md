@@ -690,7 +690,7 @@ Supervisorの詳細情報は、[Supervisorドキュメント](http://supervisord
     class AppServiceProvider extends ServiceProvider
     {
         /**
-         * サービスプロバイダの登録
+         * 全アプリケーションサービスの登録
          *
          * @return void
          */
@@ -768,6 +768,16 @@ Eloquentモデルをジョブで取り扱う場合は自動的に、キューに
     class AppServiceProvider extends ServiceProvider
     {
         /**
+         * 全アプリケーションサービスの登録
+         *
+         * @return void
+         */
+        public function register()
+        {
+            //
+        }
+
+        /**
          * 全アプリケーションサービスの初期処理
          *
          * @return void
@@ -785,16 +795,6 @@ Eloquentモデルをジョブで取り扱う場合は自動的に、キューに
                 // $event->job
                 // $event->job->payload()
             });
-        }
-
-        /**
-         * サービスプロバイダの登録
-         *
-         * @return void
-         */
-        public function register()
-        {
-            //
         }
     }
 

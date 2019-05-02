@@ -16,6 +16,7 @@
     - [トークンのリクエスト](#requesting-password-grant-tokens)
     - [全スコープの要求](#requesting-all-scopes)
     - [ユーザー名フィールドのカスタマイズ](#customizing-the-username-field)
+    - [パスワードバリデーションのカスタマイズ](#customizing-the-password-validation)
 - [暗黙のグラントトークン](#implicit-grant-tokens)
 - [クライアント認証情報グラントトークン](#client-credentials-grant-tokens)
 - [パーソナルアクセストークン](#personal-access-tokens)
@@ -473,6 +474,36 @@ OAuth2のパスワードグラントはモバイルアプリケーションの�
         public function findForPassport($username)
         {
             return $this->where('username', $username)->first();
+        }
+    }
+
+<a name="customizing-the-password-validation"></a>
+### パスワードバリデーションのカスタマイズ
+
+パスワードガードを使用して認証している場合、Passportは指定されたパスワードを確認するためにモデルの`password`属性を使用します。もし、`password`属性を持っていないか、パスワードのバリデーションロジックをカスタマイズしたい場合は、モデルの`validateForPassportPasswordGrant`メソッドを定義してください。
+
+    <?php
+
+    namespace App;
+
+    use Laravel\Passport\HasApiTokens;
+    use Illuminate\Support\Facades\Hash;
+    use Illuminate\Notifications\Notifiable;
+    use Illuminate\Foundation\Auth\User as Authenticatable;
+
+    class User extends Authenticatable
+    {
+        use HasApiTokens, Notifiable;
+
+        /**
+        * Passportパスワードグラントのために、ユーザーのパスワードをバリデート
+        *
+        * @param  string $password
+        * @return bool
+        */
+        public function validateForPassportPasswordGrant($password)
+        {
+            return Hash::check($password, $user->password);
         }
     }
 

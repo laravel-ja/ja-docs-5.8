@@ -379,7 +379,17 @@ Laravelにカスタムキャッシュドライバを登録するには、`Cache`
     class CacheServiceProvider extends ServiceProvider
     {
         /**
-         * サービス起動後の登録処理
+         * コンテナ結合の登録
+         *
+         * @return void
+         */
+        public function register()
+        {
+            //
+        }
+
+        /**
+         * 全アプリケーションサービスの初期起動
          *
          * @return void
          */
@@ -388,16 +398,6 @@ Laravelにカスタムキャッシュドライバを登録するには、`Cache`
             Cache::extend('mongo', function ($app) {
                 return Cache::repository(new MongoStore);
             });
-        }
-
-        /**
-         * コンテナへ結合を登録
-         *
-         * @return void
-         */
-        public function register()
-        {
-            //
         }
     }
 

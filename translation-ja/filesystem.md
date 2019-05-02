@@ -408,7 +408,17 @@ LaravelのFlysystem統合には、最初から様々な「ドライバ」が含�
     class DropboxServiceProvider extends ServiceProvider
     {
         /**
-         * サービスの初期処理登録後に実行
+         * コンテナ結合の登録
+         *
+         * @return void
+         */
+        public function register()
+        {
+            //
+        }
+
+        /**
+         * 全アプリケーションサービスの初期起動
          *
          * @return void
          */
@@ -421,16 +431,6 @@ LaravelのFlysystem統合には、最初から様々な「ドライバ」が含�
 
                 return new Filesystem(new DropboxAdapter($client));
             });
-        }
-
-        /**
-         * コンテナで結合の登録
-         *
-         * @return void
-         */
-        public function register()
-        {
-            //
         }
     }
 

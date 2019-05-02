@@ -165,7 +165,7 @@ Laravelは遅延サービスプロバイダが提示した全サービスのリ�
     class RiakServiceProvider extends ServiceProvider implements DeferrableProvider
     {
         /**
-         * サービスプロバイダの登録
+         * 全アプリケーションサービスの登録
          *
          * @return void
          */

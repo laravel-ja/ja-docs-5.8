@@ -33,115 +33,103 @@
 <a name="available-methods"></a>
 ## 使用できるメソッド
 
-### ベースのコレクション
+全Eloquentコレクションはベースの[Laravelコレクション](/docs/{{version}}/collections#available-methods)オブジェクトを拡張しており、そのためにベースコレクションクラスが提供しているパワフルなメソッドを全部継承しています。
 
-全Eloquentコレクションはベースの[Laravelコレクション](/docs/{{version}}/collections)オブジェクトを拡張しており、そのためにベースコレクションクラスが提供しているパワフルなメソッドを全部継承しています。
+さらに、`Illuminate\Database\Eloquent\Collection`クラスは、モデルコレクションを管理するのに役立つメソッドのスーパーセットを提供しています。ほとんどのメソッドは`Illuminate\Database\Eloquent\Collection`インスタンスを返しますが、いくつかのメソッドは`Illuminate\Support\Collection`インスタンスを返します。
 
-<style>
-    #collection-method-list > p {
-        column-count: 3; -moz-column-count: 3; -webkit-column-count: 3;
-        column-gap: 2em; -moz-column-gap: 2em; -webkit-column-gap: 2em;
-    }
+#### `contains($key, $operator = null, $value = null)`
 
-    #collection-method-list a {
-        display: block;
-    }
-</style>
+`contains`メソッドは、指定したモデルインスタンスがコレクションに含まれるかを判定します。このメソッドは主キーかモデルインスタンスを引数に取ります。
 
-<div id="collection-method-list" markdown="1">
+    $users->contains(1);
 
-[all](/docs/{{version}}/collections#method-all)
-[average](/docs/{{version}}/collections#method-average)
-[avg](/docs/{{version}}/collections#method-avg)
-[chunk](/docs/{{version}}/collections#method-chunk)
-[collapse](/docs/{{version}}/collections#method-collapse)
-[combine](/docs/{{version}}/collections#method-combine)
-[concat](/docs/{{version}}/collections#method-concat)
-[contains](/docs/{{version}}/collections#method-contains)
-[containsStrict](/docs/{{version}}/collections#method-containsstrict)
-[count](/docs/{{version}}/collections#method-count)
-[crossJoin](/docs/{{version}}/collections#method-crossjoin)
-[dd](/docs/{{version}}/collections#method-dd)
-[diff](/docs/{{version}}/collections#method-diff)
-[diffKeys](/docs/{{version}}/collections#method-diffkeys)
-[dump](/docs/{{version}}/collections#method-dump)
-[each](/docs/{{version}}/collections#method-each)
-[eachSpread](/docs/{{version}}/collections#method-eachspread)
-[every](/docs/{{version}}/collections#method-every)
-[except](/docs/{{version}}/collections#method-except)
-[filter](/docs/{{version}}/collections#method-filter)
-[first](/docs/{{version}}/collections#method-first)
-[flatMap](/docs/{{version}}/collections#method-flatmap)
-[flatten](/docs/{{version}}/collections#method-flatten)
-[flip](/docs/{{version}}/collections#method-flip)
-[forget](/docs/{{version}}/collections#method-forget)
-[forPage](/docs/{{version}}/collections#method-forpage)
-[get](/docs/{{version}}/collections#method-get)
-[groupBy](/docs/{{version}}/collections#method-groupby)
-[has](/docs/{{version}}/collections#method-has)
-[implode](/docs/{{version}}/collections#method-implode)
-[intersect](/docs/{{version}}/collections#method-intersect)
-[isEmpty](/docs/{{version}}/collections#method-isempty)
-[isNotEmpty](/docs/{{version}}/collections#method-isnotempty)
-[keyBy](/docs/{{version}}/collections#method-keyby)
-[keys](/docs/{{version}}/collections#method-keys)
-[last](/docs/{{version}}/collections#method-last)
-[map](/docs/{{version}}/collections#method-map)
-[mapInto](/docs/{{version}}/collections#method-mapinto)
-[mapSpread](/docs/{{version}}/collections#method-mapspread)
-[mapToGroups](/docs/{{version}}/collections#method-maptogroups)
-[mapWithKeys](/docs/{{version}}/collections#method-mapwithkeys)
-[max](/docs/{{version}}/collections#method-max)
-[median](/docs/{{version}}/collections#method-median)
-[merge](/docs/{{version}}/collections#method-merge)
-[min](/docs/{{version}}/collections#method-min)
-[mode](/docs/{{version}}/collections#method-mode)
-[nth](/docs/{{version}}/collections#method-nth)
-[only](/docs/{{version}}/collections#method-only)
-[pad](/docs/{{version}}/collections#method-pad)
-[partition](/docs/{{version}}/collections#method-partition)
-[pipe](/docs/{{version}}/collections#method-pipe)
-[pluck](/docs/{{version}}/collections#method-pluck)
-[pop](/docs/{{version}}/collections#method-pop)
-[prepend](/docs/{{version}}/collections#method-prepend)
-[pull](/docs/{{version}}/collections#method-pull)
-[push](/docs/{{version}}/collections#method-push)
-[put](/docs/{{version}}/collections#method-put)
-[random](/docs/{{version}}/collections#method-random)
-[reduce](/docs/{{version}}/collections#method-reduce)
-[reject](/docs/{{version}}/collections#method-reject)
-[reverse](/docs/{{version}}/collections#method-reverse)
-[search](/docs/{{version}}/collections#method-search)
-[shift](/docs/{{version}}/collections#method-shift)
-[shuffle](/docs/{{version}}/collections#method-shuffle)
-[slice](/docs/{{version}}/collections#method-slice)
-[some](/docs/{{version}}/collections#method-some)
-[sort](/docs/{{version}}/collections#method-sort)
-[sortBy](/docs/{{version}}/collections#method-sortby)
-[sortByDesc](/docs/{{version}}/collections#method-sortbydesc)
-[splice](/docs/{{version}}/collections#method-splice)
-[split](/docs/{{version}}/collections#method-split)
-[sum](/docs/{{version}}/collections#method-sum)
-[take](/docs/{{version}}/collections#method-take)
-[tap](/docs/{{version}}/collections#method-tap)
-[toArray](/docs/{{version}}/collections#method-toarray)
-[toJson](/docs/{{version}}/collections#method-tojson)
-[transform](/docs/{{version}}/collections#method-transform)
-[union](/docs/{{version}}/collections#method-union)
-[unique](/docs/{{version}}/collections#method-unique)
-[uniqueStrict](/docs/{{version}}/collections#method-uniquestrict)
-[unless](/docs/{{version}}/collections#method-unless)
-[values](/docs/{{version}}/collections#method-values)
-[when](/docs/{{version}}/collections#method-when)
-[where](/docs/{{version}}/collections#method-where)
-[whereStrict](/docs/{{version}}/collections#method-wherestrict)
-[whereIn](/docs/{{version}}/collections#method-wherein)
-[whereInStrict](/docs/{{version}}/collections#method-whereinstrict)
-[whereNotIn](/docs/{{version}}/collections#method-wherenotin)
-[whereNotInStrict](/docs/{{version}}/collections#method-wherenotinstrict)
-[zip](/docs/{{version}}/collections#method-zip)
+    $users->contains(User::find(1));
 
-</div>
+#### `diff($items)`
+
+`diff`メソッドは、指定したコレクション中に存在しないモデルをすべて返します。
+
+    use App\User;
+
+    $users = $users->diff(User::whereIn('id', [1, 2, 3])->get());
+
+#### `except($keys)`
+
+`except`メソッドは、指定した主キーを持たないモデルをすべて返します。
+
+    $users = $users->except([1, 2, 3]);
+
+#### `find($key)` {#collection-method .first-collection-method}
+
+`find`メソッドは、指定した主キーのモデルを見つけます。`$key`がモデルインスタンスの場合、`find`はその主キーと一致するモデルを返そうとします。`$key`がキーの配列の場合は`whereIn()`を使用して、`$key`と一致するモデルをすべて返します。
+
+    $users = User::all();
+
+    $user = $users->find(1);
+
+#### `fresh($with = [])`
+
+`fresh`メソッドは、コレクション中の各モデルのインスタンスをデータベースから取得します。更に、指定されたリレーションをEagerロードします。
+
+    $users = $users->fresh();
+
+    $users = $users->fresh('comments');
+
+#### `intersect($items)`
+
+`intersect`メソッドは指定したコレクション中にも存在する、すべてのモデルを返します。
+
+    use App\User;
+
+    $users = $users->intersect(User::whereIn('id', [1, 2, 3])->get());
+
+#### `load($relations)`
+
+`load`メソッドは指定したリレーションをコレクションの全モデルに対してEagerロードします。
+
+    $users->load('comments', 'posts');
+
+    $users->load('comments.author');
+
+#### `loadMissing($relations)`
+
+`loadMissing`メソッドは、リレーションがまだロードされていない場合、指定したリレーションをコレクションのすべてのモデルに対してEagerロードします。
+
+    $users->loadMissing('comments', 'posts');
+
+    $users->loadMissing('comments.author');
+
+#### `modelKeys`
+
+`modelKeys`メソッドは、コレクションの全モデルの主キーを返します。
+
+    $users->modelKeys();
+
+    // [1, 2, 3, 4, 5]
+
+#### `makeVisible($attributes)`
+
+`makeVisible`メソッドはコレクション中の各モデルの、通常「隠されている(hidden)」属性を可視化(Visible)にします。
+
+    $users = $users->makeVisible(['address', 'phone_number']);
+
+#### `makeHidden($attributes)`
+
+ `makeHidden`メソッドはコレクション中の各モデルの、通常「可視化(Visible)されている」属性を可視化隠し(hidden)ます。
+
+    $users = $users->makeHidden(['address', 'phone_number']);
+
+#### `only($keys)`
+
+`only`メソッドは、指定した主キーを持つモデルを全て返します。
+
+    $users = $users->only([1, 2, 3]);
+
+#### `unique($key = null, $strict = false)`
+
+`unique`メソッドは、コレクション中のユニークなモデルをすべて返します。コレクション中の同じタイプで同じ主キーを持つモデルは削除されます。
+
+    $users = $users->unique();
 
 <a name="custom-collections"></a>
 ## カスタムコレクション

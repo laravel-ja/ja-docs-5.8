@@ -877,7 +877,7 @@ Eloquentイベントの定義とマップができたら、[イベントリス�
     class AppServiceProvider extends ServiceProvider
     {
         /**
-         * サービスプロバイダーの登録
+         * 全アプリケーションサービスの登録
          *
          * @return void
          */
