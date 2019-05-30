@@ -194,17 +194,21 @@ JavaScriptの変数を初期化するために、配列をビューに渡してJ
         var app = <?php echo json_encode($array); ?>;
     </script>
 
-その際、`json_encode`を使う代わりに、`@json`ディレクティブを使うことができます。
+その際、`json_encode`を使う代わりに、`@json`ディレクティブを使うことができます。`@json`ディレクティブは、PHPの`json_encode`関数と同じ引数を受けます。
 
     <script>
         var app = @json($array);
+
+        var app = @json($array, JSON_PRETTY_PRINT);
     </script>
+
+> {note} 既存の変数をJSONとしてレンダするには、`@json`ディレクティブだけを使用してください。正規表現ベースのBladeテンプレートに、複雑な正規表現をディレクティブで渡すと、予期しない不良動作の原因になります。
 
 `@json`ディレクティブは、Vueコンポーネントや`data-*`属性を生成するのにも便利に使えます。
 
     <example-component :some-prop='@json($array)'></example-component>
 
-> {note} Using `@json` in element attributes requires that it be surrounded by single quotes.
+> {note} 要素の属性の中で`@json`を使用する場合は、シングルコーテーションで囲みます。
 
 #### HTMLエンティティエンコーディング
 
@@ -480,7 +484,7 @@ HTMLフォームでは、`PUT`、`PATCH`、`DELETE`リクエストを作成で�
 
     <label for="title">Post Title</label>
 
-    <input type="text" class="@error('title') is-invalid @enderror">
+    <input id="title" type="text" class="@error('title') is-invalid @enderror">
 
     @error('title')
         <div class="alert alert-danger">{{ $message }}</div>

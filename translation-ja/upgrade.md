@@ -11,6 +11,7 @@
 - [環境変数のパース](#environment-variable-parsing)
 - [Markdownファイルのディレクトリ変更](#markdown-file-directory-change)
 - [Nexmo／Slack通知チャンネル](#nexmo-slack-notification-channels)
+- [新しいデフォルトパスワード長](#new-default-password-length)
 </div>
 
 <a name="medium-impact-changes"></a>
@@ -83,11 +84,14 @@ Laravel5.8を使用する場合は、明確なパラメータとして`route`ヘ
 
 そのため、独自の`password.reset`ルートを定義している場合、`{token}`パラメータを確実にURIへ含めてください。
 
+<a name="new-default-password-length"></a>
 #### 新しいデフォルトパスワード長
 
-**影響の可能性： 低い**
+**影響の可能性： 高い**
 
-パスワードの選択とリセット時に要求されるパスワード長が、[最低８文字へ変更されました](https://github.com/laravel/framework/pull/25957)。
+パスワードの選択とリセット時に要求されるパスワード長が、[８文字へ変更されました](https://github.com/laravel/framework/pull/25957)。この新しい８文字長のデフォルトに合うように、アプリケーション中のバリデーションルールやロジックを変更してください。
+
+以前の６文字長を保持する、もしくは他の長さへ変更する必要がある場合は、`Illuminate\Auth\Passwords\PasswordBroker`クラスを拡張し、`validatePasswordWithDefaults`メソッドをオーバーライドし、カスタムロジックを組み込んでください。
 
 <a name="cache"></a>
 ### キャッシュ

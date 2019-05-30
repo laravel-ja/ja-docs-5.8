@@ -142,7 +142,7 @@ VirtualBox/VMwareとVagrantをインストールし終えたら、`laravel/homes
     cd ~/Homestead
 
     // クローンしたいリリースバージョン
-    git checkout v8.3.1
+    git checkout v8.4.0
 
 Homesteadリポジトリをクローンしたら、`Homestead.yaml`設定ファイルを生成するために、`bash init.sh`コマンドをHomesteadディレクトリで実行します。
 
@@ -660,6 +660,10 @@ Homesteadをカスタマイズすると、Ubuntuはパッケージのオリジ�
         -o Dpkg::Options::="--force-confold" \
         install your-package
 
+### ユーザによるカスタマイズ
+
+チームの設定でHomesteadを使用している場合でも、自分の個人的な開発スタイルに合うようにHomesteadを調整したくなることでしょう。`Homestead.yaml`が含まれるHomesteadのルートディレクトリに、`user-customizations.sh`を作成してください。このファイルの中で、好きなようにカスタマイズを行なってください。ただし、この`user-customizations.sh`はバージョンコントロールに含めてはいけません。
+
 <a name="updating-homestead"></a>
 ## Homesteadの更新
 
@@ -671,7 +675,7 @@ Homesteadをカスタマイズすると、Ubuntuはパッケージのオリジ�
 
     git fetch
 
-    git checkout v8.2.0
+    git checkout v8.4.0
 
 上記のコマンドにより、最新のHomesteadコードがGitHubリポジトリよりpullされ、最新のタグをフェッチし、タグ付けされた最新のリリースをチェックアウトします。安定リリースバージョンの最新版は、[GitHubリリースページ](https://github.com/laravel/homestead/releases)で見つけてください。
 

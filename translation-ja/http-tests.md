@@ -2,6 +2,7 @@
 
 - [イントロダクション](#introduction)
     - [リクエストヘッダのカスタマイズ](#customizing-request-headers)
+    - [レスポンスのデバッグ](#debugging-responses)
 - [セッション／認証](#session-and-authentication)
 - [JSON APIのテスト](#testing-json-apis)
 - [ファイルアップロードのテスト](#testing-file-uploads)
@@ -68,6 +69,36 @@ Laravelはアプリケーションに対するHTTPリクエストを作成し、
     }
 
 > {tip} テスト実行時、CSRFミドルウェアは自動的に無効になります。
+
+<a name="debugging-responses"></a>
+### レスポンスのデバッグ
+
+アプリケーションへ送るテストリクエストを作成し終えたら、レスポンスの内容を確認し、デバッグするために`dump`と`dumpHeaders`メソッドが使用できます。
+
+    <?php
+
+    namespace Tests\Feature;
+
+    use Tests\TestCase;
+    use Illuminate\Foundation\Testing\RefreshDatabase;
+    use Illuminate\Foundation\Testing\WithoutMiddleware;
+
+    class ExampleTest extends TestCase
+    {
+        /**
+         * 基本的なテスト例
+         *
+         * @return void
+         */
+        public function testBasicTest()
+        {
+            $response = $this->get('/');
+
+            $response->dumpHeaders();
+
+            $response->dump();
+        }
+    }
 
 <a name="session-and-authentication"></a>
 ## セッション／認証

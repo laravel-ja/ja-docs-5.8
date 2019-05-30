@@ -79,6 +79,24 @@ Laravelアプリケーションに含まれている`EventServiceProvider`は、
 
 `EventServiceProvider`の`$listen`配列へ、自分でイベントとリスナを登録する代わりに、自動的にイベントを検出させることができます。イベントディスカバリを有効にすると、Laravelはアプリケーションの`Listeners`ディレクトリをスキャンし、自動的にイベントとリスナを見つけ出して登録します。さらに、`EventServiceProvider`で明示的に定義されたイベントリストも今まで通りに登録します。
 
+Laravelはリフレクションを使いリスナクラスをスキャンし、イベントリスナを見つけます。Laravelは`handle`で始まるイベントリスナクラスメソッドを見つけると、そのメソッド引数のタイプヒントで示すイベントに対する、イベントリスナとしてメソッドを登録します。
+
+    use App\Events\PodcastProcessed;
+
+    class SendPodcastProcessedNotification
+    {
+        /**
+         * 指定イベントの処理
+         *
+         * @param  \App\Events\PodcastProcessed
+         * @return void
+         */
+        public function handle(PodcastProcessed $event)
+        {
+            //
+        }
+    }
+
 イベントディスカバリはデフォルトで無効になっています。アプリケーションの`EventServiceProvider`にある`shouldDiscoverEvents`をオーバーライドすることで、有効にできます。
 
     /**

@@ -68,16 +68,16 @@ First, require the Cashier package for Stripe with Composer:
 
 Before using Cashier, we'll also need to [prepare the database](/docs/{{version}}/migrations). We need to add several columns to your `users` table and create a new `subscriptions` table to hold all of our customer's subscriptions:
 
-    Schema::table('users', function ($table) {
+    Schema::table('users', function (Blueprint $table) {
         $table->string('stripe_id')->nullable()->collation('utf8mb4_bin');
         $table->string('card_brand')->nullable();
         $table->string('card_last_four', 4)->nullable();
         $table->timestamp('trial_ends_at')->nullable();
     });
 
-    Schema::create('subscriptions', function ($table) {
-        $table->increments('id');
-        $table->unsignedInteger('user_id');
+    Schema::create('subscriptions', function (Blueprint $table) {
+        $table->bigIncrements('id');
+        $table->unsignedBigInteger('user_id');
         $table->string('name');
         $table->string('stripe_id')->collation('utf8mb4_bin');
         $table->string('stripe_plan');

@@ -164,7 +164,7 @@ HTTPリクエストに「ネスト」したパラメーターが含まれてい�
 
     <label for="title">Post Title</label>
 
-    <input type="text" class="@error('title') is-invalid @enderror">
+    <input id="title" type="text" class="@error('title') is-invalid @enderror">
 
     @error('title')
         <div class="alert alert-danger">{{ $message }}</div>
@@ -560,6 +560,7 @@ Laravelは`TrimStrings`と`ConvertEmptyStringsToNull`ミドルウェアをアプ
 [寸法(画像ファイル)](#rule-dimensions)
 [別々](#rule-distinct)
 [メールアドレス](#rule-email)
+[文字列終了](#rule-ends-with)
 [存在（データベース）](#rule-exists)
 [ファイル](#rule-file)
 [充満](#rule-filled)
@@ -743,6 +744,11 @@ _ratio_制約は、横／縦比を表します。`3/2`という指定も、`1.5`
 #### email
 
 フィールドがメールアドレスとして正しいことをバリデートします。
+
+<a name="rule-ends-with"></a>
+#### ends_with:_foo_,_bar_,...
+
+フィールドの値が、指定された値で終わることをバリデートします。
 
 <a name="rule-exists"></a>
 #### exists:_テーブル_,_カラム_

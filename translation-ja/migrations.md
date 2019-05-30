@@ -355,6 +355,7 @@ Laravelの`Schema`[ファサード](/docs/{{version}}/facades)は、テーブル
 
 コマンド  |  説明
 -------  |  -----------
+`$table->dropMorphs('morphable');`  |  `morphable_id`と`morphable_type`カラムのドロップ
 `$table->dropRememberToken();`  |  `remember_token`カラムのドロップ
 `$table->dropSoftDeletes();`  |  `deleted_at`カラムのドロップ
 `$table->dropSoftDeletesTz();`  |  `dropSoftDeletes()`メソッドの別名

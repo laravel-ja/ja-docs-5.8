@@ -14,6 +14,7 @@
     - [受信者のカスタマイズ](#customizing-the-recipient)
     - [件名のカスタマイズ](#customizing-the-subject)
     - [テンプレートのカスタマイズ](#customizing-the-templates)
+    - [メール通知のプレビュー](#previewing-mail-notifications)
 - [Markdownメール通知](#markdown-mail-notifications)
     - [メッセージ生成](#generating-the-message)
     - [メッセージ記述](#writing-the-message)
@@ -307,6 +308,18 @@ Laravelの各通知は、（通常、`app/Notifications`ディレクトリに設
 通知パッケージのリソースを公開（開発者が変更できる場所にリソースを用意することを示すLaravel用語）することにより、メール通知で使用されるHTMLと平文テキストのテンプレートを変更することが可能です。次のコマンドを実行した後、メール通知のテンプレートは`resources/views/vendor/notifications`ディレクトリ下に作成されます。
 
     php artisan vendor:publish --tag=laravel-notifications
+
+<a name="previewing-mail-notifications"></a>
+### メール通知のプレビュー
+
+メール通知テンプレートをデザインしている時に、通常のBladeテンプレートのようにブラウザでメールメッセージをレンダし、素早くプレビューできると便利です。そのため、Laravelはルートのクロージャやコントローラから直接メール通知を返すことにより、メールメッセージを生成できます。`MailMessage`が返されるとレンダされ、ブラウザーへ表示されます。実際のメールアドレスへ送信することなく、デザインが素早くプレビュできます。
+
+    Route::get('mail', function () {
+        $invoice = App\Invoice::find(1);
+
+        return (new App\Notifications\InvoicePaid($invoice))
+                    ->toMail($invoice->user);
+    });
 
 <a name="markdown-mail-notifications"></a>
 ## Markdownメール通知

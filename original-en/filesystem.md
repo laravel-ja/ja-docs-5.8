@@ -190,6 +190,14 @@ For files stored using the `s3` or `rackspace` driver, you may create a temporar
         'file.jpg', now()->addMinutes(5)
     );
 
+If you need to specify additional [S3 request parameters](https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectGET.html#RESTObjectGET-requests), you may pass the array of request parameters as the third argument to the `temporaryUrl` method:
+
+    $url = Storage::temporaryUrl(
+        'file.jpg', 
+        now()->addMinutes(5), 
+        ['ResponseContentType' => 'application/octet-stream'],
+    );
+
 #### Local URL Host Customization
 
 If you would like to pre-define the host for files stored on a disk using the `local` driver, you may add a `url` option to the disk's configuration array:

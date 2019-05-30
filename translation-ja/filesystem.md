@@ -190,6 +190,14 @@ Laravelのファイルシステム統合はRackspaceでも動作します。し�
         'file.jpg', now()->addMinutes(5)
     );
 
+追加の[S3リクエストパラメータ](https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectGET.html#RESTObjectGET-requests)を指定する必要がある場合は、`temporaryUrl`メソッドの第３引数へリクエストパラメータの配列を渡してください。
+
+    $url = Storage::temporaryUrl(
+        'file.jpg',
+        now()->addMinutes(5),
+        ['ResponseContentType' => 'application/octet-stream'],
+    );
+
 #### ローカルURLホストカスタマイズ
 
 `local`ドライバを使用し、ディスク上に保存されるファイルのホストを事前定義したい場合は、ディスク設定配列へ`url`オプションを追加してください。

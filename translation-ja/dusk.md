@@ -2,6 +2,7 @@
 
 - [イントロダクション](#introduction)
 - [インストール](#installation)
+    - [ChromeDriverインストールの管理](#managing-chromedriver-installations)
     - [他ブラウザの使用](#using-other-browsers)
 - [利用の開始](#getting-started)
     - [テストの生成](#generating-tests)
@@ -66,6 +67,20 @@ Duskパッケージをインストールし終えたら、`dusk:install` Artisan
 `dusk`コマンドで最後に実行したテストが失敗した場合、`dusk:fails`コマンドを使用し、失敗したテストを再実行することにより、時間を節約できます。
 
     php artisan dusk:fails
+
+<a name="managing-chromedriver-installations"></a>
+### ChromeDriverインストールの管理
+
+Laravel Duskにデフォルトで含まれるChromeDriverとは別のバージョンをインストールしたい場合は、`dusk:chrome-driver`コマンドが使用できます。
+
+    # OSに合う、最新バージョンのChromeDriverのインストール
+    php artisan dusk:chrome-driver
+
+    # OSに合う、指定バージョンのChromeDriverのインストール
+    php artisan dusk:chrome-driver 74
+
+    # 全OSをサポートしている、指定バージョンのChromeDriverのインストール
+    php artisan dusk:chrome-driver --all
 
 > {note} Dusk実行には、実行可能な`chromedriver`バイナリが必要です。Dusk実行時に問題がある場合は、このバイナリを実行可能に確実にするために、`chmod -R 0755 vendor/laravel/dusk/bin`コマンドを実行してみてください。
 

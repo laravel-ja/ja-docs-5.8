@@ -181,7 +181,7 @@ Envoyは各タスク実行後の、[Slack](https://slack.com)への通知もサ�
 <a name="discord"></a>
 ### Discord
 
-Envoyは各タスク終了後に、[Discord](https://discord.com)へ通知を送ることもサポートしています。`@discord`ディレクティブはDiscordフックURLとメッセージを引数に取ります。WebフックURLはServer Settingsで"Webhook"を作成すると取得できます。Webフックをどのチャンネルへ送るのかを選んでください。WebフックURL全体を`@discord`ディレクティブへ渡してください。
+Envoyは各タスク実行後の、[Discord](https://discord.com)への通知もサポートしています。`@discord`ディレクティブは、DiscordフックURLとメッセージを引数に取ります。Server Settingで"Webhook"を作成し、どのチャンネルにポストするのかを選べば、WebフックURLが取得できます。WebフックURL全体を`@discode`ディレクティブへ渡してください。
 
     @finished
         @discord('discord-webhook-url')

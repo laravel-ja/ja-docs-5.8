@@ -86,7 +86,49 @@ Eloquent ORMはLaravelに含まれている、美しくシンプルなアクテ�
 
 Eloquentは更にテーブルの主キーが`id`というカラム名であると想定しています。この規約をオーバーライドする場合は、protectedの`primaryKey`プロパティを定義してください。
 
-さらに、Eloquentは主キーを自動増分される整数値であるとも想定しています。つまり、デフォルト状態で主キーは自動的に`int`へキャストされます。自動増分ではない、もしくは整数値ではない主キーを使う場合、モデルにpublicの`$incrementing`プロパティを用意し、`false`をセットしてください。主キーが整数でない場合は、モデルのprotectedの`$keyType`プロパティへ`string`値を設定してください。
+    <?php
+
+    namespace App;
+
+    use Illuminate\Database\Eloquent\Model;
+
+    class Flight extends Model
+    {
+        /**
+         * テーブルの主キー
+         *
+         * @var string
+         */
+        protected $primaryKey = 'flight_id';
+    }
+
+さらに、Eloquentは主キーを自動増分される整数値であるとも想定しています。つまり、デフォルト状態で主キーは自動的に`int`へキャストされます。自動増分ではない、もしくは整数値ではない主キーを使う場合、モデルにpublicの`$incrementing`プロパティを用意し、`false`をセットしてください。
+
+    <?php
+
+    class Flight extends Model
+    {
+        /**
+         * IDが自動増分されるか
+         *
+         * @var bool
+         */
+        public $incrementing = false;
+    }
+
+主キーが整数でない場合は、モデルのprotectedの`$keyType`プロパティへ`string`値を設定してください。
+
+    <?php
+
+    class Flight extends Model
+    {
+        /**
+         * 自動増分IDの「タイプ」
+         *
+         * @var string
+         */
+        protected $keyType = 'string';
+    }
 
 #### タイムスタンプ
 
@@ -354,7 +396,7 @@ Eloquentの`all`メソッドはモデルテーブルの全レコードを結果�
 
 `update`メソッドは更新したいカラムと値の配列を受け取ります。
 
-> {note} Eloquentの複数モデル更新を行う場合、更新モデルに対する`saved`と`updated`モデルイベントは発行されません。その理由は複数モデル更新を行う時、実際にモデルが取得されるわけではないからです。
+> {note} Eloquentの複数モデル更新を行う場合、更新モデルに対する`saving`、`saved`、`updating`、`updated`モデルイベントは発行されません。その理由は複数モデル更新を行う時、実際にモデルが取得されるわけではないからです。
 
 <a name="mass-assignment"></a>
 ### 複数代入

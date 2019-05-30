@@ -74,7 +74,7 @@ CashierをBraintreeで使用する前に、`plan-credit`ディスカウントを
 
 Cashierを使用する前に、[データベースを準備](/docs/{{version}}/migrations)する必要があります。`users`テーブルに、いくつかのカラムを追加し、顧客のサブスクリプション情報すべてを保持する新しい`subscriptions`テーブルを作成します。
 
-    Schema::table('users', function ($table) {
+    Schema::table('users', function (Blueprint $table) {
         $table->string('braintree_id')->nullable();
         $table->string('paypal_email')->nullable();
         $table->string('card_brand')->nullable();
@@ -82,7 +82,7 @@ Cashierを使用する前に、[データベースを準備](/docs/{{version}}/m
         $table->timestamp('trial_ends_at')->nullable();
     });
 
-    Schema::create('subscriptions', function ($table) {
+    Schema::create('subscriptions', function (Blueprint $table) {
         $table->increments('id');
         $table->unsignedInteger('user_id');
         $table->string('name');

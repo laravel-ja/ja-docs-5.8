@@ -351,6 +351,22 @@ Redisキューを使用する場合、ワーカのループの繰り返しとRed
                   ->onConnection('sqs')
                   ->onQueue('processing');
 
+もしくは、ジョブクラスの`connection`プロパティとして指定してください。
+
+    <?php
+
+    namespace App\Jobs;
+
+    class ProcessPodcast implements ShouldQueue
+    {
+        /**
+         * このジョブを処理するキュー接続
+         *
+         * @var string
+         */
+        public $connection = 'sqs';
+    }
+
 <a name="max-job-attempts-and-timeout"></a>
 ### 最大試行回数／タイムアウト値の指定
 

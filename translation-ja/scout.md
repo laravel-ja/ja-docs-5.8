@@ -339,10 +339,10 @@ Scoutは検索クエリに対して"WHERE"節を単に追加する方法も提�
 この設定オプションを`true`にすると、Scoutは検索インデックスからソフトデリートされたモデルを削除しません。代わりに、インデックスされたレコードへ、隠し`__soft_deleted`属性をセットします。これにより、検索時にソフトデリート済みレコードを取得するために、`withTrashed`や`onlyTrashed`メソッドがつかえます。
 
     // 結果の取得時に、削除済みレコードも含める
-    $orders = App\Order::withTrashed()->search('Star Trek')->get();
+    $orders = App\Order::search('Star Trek')->withTrashed()->get();
 
     // 結果の取得時に、削除済みレコードのみを対象とする
-    $orders = App\Order::onlyTrashed()->search('Star Trek')->get();
+    $orders = App\Order::search('Star Trek')->onlyTrashed()->get();
 
 > {tip} ソフトデリートされたモデルが、`forceDelete`により完全に削除されると、Scoutは自動的に検索インデックスから削除します。
 

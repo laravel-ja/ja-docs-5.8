@@ -68,16 +68,16 @@ Laravel Cashierは[Stripe](https://stripe.com)によるサブスクリプショ�
 
 Cashierを使用する前に、[データベースを準備](/docs/{{version}}/migrations)する必要があります。`users`テーブルに、いくつかのカラムを追加し、顧客のサブスクリプション情報すべてを保持する新しい`subscriptions`テーブルを作成します。
 
-    Schema::table('users', function ($table) {
+    Schema::table('users', function (Blueprint $table) {
         $table->string('stripe_id')->nullable()->collation('utf8mb4_bin');
         $table->string('card_brand')->nullable();
         $table->string('card_last_four', 4)->nullable();
         $table->timestamp('trial_ends_at')->nullable();
     });
 
-    Schema::create('subscriptions', function ($table) {
-        $table->increments('id');
-        $table->unsignedInteger('user_id');
+    Schema::create('subscriptions', function (Blueprint $table) {
+        $table->bigIncrements('id');
+        $table->unsignedBigInteger('user_id');
         $table->string('name');
         $table->string('stripe_id')->collation('utf8mb4_bin');
         $table->string('stripe_plan');

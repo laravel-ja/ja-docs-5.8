@@ -20,6 +20,7 @@
     - [増減分](#increment-and-decrement)
 - [DELETE](#deletes)
 - [排他的ロック](#pessimistic-locking)
+- [デバッグ](#debugging)
 
 <a name="introduction"></a>
 ## イントロダクション
@@ -184,7 +185,7 @@ LaravelクエリビルダはアプリケーションをSQLインジェクショ�
                          ->groupBy('status')
                          ->get();
 
-> {note} rowメソッドはクエリを文字列として挿入するため、SQLインジェクションの脆弱性を生まないように十分気をつけてください。
+> {note} rawメソッドはクエリを文字列として挿入するため、SQLインジェクションの脆弱性を生まないように十分気をつけてください。
 
 <a name="raw-methods"></a>
 ### rawメソッド
@@ -707,3 +708,12 @@ JSONカラムを更新する場合は、JSONオブジェクト中の適切なキ
 もしくは`lockForUpdate`メソッドが使えます。占有ロックをかけることで、レコードを更新したりSELECTするために他の共有ロックが行われるのを防ぎます。
 
     DB::table('users')->where('votes', '>', 100)->lockForUpdate()->get();
+
+<a name="debugging"></a>
+## デバッグ
+
+クエリを組み立てる時に、クエリの結合とSQLをダンプするために、`dd`と`dump`メソッドが使用できます。`dd`メソッドはデバッグ情報を出力し、リクエストの実行を中断します。`dump`メソッドはデバッグ情報を出力しますが、リクエストは継続して実行されます。
+
+    DB::table('users')->where('votes', '>', 100)->dd();
+
+    DB::table('users')->where('votes', '>', 100)->dump();

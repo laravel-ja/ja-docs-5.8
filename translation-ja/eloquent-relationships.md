@@ -391,6 +391,8 @@ Eloquentは、`Comment`モデルに対する外部キーを自動的に決める
         }
     }
 
+> **注意：** ピボットモデルでは、`SoftDeletes`トレイトを使わないほうが良いでしょう。ピボットレコードのソフト削除が必要な場合は、ピボットモデルを実際のEloquentモデルに変換することを考えてください。
+
 #### カスタム中間テーブルとIDの増分
 
 カスタム中間テーブルを使用し、他対多リレーションを定義しており、その中間テーブルが自動増加する主キーを持つ場合、カスタム中間テーブルクラスの`incrementing`プロパティを`true`にセットしてください。
@@ -828,6 +830,30 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 すべての[クエリビルダ](/docs/{{version}}/queries)メソッドをリレーションで使用することも可能です。ですから、提供している全メソッドを学ぶために、クエリビルダのドキュメントを研究してください。
 
+#### リレーションに`orWhere`を続ける
+
+前記の例では、リレーションのクエリ時に制約を自由に追加できることをデモンストレーションしました。しかし、`orWhere`節はリレーション制約として、同じレベルの論理グループにしてしまうため、使用には注意が必要です。
+
+    $user->posts()
+            ->where('active', 1)
+            ->orWhere('votes', '>=', 100)
+            ->get();
+
+    // select * from posts
+    // where user_id = ? and active = 1 or votes >= 100
+
+多くの状況では、カッコに挟まれた条件チェックの論理グループにするために、[制約グループ](/docs/{{version}}/queries#parameter-grouping)を使うほうが目的に叶うでしょう。
+
+    $user->posts()
+            ->where(function ($query) {
+                return $query->where('active', 1)
+                             ->orWhere('votes', '>=', 100);
+            })
+            ->get();
+
+    // select * from posts
+    // where user_id = ? and (active = 1 or votes >= 100)
+
 <a name="relationship-methods-vs-dynamic-properties"></a>
 ### リレーションメソッド 対 動的プロパティ
 
@@ -931,7 +957,7 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 `select`文に`withCount`を組み合わせる場合は、`select`文の後で`withCount`を呼び出してください。
 
-    $posts = App\Post::select(['title', 'body'])->withCount('comments');
+    $posts = App\Post::select(['title', 'body'])->withCount('comments')->get();
 
     echo $posts[0]->title;
     echo $posts[0]->body;

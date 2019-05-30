@@ -184,6 +184,11 @@ Passportを実働サーバへ最初にデプロイするとき、`passport:keys`
         Passport::loadKeysFrom('/secret-keys/oauth');
     }
 
+更に、環境変数からキーをロードすることもできます。
+
+    PASSPORT_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\n<private key here>\n-----END RSA PRIVATE KEY-----"
+    PASSPORT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\n<public key here>\n-----END PUBLIC KEY-----\n"
+
 <a name="configuration"></a>
 ## 設定
 
