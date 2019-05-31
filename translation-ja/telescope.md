@@ -9,6 +9,7 @@
 - [フィルタリング](#filtering)
     - [エンティティ](#filtering-entries)
     - [バッチ](#filtering-batches)
+- [タグ付け](#tagging)
 - [利用可能なワッチャー](#available-watchers)
     - [Cacheワッチャー](#cache-watcher)
     - [Commandワッチャー](#command-watcher)
@@ -180,6 +181,31 @@ Telescopeはデフォルトで、ダッシュボードを`/telescope`で表示�
                 });
         });
     }
+
+<a name="tagging"></a>
+## タグ付け
+
+Telescopeでは「タグ」により検索を登録できます。タグはEloquentモデルクラス名や認証済みユーザーのIDが多いでしょうが、Telescopeは自動的にエントリーを登録します。まれに、独自のカスタムタグエントリーを追加する必要も起きるでしょう。その場合は、`Telescope::tags`メソッドを使用してください。`tags`メソッドはタグの配列を返すコールバックを引数に取ります。コールバックから返されたタグは、Telescopeが自動的にエントリーに追加したタグとマージされます。`tags`メソッドは、`TelescopeServiceProvider`の中で呼び出してください。
+
+    use Laravel\Telescope\Telescope;
+
+    /**
+     * 全アプリケーションサービスの登録
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->hideSensitiveRequestDetails();
+
+        Telescope::tags(function (IncomingEntry $entry) {
+            if ($entry->type === 'request') {
+                return ['status:'.$entry->content['response_status']];
+            }
+
+            return [];
+        });
+     }
 
 <a name="available-watchers"></a>
 ## 利用可能なワッチャー
