@@ -81,6 +81,7 @@ Laravelは様々な、グローバル「ヘルパ」PHP関数を用意してい�
 [Str::before](#method-str-before)
 [Str::camel](#method-camel-case)
 [Str::contains](#method-str-contains)
+[Str::containsAll](#method-str-contains-all)
 [Str::endsWith](#method-ends-with)
 [Str::finish](#method-str-finish)
 [Str::is](#method-str-is)
@@ -864,6 +865,17 @@ NULL値を指定すると、空の配列が返ってきます。
     use Illuminate\Support\Str;
 
     $contains = Str::contains('This is my name', ['my', 'foo']);
+
+    // true
+
+<a name="method-str-contains-all"></a>
+#### `Str::containsAll()` {#collection-method}
+
+`Str::containsAll`メソッドは、指定した配列の値をすべて文字列が含んでいるか調べます。
+
+    use Illuminate\Support\Str;
+
+    $containsAll = Str::containsAll('This is my name', ['my', 'name']);
 
     // true
 

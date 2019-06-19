@@ -423,9 +423,9 @@ LaravelはJSON APIとレスポンスをテストする数多くのヘルパを�
 <a name="assert-json-validation-errors"></a>
 #### assertJsonValidationErrors
 
-レスポンスが指定したキーの、指定したJSONバリデーションエラーを持っていることを宣言。
+レスポンスが指定したJSONバリデーションエラーを持っていることを宣言。
 
-    $response->assertJsonValidationErrors($keys);
+    $response->assertJsonValidationErrors(array $data);
 
 <a name="assert-location"></a>
 #### assertLocation

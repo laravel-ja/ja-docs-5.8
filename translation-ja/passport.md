@@ -358,6 +358,27 @@ JSON APIは`web`と`auth`ミドルウェアにより保護されています。�
 
     php artisan vendor:publish --tag=passport-views
 
+ファーストパーティクライアントにより認可中のように、認可プロンプトをとばしたい場合もあり得ます。クライアントモデルへ`skipsAuthorization`メソッドを定義することで実現できます。`skipsAuthorization`がクライアントは認証されるとして`true`を返すと、そのユーザーをすぐに`redirect_uri`へリダイレクトで戻します。
+
+    <?php
+
+    namespace App\Models\Passport;
+
+    use Laravel\Passport\Client as BaseClient;
+
+    class Client extends BaseClient
+    {
+        /**
+         * クライアントが認可プロンプトを飛ばすべきか決める
+         *
+         * @return bool
+         */
+        public function skipsAuthorization()
+        {
+            return $this->first_party;
+        }
+    }
+
 #### 許可コードからアクセストークンへの変換
 
 ユーザーが許可リクエストを承認したら、API使用側アプリケーションへリダイレクトされます。使用側はあなたのアプリケーションへ、アクセストークンをリクエストするため、`POST`リクエストを送信する必要があります。そのリクエストには、ユーザーが許可リクエストを承認した時にあなたのアプリケーションが発行した、許可コードを含める必要があります。この例として、Guzzle HTTPライブラリで`POST`リクエストを作成してみましょう。
@@ -508,7 +529,7 @@ OAuth2のパスワードグラントはモバイルアプリケーションの�
         */
         public function validateForPassportPasswordGrant($password)
         {
-            return Hash::check($password, $user->password);
+            return Hash::check($password, $this->password);
         }
     }
 

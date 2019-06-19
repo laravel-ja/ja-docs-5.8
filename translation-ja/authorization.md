@@ -393,6 +393,18 @@ Laravelアプリケーションに含まれる`User`モデルは、アクショ�
         }
     }
 
+次のコントローラメソッドが、対応するポリシーメソッドにマップされます。
+
+| コントローラメソッド | ポリシーメソッド |
+| --- | --- |
+| index | viewAny |
+| show | view |
+| create | create |
+| store | create |
+| edit | update |
+| update | update |
+| destroy | delete |
+
 > {tip} 指定するモデルのポリシークラスを手っ取り早く生成するには、`--model`オプションを付け`make:policy`コマンドを実行します。`php artisan make:policy --model=Post`
 
 <a name="via-blade-templates"></a>

@@ -251,6 +251,8 @@ Laravelのコマンドスケジューラは、Laravel自身の中でコマンド
              ->daily()
              ->runInBackground();
 
+> {note} `runInBackground`メソッドは`command`か`exec`メソッドにより、タスクをスケジュールするときにのみ使用してください。
+
 <a name="maintenance-mode"></a>
 ### メンテナンスモード
 
@@ -280,13 +282,13 @@ Laravelスケジューラはスケジュールしたタスクが生成する出�
              ->sendOutputTo($filePath)
              ->emailOutputTo('foo@example.com');
 
-コマンド失敗時に出力をメール送信したい場合は、`emailOnFailure`メソッドを使用します。
+コマンド失敗時に出力をメール送信したい場合は、`emailOutputOnFailure`メソッドを使用します。
 
     $schedule->command('foo')
              ->daily()
-             ->emailOnFailure('foo@example.com');
+             ->emailOutputOnFailure('foo@example.com');
 
-> {note} `emailOutputTo`、 `emailOnFailure`、`sendOutputTo`、`appendOutputTo`メソッドは、`command`と`exec`メソッドに対してどれか一つしか指定できません。
+> {note} `emailOutputTo`、 `emailOutputOnFailure`、`sendOutputTo`、`appendOutputTo`メソッドは、`command`と`exec`メソッドに対してどれか一つしか指定できません。
 
 <a name="task-hooks"></a>
 ## タスクフック

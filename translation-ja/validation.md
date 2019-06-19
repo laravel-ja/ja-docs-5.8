@@ -25,6 +25,7 @@
     - [ルールオブジェクトの使用](#using-rule-objects)
     - [クロージャの使用](#using-closures)
     - [拡張の使用](#using-extensions)
+    - [暗黙の拡張](#implicit-extensions)
 
 <a name="introduction"></a>
 ## イントロダクション
@@ -333,9 +334,9 @@ Laravelは`TrimStrings`と`ConvertEmptyStringsToNull`ミドルウェアをアプ
 
     namespace App\Http\Controllers;
 
-    use Validator;
     use Illuminate\Http\Request;
     use App\Http\Controllers\Controller;
+    use Illuminate\Support\Facades\Validator;
 
     class PostController extends Controller
     {
@@ -1296,7 +1297,8 @@ Laravelは様々な便利なバリデーションルールを提供していま�
         });
     }
 
-#### 暗黙の拡張
+<a name="implicit-extensions"></a>
+### 暗黙の拡張
 
 バリデートする属性が存在していない場合か空文字列の場合、カスタム拡張したものも含め通常のバリデーションルールは実行されません。たとえば[`unique`](#rule-unique)ルールは`null`値に対して実行されません。
 
@@ -1313,3 +1315,7 @@ Laravelは様々な便利なバリデーションルールを提供していま�
     });
 
 > {note} 「暗黙の」拡張は、単にその属性が必須であると**ほのめかしている**だけです。属性が存在しない場合や空のときに、実際にバリデーションを失敗と判断するかどうかは、みなさん次第です。
+
+#### 暗黙のルールオブジェクト
+
+属性が空の場合にルールオブジェクトを実行したい場合は、`Illuminate\Contracts\Validation\ImplicitRule`インターフェイスを実装してください。このインターフェイスはバリデータの「マーカー（目印）インターフェイス」として動作します。そのため、実装する必要のあるメソッドは含んでいません。

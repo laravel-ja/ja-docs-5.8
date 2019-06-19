@@ -141,8 +141,8 @@ VirtualBox/VMwareとVagrantをインストールし終えたら、`laravel/homes
 
     cd ~/Homestead
 
-    // クローンしたいリリースバージョン
-    git checkout v8.4.0
+    // 安定した「リリース」ブランチのチェックアウト
+    git checkout release
 
 Homesteadリポジトリをクローンしたら、`Homestead.yaml`設定ファイルを生成するために、`bash init.sh`コマンドをHomesteadディレクトリで実行します。
 
@@ -675,7 +675,7 @@ Homesteadをカスタマイズすると、Ubuntuはパッケージのオリジ�
 
     git fetch
 
-    git checkout v8.4.0
+    git pull origin release
 
 上記のコマンドにより、最新のHomesteadコードがGitHubリポジトリよりpullされ、最新のタグをフェッチし、タグ付けされた最新のリリースをチェックアウトします。安定リリースバージョンの最新版は、[GitHubリリースページ](https://github.com/laravel/homestead/releases)で見つけてください。
 

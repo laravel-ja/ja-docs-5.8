@@ -25,6 +25,12 @@ JSONでAPIを作成する場合にはモデルとリレーションを配列やJ
 
     return $user->toArray();
 
+モデルの属性のみを配列へ変換する場合は、`attributesToArray`メソッドを使います。
+
+    $user = App\User::first();
+
+    return $user->attributesToArray();
+
 モデルの[コレクション](/docs/{{version}}/eloquent-collections)を配列に変換することもできます。
 
     $users = App\User::all();

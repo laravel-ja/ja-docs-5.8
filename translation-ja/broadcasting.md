@@ -40,7 +40,7 @@
 <a name="configuration"></a>
 ### 設定
 
-イベントブロードキャストの設定オプションは、すべて`config/broadcasting.php`設定ファイルの中にあります。Laravelはドライバをいくつか準備しています。[Pusher](https://pusher.com)や[Redis](/docs/{{version}}/redis)、それにローカルの開発とデバッグのための`log`ドライバがあります。さらにブロードキャストを完全に無効にするための、`null`ドライバも用意しています。`config/broadcasting.php`設定ファイルに、各ドライバの設定例が含まれています。
+イベントブロードキャストの設定オプションは、すべて`config/broadcasting.php`設定ファイルの中にあります。Laravelはドライバをいくつか準備しています。[Pusherチャンネル](https://pusher.com/channels)や[Redis](/docs/{{version}}/redis)、それにローカルの開発とデバッグのための`log`ドライバがあります。さらにブロードキャストを完全に無効にするための、`null`ドライバも用意しています。`config/broadcasting.php`設定ファイルに、各ドライバの設定例が含まれています。
 
 #### ブロードキャストサービスプロバイダ
 
@@ -55,20 +55,20 @@
 <a name="driver-prerequisites"></a>
 ### ドライバ要求
 
-#### Pusher
+#### Pusherチャンネル
 
-イベントを[Pusher](https://pusher.com)によりブロードキャストする場合、Composerパッケージマネージャを使い、Pusher PHP SDKをインストールする必要があります。
+イベントを[Pusherチャンネル](https://pusher.com/channels)によりブロードキャストする場合、Composerパッケージマネージャを使い、PusherチャンネルPHP SDKをインストールする必要があります。
 
     composer require pusher/pusher-php-server "~3.0"
 
-次に、Pusherの認証情報を`config/broadcasting.php`設定ファイル中で設定する必要があります。Pusherの設定例はこのファイルに含まれ、Pusherキーと秘密キー、アプリケーションIDを簡単に指定できます。`config/broadcasting.php`ファイルの`pusher`設定では、Pusherでサポートされているクラスタなど、追加のオプション（`options`）も設定可能です。
+次に、チャンネルの認証情報を`config/broadcasting.php`設定ファイル中で設定する必要があります。Pusherチャンネルの設定例はこのファイルに含まれ、チャンネルキーと秘密キー、アプリケーションIDを簡単に指定できます。`config/broadcasting.php`ファイルの`pusher`設定では、チャンネルでサポートされているクラスタなど、追加のオプション（`options`）も設定可能です。
 
     'options' => [
         'cluster' => 'eu',
-        'encrypted' => true
+        'useTLS' => true
     ],
 
-Pusherと[Laravel Echo](#installing-laravel-echo)を使用する場合、`resources/js/bootstrap.js`ファイルのEchoインスタンスをインスタンス化する時に、使用するブロードキャスタとして、`pusher`を指定する必要があります。
+チャンネルと[Laravel Echo](#installing-laravel-echo)を使用する場合、`resources/js/bootstrap.js`ファイルのEchoインスタンスをインスタンス化する時に、使用するブロードキャスタとして、`pusher`を指定する必要があります。
 
     import Echo from "laravel-echo";
 
@@ -76,7 +76,7 @@ Pusherと[Laravel Echo](#installing-laravel-echo)を使用する場合、`resour
 
     window.Echo = new Echo({
         broadcaster: 'pusher',
-        key: 'your-pusher-key'
+        key: 'your-pusher-channels-key'
     });
 
 #### Redis
@@ -115,14 +115,14 @@ RedisブロードキャスタとSocket.IOサーバをペアリングする場合
 <a name="concept-overview"></a>
 ## 概論
 
-Laravelのイベントブロードキャストは、サーバサイドのLaravelイベントから、WebSocketに対する駆動ベースのアプローチを使っている、あなたのクライアントサイドのJavaScriptアプリケーションへ、ブロードキャストできるようにします。現在、[Pusher](https://pusher.com)とRedisドライバーが用意されています。[Laravel Echo](#installing-laravel-echo) JavaScriptパッケージを使用したクライアントサイド上で、イベントは簡単に利用できます。
+Laravelのイベントブロードキャストは、サーバサイドのLaravelイベントから、WebSocketに対する駆動ベースのアプローチを使っている、あなたのクライアントサイドのJavaScriptアプリケーションへ、ブロードキャストできるようにします。現在、[Pusherチャンネル](https://pusher.com/channels)とRedisドライバーが用意されています。[Laravel Echo](#installing-laravel-echo) JavaScriptパッケージを使用したクライアントサイド上で、イベントは簡単に利用できます。
 
 パブリック、もしくはプライベートに指定された「チャンネル」上で、イベントはブロードキャストされます。アプリケーションの全訪問者は、認証も認可も必要ないパブリックチャンネルを購入できます。しかし、プライベートチャンネルを購入するためには、認証され、そのチャンネルをリッスンできる認可が必要です。
 
 <a name="using-example-application"></a>
 ### サンプルアプリケーションの使用
 
-イベントブロードキャストの各コンポーネントへ飛び込む前に、例としてeコマースショップを使い、ハイレベルな概念を把握しましょう。このドキュメント中の別のセクションで詳細を説明するため、[Pusher](http://pusher.com)と[Laravel Echo](#installing-laravel-echo)の設定についての詳細は省きます。
+イベントブロードキャストの各コンポーネントへ飛び込む前に、例としてeコマースショップを使い、ハイレベルな概念を把握しましょう。このドキュメント中の別のセクションで詳細を説明するため、[Pusherチャンネル](https://pusher.com/channels)と[Laravel Echo](#installing-laravel-echo)の設定についての詳細は省きます。
 
 このアプリケーションでは、ユーザーに注文の発送状態を確認してもらうビューページがあるとしましょう。さらに、アプリケーションが発送状態を変更すると、`ShippingStatusUpdated`イベントが発行されるとしましょう。
 
@@ -339,7 +339,7 @@ Laravelへイベントをブロードキャストすることを知らせるた�
 
     window.Echo = new Echo({
         broadcaster: 'pusher',
-        key: 'your-pusher-key',
+        key: 'your-pusher-channels-key',
         authEndpoint: '/custom/endpoint/auth'
     });
 
@@ -466,7 +466,7 @@ VueとAxiosを使用しない場合、JavaScriptアプリケーションで`X-So
 <a name="installing-laravel-echo"></a>
 ### Laravel Echoのインストール
 
-Laravel EchoはJavaScriptライブラリで、チャンネルの購読とLaravelによるイベントブロードキャストのリッスンを苦労なしに実現してくれます。EchoはNPMパッケージマネージャにより、インストールします。以降の例で、Pusherブロードキャストを使用する予定のため、`pusher-js`パッケージもインストールしています。
+Laravel EchoはJavaScriptライブラリで、チャンネルの購読とLaravelによるイベントブロードキャストのリッスンを苦労なしに実現してくれます。EchoはNPMパッケージマネージャにより、インストールします。以降の例で、Pusherチャンネルブロードキャストを使用する予定のため、`pusher-js`パッケージもインストールしています。
 
     npm install --save laravel-echo pusher-js
 
@@ -476,27 +476,27 @@ Echoがインストールできたら、アプリケーションのJavaScriptで
 
     window.Echo = new Echo({
         broadcaster: 'pusher',
-        key: 'your-pusher-key'
+        key: 'your-pusher-channels-key'
     });
 
-`pusher`コネクタを使うEchoインスタンスを作成するときには、`cluster`と同時に接続の暗号化を行うかどうかを指定することもできます。
+`pusher`コネクタを使うEchoインスタンスを作成するときには、`cluster`と同時にTLS接続を行うかどうかを指定することもできます。（デフォルトはTLS接続を使います。`forceTLS`が`false`の場合は非TLS接続設定です。非TLS接続設定では、そのページをHTTPでロードするか、TLS接続に失敗した時のフォールバックとしてHTTPで接続します。）
 
     window.Echo = new Echo({
         broadcaster: 'pusher',
-        key: 'your-pusher-key',
+        key: 'your-pusher-channels-key',
         cluster: 'eu',
-        encrypted: true
+        forceTLS: true
     });
 
 #### 既存クライアントインスタンスの利用
 
-Echoで使用したいPusherやSocket.ioクライアントを既に用意してあれば、`client`設定オプションによりEchoへ指定できます。
+Echoで使用したいPusherチャンネルやSocket.ioクライアントを既に用意してあれば、`client`設定オプションによりEchoへ指定できます。
 
     const client = require('pusher-js');
 
     window.Echo = new Echo({
         broadcaster: 'pusher',
-        key: 'your-pusher-key',
+        key: 'your-pusher-channels-key',
         client: client
     });
 
@@ -535,7 +535,7 @@ Echoで使用したいPusherやSocket.ioクライアントを既に用意して�
 
     window.Echo = new Echo({
         broadcaster: 'pusher',
-        key: 'your-pusher-key',
+        key: 'your-pusher-channels-key',
         namespace: 'App.Other.Namespace'
     });
 
@@ -616,7 +616,8 @@ Echoの`listen`メソッドにより、参加イベントをリッスンでき�
 <a name="client-events"></a>
 ## クライアントイベント
 
-> {tip} [Pusher](https://pusher.com)を使用する場合、クライアントイベントを送信するために、[application dashboard](https://dashboard.pusher.com/)の"App Settings"にある、"Client Events"オプションを有効にしてください。
+> {tip} [Pusherチャンネル](https://pusher.com/channels)を使用する場合、クライアントイベントを送信するた
+めに、[application dashboard](https://dashboard.pusher.com/)の"App Settings"にある、"Client Events"オプションを有効にしてください。
 
 Laravelアプリケーションに全く関係ないイベントを他の接続クライアントへブロードキャストしたい場合もあるでしょう。これは特にアプリケーションユーザーへ他のユーザーがキーボードをタイプしているメッセージをページで表示するための「タイプ中」通知のような場合に便利です。
 
