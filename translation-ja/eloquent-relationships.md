@@ -337,7 +337,7 @@ Eloquentは、`Comment`モデルに対する外部キーを自動的に決める
 
 リレーションの中間テーブルを表す、カスタムモデルを定義したい場合は、リレーション定義で`using`メソッドを呼び出します。カスタム多対多ピボットモデルは、`Illuminate\Database\Eloquent\Relations\Pivot`クラス、一方のカスタムポリモーフィック多対多ピボットモデルは、`Illuminate\Database\Eloquent\Relations\MorphPivot`クラスを拡張する必要があります。例として、カスタム`RoleUser`ピボットモデルを使用する、`Role`を定義してみましょう。
 
-    <?phpDefining Custom Intermediate Table Models
+    <?php
 
     namespace App;
 
