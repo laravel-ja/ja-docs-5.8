@@ -1658,6 +1658,12 @@ Str::singular`メソッドは複数形を単数形へ変換します。このメ
         'email' => $email,
     ]);
 
+クラスへ`tap`メソッドを追加するには、`Illuminate\Support\Traits\Tappable`トレイトをそのクラスへ追加してください。このトレイトの`tap`メソッドはクロージャだけを引数に受け取ります。オブジェクトインスタンス自身がクロージャに渡され、`tap`メソッドによりリターンされます。
+
+    return $user->tap(function ($user) {
+        //
+    });
+
 <a name="method-throw-if"></a>
 #### `throw_if()` {#collection-method}
 

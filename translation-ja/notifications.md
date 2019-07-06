@@ -504,7 +504,7 @@ Markdownメール通知ではBladeコンポーネントとMarkdown記法が利�
 <a name="formatting-broadcast-notifications"></a>
 ### ブロードキャスト通知のフォーマット
 
-`broadcast`チャンネルは、リアルタイムでJavaScriptクライアントが通知を補足できるようにする、Laravelの[イベントブロードキャスト](/docs/{{version}}/broadcasting)サービスを用い、通知をブロードキャストします。通知でブロードキャストをサポートする場合、通知クラスで`toBroadcast`メソッドを定義する必要があります。このメソッドは`$notifiable`エンティティを受け取り、プレーンなPHP配列を返す必要があります。返される配列はJSONへエンコードされ、JavaScriptクライアントへブロードキャストされます。`toBroadcast`メソッドの例を見てみましょう。
+`broadcast`チャンネルは、リアルタイムでJavaScriptクライアントが通知を補足できるようにする、Laravelの[イベントブロードキャスト](/docs/{{version}}/broadcasting)サービスを用い、通知をブロードキャストします。通知でブロードキャストをサポートする場合、通知クラスで`toBroadcast`メソッドを定義することができます。このメソッドは`$notifiable`エンティティを受け取り、`BroadcastMessage`インスタンスを返す必要があります。`toBroadcast`メソッドが存在しない場合は、ブロードキャストするデータをまとめるために`toArray`メソッドが使用されます。返されるデータはJSONへエンコードされ、JavaScriptクライアントへブロードキャストされます。`toBroadcast`メソッドの例を見てみましょう。
 
     use Illuminate\Notifications\Messages\BroadcastMessage;
 

@@ -59,7 +59,7 @@
 
 イベントを[Pusherチャンネル](https://pusher.com/channels)によりブロードキャストする場合、Composerパッケージマネージャを使い、PusherチャンネルPHP SDKをインストールする必要があります。
 
-    composer require pusher/pusher-php-server "~3.0"
+    composer require pusher/pusher-php-server "~4.0"
 
 次に、チャンネルの認証情報を`config/broadcasting.php`設定ファイル中で設定する必要があります。Pusherチャンネルの設定例はこのファイルに含まれ、チャンネルキーと秘密キー、アプリケーションIDを簡単に指定できます。`config/broadcasting.php`ファイルの`pusher`設定では、チャンネルでサポートされているクラスタなど、追加のオプション（`options`）も設定可能です。
 

@@ -256,6 +256,42 @@ Laravelはリフレクションを使いリスナクラスをスキャンし、�
         public $delay = 60;
     }
 
+#### 条件付きリスナのキュー投入
+
+あるデータが存在する場合のみ、実行時にリスナをキューすると判断する必要が起きる場合もあります。そのためには`shouldQueue`メソッドをリスナへ追加し、そのリスナがキューされ同期的に実行されるかどうかを決めます。
+
+    <?php
+
+    namespace App\Listeners;
+
+    use App\Events\OrderPlaced;
+    use Illuminate\Contracts\Queue\ShouldQueue;
+
+    class RewardGiftCard implements ShouldQueue
+    {
+        /**
+         * 顧客にギフトカードを贈る
+         *
+         * @param  \App\Events\OrderPlaced  $event
+         * @return void
+         */
+        public function handle(OrderPlaced $event)
+        {
+            //
+        }
+
+        /**
+         * リスナがキューされるかどうかを決める
+         *
+         * @param  \App\Events\OrderPlaced  $event
+         * @return bool
+         */
+        public function shouldQueue(OrderPlaced $event)
+        {
+            return $event->order->subtotal >= 5000;
+        }
+    }
+
 <a name="manually-accessing-the-queue"></a>
 ### キューへの任意アクセス
 

@@ -111,6 +111,12 @@ Bladeビューはグローバルな`view`ヘルパを使用し、ルートから
         <strong>Whoops!</strong> Something went wrong!
     @endcomponent
 
+そのコンポーネントへ利用する可能性があるビューの配列を指定し、存在する最初のビューをロードするようにLaravelへ指示するには、`componentFirst`ディレクティブを使用してください。
+
+    @componentFirst(['custom.alert', 'alert'])
+        <strong>Whoops!</strong> Something went wrong!
+    @endcomponent
+
 一つのコンポーネントに対し、複数のスロットを定義するのも、役立つことがあるでしょう。"title"を注入できるようにalertコンポーネントを改造してみましょう。名前付きスロットは、名前に一致する変数を"echo"します。
 
     <!-- /resources/views/alert.blade.php -->

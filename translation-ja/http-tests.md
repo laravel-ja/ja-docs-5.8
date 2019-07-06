@@ -294,6 +294,7 @@ LaravelはJSON APIとレスポンスをテストする数多くのヘルパを�
 [assertSessionMissing](#assert-session-missing)
 [assertStatus](#assert-status)
 [assertSuccessful](#assert-successful)
+[assertUnauthorized](#assert-unauthorized)
 [assertViewHas](#assert-view-has)
 [assertViewHasAll](#assert-view-has-all)
 [assertViewIs](#assert-view-is)
@@ -549,9 +550,16 @@ LaravelはJSON APIとレスポンスをテストする数多くのヘルパを�
 <a name="assert-successful"></a>
 #### assertSuccessful
 
-レスポンスが成功のステータスコードであることを宣言。
+レスポンスが成功(200)ステータスコードであることを宣言。
 
     $response->assertSuccessful();
+
+<a name="assert-unauthorized"></a>
+#### assertUnauthorized
+
+レスポンスがオーソライズされていない(401)ステータスコードであることを宣言。
+
+    $response->assertUnauthorized();
 
 <a name="assert-view-has"></a>
 #### assertViewHas

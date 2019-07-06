@@ -43,7 +43,7 @@
 
 Laravel Homestead（入植農地、「ホームステード」）はパッケージを事前に済ませた、Laravel公式の"box"で、PHPやWebサーバ、その他のサーバソフトウェアをローカルマシンにインストールする必要なく、素晴らしい開発環境を準備できます。オペレーティングシステムでごちゃごちゃになる心配はもうありません！　Vagrant boxは完全に使い捨てできます。何かの調子が悪くなれば壊して、数分のうちにそのboxを再生成できます！
 
-HomesteadはWindowsやMac、Linuxシステム上で実行でき、Nginx WebサーバとPHP7.3、PHP7.2、PHP7.1、MySQL、PostgreSQL、Redis、Memcached、Node、他にも素晴らしいLaravelアプリケーションを開発するために必要となるものすべてを含んでいます。
+HomesteadはWindowsやMac、Linuxシステム上で実行でき、NginxやPHP、MySQL、PostgreSQL、Redis、Memcached、Node、他にも素晴らしいLaravelアプリケーションを開発するために必要となるものすべてを含んでいます。
 
 > {note} Windowsを使用している場合は、ハードウェア仮想化(VT-x)を有効にする必要があります。通常、BIOSにより有効にできます。UEFI system上のHyper-Vを使用している場合は、VT-xへアクセスするため、さらにHyper-Vを無効にする必要があります。
 
@@ -64,6 +64,8 @@ HomesteadはWindowsやMac、Linuxシステム上で実行でき、Nginx Webサ�
 - PHP 7.3
 - PHP 7.2
 - PHP 7.1
+- PHP 7.0
+- PHP 5.6
 - Nginx
 - MySQL
 - lmmによるMySQLとMariaDBデータベーススナップショット
@@ -96,17 +98,29 @@ HomesteadはWindowsやMac、Linuxシステム上で実行でき、Nginx Webサ�
 
 <div id="software-list" markdown="1">
 - Apache
+- Blackfire
+- Cassandra
+- Chronograf
+- CouchDB
 - Crystal & Lucky Framework
+- Docker
 - Dot Net Core
 - Elasticsearch
+- Gearman
 - Go
+- Grafana
+- InfluxDB
 - MariaDB
+- MinIO
 - MongoDB
 - Neo4j
 - Oh My Zsh
-- Ruby & Rails
+- Open Resty
+- PM2
+- Python
+- RabbitMQ
+- Solr
 - Webdriver & Laravel Dusk Utilities
-- Zend Z-Ray
 </div>
 
 <a name="installation-and-setup"></a>
@@ -542,7 +556,7 @@ Minioを使用するために、`config/filesystems.php`設定ファイルの中
 <a name="multiple-php-versions"></a>
 ### 複数のPHPバージョン
 
-Homestead6から、同一仮想マシン上での複数PHPバージョンをサポートを開始しました。`Homestead.yaml`ファイルで、特定のサイトでどのバージョンのPHPを使用するのかを指定できます。利用できるPHPバージョンは、"7.1"、"7.2"、"7.3（デフォルト）"です。
+Homestead6から、同一仮想マシン上での複数PHPバージョンをサポートを開始しました。`Homestead.yaml`ファイルで、特定のサイトでどのバージョンのPHPを使用するのかを指定できます。利用できるPHPバージョンは、"5.6"、"7.0"、"7.1"、"7.2"、"7.3（デフォルト）"です。
 
     sites:
         - map: homestead.test
@@ -551,6 +565,8 @@ Homestead6から、同一仮想マシン上での複数PHPバージョンをサ�
 
 さらに、コマンドラインではサポート済みPHPバージョンをすべて利用できます。
 
+    php5.6 artisan list
+    php7.0 artisan list
     php7.1 artisan list
     php7.2 artisan list
     php7.3 artisan list

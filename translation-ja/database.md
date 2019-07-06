@@ -5,7 +5,7 @@
     - [Read／Write接続](#read-and-write-connections)
     - [複数接続の使用](#using-multiple-database-connections)
 - [SQLクエリの実行](#running-queries)
-    - [クエリイベントのリッスン](#listening-for-query-events)
+- [クエリイベントのリッスン](#listening-for-query-events)
 - [データベーストランザクション](#database-transactions)
 
 <a name="introduction"></a>
@@ -173,7 +173,7 @@ Read/Write接続を理解してもらうため、以下の例をご覧くださ�
     DB::statement('drop table users');
 
 <a name="listening-for-query-events"></a>
-### クエリイベントのリッスン
+## クエリイベントのリッスン
 
 アプリケーションで実行される各SQLクエリを取得したい場合は、`listen`メソッドが使用できます。このメソッドはクエリをログしたり、デバッグしたりするときに便利です。クエリリスナは[サービスプロバイダ](/docs/{{version}}/providers)の中で登録します。
 

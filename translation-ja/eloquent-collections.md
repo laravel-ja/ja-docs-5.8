@@ -99,7 +99,7 @@
 
     $users->loadMissing('comments.author');
 
-#### `modelKeys`
+#### `modelKeys()`
 
 `modelKeys`メソッドは、コレクションの全モデルの主キーを返します。
 

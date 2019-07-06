@@ -86,6 +86,7 @@
 [diffKeys](#method-diffkeys)
 [dump](#method-dump)
 [duplicates](#method-duplicates)
+[duplicatesStrict](#method-duplicatesstrict)
 [each](#method-each)
 [eachSpread](#method-eachspread)
 [every](#method-every)
@@ -509,7 +510,24 @@
 
     $collection->duplicates();
 
-    // [ 2 => 'a', 4 => 'b' ]
+    // [2 => 'a', 4 => 'b']
+
+コレクションが配列やオブジェクトを含む場合は、値の重複を調べたい属性のキーを渡せます。
+
+    $employees = collect([
+        ['email' => 'abigail@example.com', 'position' => 'Developer'],
+        ['email' => 'james@example.com', 'position' => 'Designer'],
+        ['email' => 'victoria@example.com', 'position' => 'Developer'],
+    ])
+
+    $employees->duplicates('position');
+
+    // [2 => 'Developer']
+
+<a name="method-duplicatesstrict"></a>
+#### `duplicatesStrict()` {#collection-method}
+
+このメソッドの使い方は[`duplicates`](#method-duplicates)メソッドと同じですが、すべての値に「厳密な」比較が行われます。
 
 <a name="method-each"></a>
 #### `each()` {#collection-method}

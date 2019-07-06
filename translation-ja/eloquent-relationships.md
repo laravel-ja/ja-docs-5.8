@@ -18,6 +18,7 @@
     - [リレーションメソッド 対 動的プロパティ](#relationship-methods-vs-dynamic-properties)
     - [存在するリレーションのクエリ](#querying-relationship-existence)
     - [存在しないリレーションのクエリ](#querying-relationship-absence)
+    - [ポリモーフィックリレーションのクエリ](#querying-polymorphic-relationships)
     - [関連するモデルのカウント](#counting-related-models)
 - [Eagerローディング](#eager-loading)
     - [制約Eager Loads](#constraining-eager-loads)
@@ -922,6 +923,44 @@ Eloquentリレーションは全てメソッドとして定義されているた
         $query->where('banned', 1);
     })->get();
 
+<a name="querying-polymorphic-relationships"></a>
+### ポリモーフィックリレーションのクエリ
+
+既存の`MorphTo`リレーションへクエリするには、`whereHasMorph`とこれに対応するメソッドを利用してください。
+
+    $comments = App\Comment::whereHasMorph(
+        'commentable',
+        ['App\Post', 'App\Video'],
+        function ($query) {
+            $query->where('title', 'like', 'foo%');
+        }
+    )->get();
+
+    $comments = App\Comment::doesntHaveMorph(
+        'commentable',
+        ['App\Post', 'App\Video']
+    )->get();
+
+関連するモデルに応じて異なった制約を追加するために、`$type`パラメータを使用できます。
+
+    $comments = App\Comment::whereHasMorph(
+        'commentable',
+        ['App\Post', 'App\Video'],
+        function ($query, $type) {
+            $query->where('title', 'like', 'foo%');
+
+            if ($type === 'App\Post') {
+                $query->orWhere('content', 'like', 'foo%');
+            }
+        }
+    )->get();
+
+ポリモーフィックモデルの配列を渡す代わりに`*`をワイルドカードとして指定でき、その場合はデータベースからすべてのポリモーフィックタイプをLaravelは取得します。
+
+    $comments = App\Comment::whereHasMorph('commentable', '*', function ($query) {
+        $query->where('title', 'like', 'foo%');
+    })->get();
+
 <a name="counting-related-models"></a>
 ### 関連するモデルのカウント
 
@@ -1020,6 +1059,38 @@ Eloquentリレーションは全てメソッドとして定義されているた
 ネストしたリレーションをEagerロードする場合は「ドット」記法が使用できます。例としてEloquent文で全著者と著者個人のコンタクトも全部Eagerロードしてみましょう。
 
     $books = App\Book::with('author.contacts')->get();
+
+#### `morphTo`リレーションのネストしたEagerロード
+
+リレーションにより返される様々なエンティティのリレーションがネストしている、`morphTo`リレーションをEagerロードしたい場合は、`with`メソッドを`morphTo`リレーションの`morphWith`メソッドと組み合わせて使用します。
+
+    <?php
+
+    use Illuminate\Database\Eloquent\Model;
+
+    class ActivityFeed extends Model
+    {
+        /**
+         * アクティビティフィードレコードの親を取得
+         */
+        public function parentable()
+        {
+            return $this->morphTo();
+        }
+    }
+
+この例の場合、`Event`、`Photo`、`Post`モデルで`ActivityFeed`モデルを構成していると仮定しましょう。さらに、`Event`モデルは`Calendar`モデルへ所属し、`Photo`モデルは`Tag`モデルと関連し、`Post`モデルは`Author`モデルへ所属しているとしましょう。
+
+このモデル定義とリレーションを使用して、`ActivityFeed`モデルインスタンスを取得し、全`parentable`モデルとそれぞれのネストしたリレーションをEagerロードできます。
+
+    $activities = ActivityFeed::query()
+        ->with(['parentable' => function ($morphTo) {
+            $morphTo->morphWith([
+                Event::class => ['calendar'],
+                Photo::class => ['tags'],
+                Post::class => ['author'],
+            ]);
+        }])->get();
 
 #### 特定カラムのEagerロード
 
