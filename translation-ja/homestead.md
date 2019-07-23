@@ -603,7 +603,7 @@ Homesteadは、デフォルトで`1025`ポートをリッスンする、Postfix�
 
 Homesteadは[Xdebug](https://xdebug.org)を使用するステップデバッグをサポートしています。例えば、ブラウザからWebページをロードし、実行中のコードのインスペクションと変更ができるようにPHPをIDEに接続します。
 
-To enable debugging, run the following commands inside your Vagrant box: デバッグを有効にするには、Vagrant Boxの中で以下のコマンドを実行してください。
+デバッグを有効にするには、Vagrant Boxの中で以下のコマンドを実行してください。
 
     sudo phpenmod xdebug
 
