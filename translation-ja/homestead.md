@@ -6,10 +6,7 @@
     - [Homestead設定](#configuring-homestead)
     - [Vagrant Boxの実行](#launching-the-vagrant-box)
     - [プロジェクトごとのインストール](#per-project-installation)
-    - [MariaDBのインストール](#installing-mariadb)
-    - [MongoDBのインストール](#installing-mongodb)
-    - [Elasticsearchのインストール](#installing-elasticsearch)
-    - [Neo4jのインストール](#installing-neo4j)
+    - [オプション機能のインストール](#installing-optional-features)
     - [エイリアス](#aliases)
 - [使用方法](#daily-usage)
     - [Homesteadへのグローバルアクセス](#accessing-homestead-globally)
@@ -30,6 +27,7 @@
 - [デバッグとプロファイリング](#debugging-and-profiling)
     - [XdebugによるWebリクエストのデバッグ](#debugging-web-requests)
     - [CLIアプリケーションのデバッグ](#debugging-cli-applications)
+    - [Blackfireによるアプリケーションプロファイリング](#profiling-applications-with-blackfire)
 - [ネットワークインターフェイス](#network-interfaces)
 - [Homesteadの拡張](#extending-homestead)
 - [Homesteadの更新](#updating-homestead)
@@ -104,7 +102,6 @@ HomesteadはWindowsやMac、Linuxシステム上で実行でき、NginxやPHP、
 - CouchDB
 - Crystal & Lucky Framework
 - Docker
-- Dot Net Core
 - Elasticsearch
 - Gearman
 - Go
@@ -113,6 +110,7 @@ HomesteadはWindowsやMac、Linuxシステム上で実行でき、NginxやPHP、
 - MariaDB
 - MinIO
 - MongoDB
+- MySQL 8
 - Neo4j
 - Oh My Zsh
 - Open Resty
@@ -129,7 +127,7 @@ HomesteadはWindowsやMac、Linuxシステム上で実行でき、NginxやPHP、
 <a name="first-steps"></a>
 ### 最初の段階
 
-Homestead環境を起動する前に[Vagrant](https://www.vagrantup.com/downloads.html)と共に、[VirtualBox](https://www.virtualbox.org/wiki/Downloads)か、[VMWare](https://www.vmware.com)、[Parallels](https://www.parallels.com/products/desktop/)、[Hyper-V](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v)をインストールする必要があります。全ソフトウェア共に簡単に使用できるビジュアルインストーラが、人気のあるオペレーティングシステム全てに用意されています。
+Homestead環境を起動する前に[Vagrant](https://www.vagrantup.com/downloads.html)と共に、[VirtualBox 6.x](https://www.virtualbox.org/wiki/Downloads)か、[VMWare](https://www.vmware.com)、[Parallels](https://www.parallels.com/products/desktop/)、[Hyper-V](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v)をインストールする必要があります。全ソフトウェア共に簡単に使用できるビジュアルインストーラが、人気のあるオペレーティングシステム全てに用意されています。
 
 VMwareプロバイダを使用するには、VMware Fusion/Workstationと[VMware Vagrantプラグイン](https://www.vagrantup.com/vmware)を購入する必要があります。無料ではありませんが、VMwareが提供する共有フォルダは最初からよりスピーディーです。
 
@@ -151,11 +149,10 @@ VirtualBox/VMwareとVagrantをインストールし終えたら、`laravel/homes
 
     git clone https://github.com/laravel/homestead.git ~/Homestead
 
-`master`ブランチは常に安定しているわけではないため、バージョンタグがついたHomesteadをチェックアウトすべきでしょう。最新の安定バージョンは、[GitHubのリリースページ](https://github.com/laravel/homestead/releases)で見つかります。
+`master`ブランチは常に安定しているわけではないため、バージョンタグがついたHomesteadをチェックアウトすべきでしょう。最新の安定バージョンは、[GitHubのリリースページ](https://github.com/laravel/homestead/releases)で見つかります。もしくは、常に最新の安定バージョンを用意している`release`ブランチをチェックアウトしてください。
 
     cd ~/Homestead
 
-    // 安定した「リリース」ブランチのチェックアウト
     git checkout release
 
 Homesteadリポジトリをクローンしたら、`Homestead.yaml`設定ファイルを生成するために、`bash init.sh`コマンドをHomesteadディレクトリで実行します。
@@ -180,23 +177,27 @@ Homesteadリポジトリをクローンしたら、`Homestead.yaml`設定ファ�
 `Homestead.yaml`ファイルの`folders`プロパティには、Homestead環境と共有したい全フォルダがリストされています。これらのフォルダの中のファイルが変更されると、ローカルマシンとHomestead環境との間で同期されます。必要なだけ共有フォルダを設定してください！
 
     folders:
-        - map: ~/code
-          to: /home/vagrant/code
+        - map: ~/code/project1
+          to: /home/vagrant/project1
 
-少数のサイトを作るだけなら、この包括的なマッピングは上手く動作します。しかし、多くのサイトが継続的に成長していくに連れ、パフォーマンスの問題が発生してきます。この問題はとても大きいファイルを含むローエンドのマシンやプロジェクトで、悲痛なほど顕著に現れます。この問題が起きたら、全プロジェクトを自身のVagrantフォルダにマップしてください。
+> {note} Windowsユーザーはパスを`~/`記法を使わず、代わりにたとえば`C:\Users\user\Code\project1`のように、プロジェクトのフルパスを使ってください。
+
+`~/code`フォルダーへ常に個別プロジェクトをマップする代わりに、個別にマップすべきでしょう。仮想マシンへあるフォルダーをマップすると、そのフォルダー中の**すべて**のファイルによるディスクＩＯをトラックし続けます。これにより、フォルダーの中に莫大なファイルが存在する場合に、パフォーマンスの問題が起きます。
 
     folders:
         - map: ~/code/project1
-          to: /home/vagrant/code/project1
+          to: /home/vagrant/project1
 
         - map: ~/code/project2
-          to: /home/vagrant/code/project2
+          to: /home/vagrant/project2
+
+> {note} Homesteadを使用する場合、`.`（カレントディレクトリ）をマウントしないでください。そうすると、Vagrantはカレントフォルダーを`/vagrant`へマップしない状況が起き、オプションの機能が壊れ、プロビジョン中に予期せぬ結果が起きます。
 
 [NFS](https://www.vagrantup.com/v2/synced-folders/nfs.html)を有効にするには、同期するフォルダにフラグを指定するだけです。
 
     folders:
-        - map: ~/code
-          to: /home/vagrant/code
+        - map: ~/code/project1
+          to: /home/vagrant/project1
           type: "nfs"
 
 > {note} Windows上でNFSを使用する場合は、[vagrant-winnfsd](https://github.com/winnfsd/vagrant-winnfsd)プラグインのインストールを考慮してください。このプラグインは、Homestead下のファイルとディレクトリのユーザー／グループパーミッションを正しく維持します。
@@ -204,8 +205,8 @@ Homesteadリポジトリをクローンしたら、`Homestead.yaml`設定ファ�
 さらに、Vagrantの[同期フォルダ](https://www.vagrantup.com/docs/synced-folders/basic_usage.html)でサポートされている任意のオプションを、`options`キーの下に列挙して渡すことができます。
 
     folders:
-        - map: ~/code
-          to: /home/vagrant/code
+        - map: ~/code/project1
+          to: /home/vagrant/project1
           type: "rsync"
           options:
               rsync__args: ["--verbose", "--archive", "--delete", "-zz"]
@@ -217,9 +218,11 @@ Nginxには詳しくない？　問題ありません。`sites`プロパティ�
 
     sites:
         - map: homestead.test
-          to: /home/vagrant/code/my-project/public
+          to: /home/vagrant/project1/public
 
 `sites`プロパティをHomestead boxのプロビジョニング後に変更した場合、仮想マシンのNginx設定を更新するため、`vagrant reload --provision`を再実行する必要があります。
+
+> {note} Homesteadのスクリプトは可能な限り冪等性を保つように組まれています。しかしながら、プロビジョニング中に問題が起きたら、`vagrant destroy && vagrant up`によりマシンを壊し、再構築してください。
 
 <a name="hostname-resolution"></a>
 #### ホスト名の解決
@@ -262,47 +265,56 @@ Windows:
 
 次に`vagrant up`コマンドを端末で実行し、ブラウザで`http://homestead.test`のプロジェクトへアクセスしてください。自動[ホスト名解決](#hostname-resolution)を使わない場合は、`/etc/hosts`ファイルに`homestead.test`か、自分で選んだドメインのエントリーを追加する必要があることを忘れないでください。
 
-<a name="installing-mariadb"></a>
-### MariaDBのインストール
+<a name="installing-optional-features"></a>
+### オプション機能のインストール
 
-MySQLの代わりにMariaDBを使用したい場合は、`mariadb`オプションを`Homestead.yaml`ファイルへ追加してください。このオプションはMySQLを削除し、MariaDBをインストールします。MariaDBはMySQLとそのまま置き換えられる代用ソフトウェアですので、`mysql`データベースドライバをそのままアプリケーションで使用できます。
+オプションのソフトウェアは、Homestead設定ファイルの"features"設定を用い、インストールします。ほとんどの機能は論理値により有効／無効を指定できます。いくつかの機能では複数のオプションができます。
 
-    box: laravel/homestead
-    ip: "192.168.10.10"
-    memory: 2048
-    cpus: 4
-    provider: virtualbox
-    mariadb: true
+    features:
+        - blackfire:
+            server_id: "server_id"
+            server_token: "server_value"
+            client_id: "client_id"
+            client_token: "client_value"
+        - cassandra: true
+        - chronograf: true
+        - couchdb: true
+        - crystal: true
+        - docker: true
+        - elasticsearch:
+            version: 7
+        - gearman: true
+        - golang: true
+        - grafana: true
+        - influxdb: true
+        - mariadb: true
+        - minio: true
+        - mongodb: true
+        - mysql8: true
+        - neo4j: true
+        - ohmyzsh: true
+        - openresty: true
+        - pm2: true
+        - python: true
+        - rabbitmq: true
+        - solr: true
+        - webdriver: true
 
-<a name="installing-mongodb"></a>
-### MongoDBのインストール
+#### MariaDB
 
-MongoDBのコミュニティエディションをインストールするには、以下のように`Homestead.yaml`ファイルを変更してください。
+MariaDBを有効にすると、MySQLを削除してMariaDBをインストールします。MariaDBはMySQLのそのまま置き換え可能な代替機能として動作します。そのため、アプリケーションのデータベース設定では、`mysql`データベースドライバをそのまま使ってください。
 
-    mongodb: true
+#### MongoDB
 
 デフォルト状態のMongoDBでは、データベースのユーザー名を`homestead`、パスワードを`secret`に設定します。
 
-<a name="installing-elasticsearch"></a>
-### Elasticsearchのインストール
+#### Elasticsearch
 
-Elasticsearchをインストールするには、`Homestead.yaml`ファイルへ`elasticsearch`オプションを追加し、メジャーバージョンか、major.minor.patch形式で厳密なバージョンを指定してください。デフォルトのインストールでは、`homestead`という名前のクラスタが作成されます。Elasticsearchにオペレーティングシステムのメモリの半分以上を割り当ててはいけません。つまり、Elasticsearchに割り当てる量の最低でも２倍以上のメモリをHomesteadマシンに割り当てます。
-
-    box: laravel/homestead
-    ip: "192.168.10.10"
-    memory: 4096
-    cpus: 4
-    provider: virtualbox
-    elasticsearch: 6
+デフォルトのインストールでは、`homestead`という名前のクラスタが作成されます。Elasticsearchにオペレーティングシステムのメモリの半分以上を割り当ててはいけません。つまり、Elasticsearchに割り当てる量の最低でも２倍以上のメモリをHomesteadマシンに割り当てます。
 
 > {tip} 設定のカスタマイズについては、[Elasticsearchのドキュメント](https://www.elastic.co/guide/en/elasticsearch/reference/current)を確認してください。
 
-<a name="installing-neo4j"></a>
-### Neo4jのインストール
-
-[Neo4j](https://neo4j.com/)はグラフデータベース管理システムです。Neo4jコミュニティエディションをインストールするには、`Homestead.yaml`で以下の設定オプションを指定してください。
-
-    neo4j: true
+#### Neo4j
 
 デフォルト状態のNeo4jでは、データベースのユーザー名を`homestead`、パスワードを`secret`として設定します。Neo4jブラウザにアクセスするには、Webブラウザで`http://homestead.test:7474`にアクセスしてください。Neo4jクライアントのために、`7687` (Bolt)、`7474` (HTTP)、`7473` (HTTPS)ポートが用意されています。
 
@@ -396,9 +408,9 @@ Homestead環境をプロビジョニングし、実働した後に、Laravelア�
 
     sites:
         - map: homestead.test
-          to: /home/vagrant/code/my-project/public
+          to: /home/vagrant/project1/public
         - map: another.test
-          to: /home/vagrant/code/another/public
+          to: /home/vagrant/project2/public
 
 Vagrantが"hosts"ファイルを自動的に管理しない場合は、新しいサイトを追加する必要があります。
 
@@ -414,7 +426,7 @@ Laravelベースではないプロジェクトも簡単に実行できるよう�
 
     sites:
         - map: symfony2.test
-          to: /home/vagrant/code/my-symfony-project/web
+          to: /home/vagrant/my-symfony-project/web
           type: "symfony2"
 
 指定できるサイトタイプは`apache`、`apigility`、`expressive`、`laravel`（デフォルト）、`proxy`、`silverstripe`、`statamic`、`symfony2`、`symfony4`、`zf`です。
@@ -426,7 +438,7 @@ Laravelベースではないプロジェクトも簡単に実行できるよう�
 
     sites:
         - map: homestead.test
-          to: /home/vagrant/code/my-project/public
+          to: /home/vagrant/project1/public
           params:
               - key: FOO
                 value: BAR
@@ -453,7 +465,7 @@ Homesteadサイトで`schedule:run`コマンドを実行したい場合は、サ
 
     sites:
         - map: homestead.test
-          to: /home/vagrant/code/my-project/public
+          to: /home/vagrant/project1/public
           schedule: true
 
 こうしたサイト用のCronジョブは、仮想マシンの`/etc/cron.d`フォルダの中に定義されます。
@@ -560,7 +572,7 @@ Homestead6から、同一仮想マシン上での複数PHPバージョンをサ�
 
     sites:
         - map: homestead.test
-          to: /home/vagrant/code/my-project/public
+          to: /home/vagrant/project1/public
           php: "7.1"
 
 さらに、コマンドラインではサポート済みPHPバージョンをすべて利用できます。
@@ -617,6 +629,24 @@ Webサーバーへのリクエストを生成する機能テストのデバッ�
     xdebug.remote_host = 192.168.10.1
     xdebug.remote_autostart = 1
 
+<a name="profiling-applications-with-blackfire"></a>
+### Blackfireによるアプリケーションプロファイリング
+
+[Blackfire](https://blackfire.io/docs/introduction)はWebリクエストとCLIアプリケーションのプロファイリングと、パフォーマンスアサーションの記述を提供するSaaSサービスです。プロファイルデーターをコールグラフとタイムラインで表示するユーザーインターフェイスを提供しています。エンドユーザーにオーバーヘッドをかけずに、開発／ステージング／実働環境で使用できるように構築されています。コードと`php.ini`に対するパフォーマンスと品質、安全性のチェックを提供しています。
+
+[Blackfire Player](https://blackfire.io/docs/player/index)はBlackfireでプロファイルシナリオを書くために使用する、オープンソースのWebクローリング／テスト／スクラッピングアプリケーションです。
+
+Blackfireを有効にするためには、Homestead設定ファイルの"features"設定を使います。
+
+    features:
+        - blackfire:
+            server_id: "server_id"
+            server_token: "server_value"
+            client_id: "client_id"
+            client_token: "client_value"
+
+Blackfireサーバー設定項目とクライアント設定項目には、[ユーザーアカウントが必要です](https://blackfire.io/signup)。BlackfireはCLIツールやブラウザー拡張を含んだ、アプリケーションのプロファイルに使用する様々なオプションを用意しています。[詳細についてはBlackfireのドキュメント](https://blackfire.io/docs/cookbooks/index)をご覧ください。
+
 ### XHGuiを使用した、PHPパフォーマンスのプロファイリング
 
 [XHGui](https://www.github.com/perftools/xhgui)はPHPアプリケーションのパフォーマンスを表示してくれるユーザーインターフェイスです。XHGuiを有効にするには、サイト設定に`xhgui: 'true'`を追加してください。
@@ -624,7 +654,7 @@ Webサーバーへのリクエストを生成する機能テストのデバッ�
     sites:
         -
             map: your-site.test
-            to: /home/vagrant/code/web
+            to: /home/vagrant/your-site/public
             type: "apache"
             xhgui: 'true'
 
@@ -683,7 +713,7 @@ Homesteadをカスタマイズすると、Ubuntuはパッケージのオリジ�
 <a name="updating-homestead"></a>
 ## Homesteadの更新
 
-簡単な手順で、Homesteadをアップデートできます。最初に`vagrant box update`コマンドを使い、Vagrant boxを更新してください。
+Homesteadの更新を開始する前に、現在の仮想マシンを削除するために、`vagrant destroy`を実行してください。次に、Vagrantボックスを更新するために、`vagrant box update`コマンドを実行してください。
 
     vagrant box update
 
@@ -695,7 +725,7 @@ Homesteadをカスタマイズすると、Ubuntuはパッケージのオリジ�
 
 上記のコマンドにより、最新のHomesteadコードがGitHubリポジトリよりpullされ、最新のタグをフェッチし、タグ付けされた最新のリリースをチェックアウトします。安定リリースバージョンの最新版は、[GitHubリリースページ](https://github.com/laravel/homestead/releases)で見つけてください。
 
-プロジェクトの`composer.json`ファイルによりHomesteadをインストールしている場合は、`composer.json`ファイルに`"laravel/homestead": "^8"`が含まれていることを確認し、依存コンポーネントをアップデートしてください。
+プロジェクトの`composer.json`ファイルによりHomesteadをインストールしている場合は、`composer.json`ファイルに`"laravel/homestead": "^9"`が含まれていることを確認し、依存コンポーネントをアップデートしてください。
 
     composer update
 

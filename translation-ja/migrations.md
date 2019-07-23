@@ -287,7 +287,7 @@ Laravelの`Schema`[ファサード](/docs/{{version}}/facades)は、テーブル
 `->after('column')`  |  指定カラムの次に他のカラムを設置(MySQLのみ)
 `->autoIncrement()`  |  整数カラムを自動増分ID（主キー）へ設定
 `->charset('utf8')`  |  カラムへキャラクタセットを指定(MySQLのみ)
-`->collation('utf8_unicode_ci')`  |  カラムへコロケーションを指定(MySQL/SQL Serverのみ)
+`->collation('utf8_unicode_ci')`  |  カラムへコロケーションを指定(MySQL/PostgreSQL/SQL Serverのみ)
 `->comment('my comment')`  |  カラムにコメント追加(MySQL/PostgreSQLのみ)
 `->default($value)`  |  カラムのデフォルト(default)値設定
 `->first()`  |  カラムをテーブルの最初(first)に設置する(MySQLのみ)

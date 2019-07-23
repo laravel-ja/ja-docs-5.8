@@ -660,7 +660,7 @@ JSON配列を長さでクエリするには、`whereJsonLength`を使います�
 <a name="updating-json-columns"></a>
 ### JSONカラムの更新
 
-JSONカラムを更新する場合は、JSONオブジェクト中の適切なキーへアクセスするために、`->`記法を使用してください。この操作子は、MySQL5.7以上のみサポートしています。
+JSONカラムを更新する場合は、JSONオブジェクト中の適切なキーへアクセスするために、`->`記法を使用してください。この操作子は、MySQL5.7以上とPostgreSQL9.5以上でサポートしています。
 
     DB::table('users')
                 ->where('id', 1)

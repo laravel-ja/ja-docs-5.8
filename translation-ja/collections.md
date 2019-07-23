@@ -121,6 +121,7 @@
 [max](#method-max)
 [median](#method-median)
 [merge](#method-merge)
+[mergeRecursive](#method-mergerecursive)
 [min](#method-min)
 [mode](#method-mode)
 [nth](#method-nth)
@@ -137,6 +138,8 @@
 [random](#method-random)
 [reduce](#method-reduce)
 [reject](#method-reject)
+[replace](#method-replace)
+[replaceRecursive](#method-replacerecursive)
 [reverse](#method-reverse)
 [search](#method-search)
 [shift](#method-shift)
@@ -1236,6 +1239,19 @@ staticの`make`メソッドは、新しいコレクションインスタンス�
 
     // ['Desk', 'Chair', 'Bookcase', 'Door']
 
+<a name="method-mergerecursive"></a>
+#### `mergeRecursive()` {#collection-method}
+
+`mergeRecursive`メソッドはオリジナルのコレクションに対し、指定した配列かコレクションを再帰的にマージします。指定したアイテムの文字列キーがオリジナルコレクションのものと一致したら、それらのキーに対する値を配列へマージします。これを再帰的に行います。
+
+    $collection = collect(['product_id' => 1, 'price' => 100]);
+
+    $merged = $collection->mergeRecursive(['product_id' => 2, 'price' => 200, 'discount' => false]);
+
+    $merged->all();
+
+    // ['product_id' => [1, 2], 'price' => [100, 200], 'discount' => false]
+
 <a name="method-min"></a>
 #### `min()` {#collection-method}
 
@@ -1523,6 +1539,32 @@ staticの`make`メソッドは、新しいコレクションインスタンス�
     // [1, 2]
 
 `reject`メソッドの逆の働きについては、[`filter`](#method-filter)メソッドを読んでください。
+
+<a name="method-replace"></a>
+#### `replace()` {#collection-method}
+
+`replace`メソッドは、`merge`メソッドと似た振る舞いを行います。文字列キーに一致したアイテムをオーバーライドするのは同じですが、`replace`メソッドは数値キーに一致するコレクション中のアイテムもオーバーライドします。
+
+    $collection = collect(['Taylor', 'Abigail', 'James']);
+
+    $replaced = $collection->replace([1 => 'Victoria', 3 => 'Finn']);
+
+    $replaced->all();
+
+    // ['Taylor', 'Victoria', 'James', 'Finn']
+
+<a name="method-replacerecursive"></a>
+#### `replaceRecursive()` {#collection-method}
+
+このメソッドは`replace`と似た動作をしますが、配列を再帰的に下り、次元の低い値も同様に置換します。
+
+    $collection = collect(['Taylor', 'Abigail', ['James', 'Victoria', 'Finn']]);
+
+    $replaced = $collection->replaceRecursive(['Charlie', 2 => [1 => 'King']]);
+
+    $replaced->all();
+
+    // ['Charlie', 'Abigail', ['James', 'King', 'Finn']]
 
 <a name="method-reverse"></a>
 #### `reverse()` {#collection-method}

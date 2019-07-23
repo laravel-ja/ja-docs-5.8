@@ -32,6 +32,8 @@
 
 マイグレーションが出来上がったら、`migrate` Artisanコマンドを実行します。
 
+> {tip} 別のカラム名を使う場合は、`config/auth.php`設定ファイル中の`storage_key`設定オプションを必ず更新してください。
+
 <a name="generating-tokens"></a>
 ## トークン生成
 

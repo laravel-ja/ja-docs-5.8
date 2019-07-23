@@ -38,6 +38,14 @@ Laravelのサービスコンテナにより、アプリケーションへ依存�
         $mock->shouldReceive('process')->once();
     });
 
+同様に、オブジェクトをスパイしたい場合は、Laravelの便利な`Mockery::spy`ラッパーであり、ベースのテストケースクラスで提供している`spy`メソッドを用います。
+
+    use App\Service;
+
+    $this->spy(Service::class, function ($mock) {
+        $mock->shouldHaveReceived('process');
+    });
+
 <a name="bus-fake"></a>
 ## Bus Fake
 

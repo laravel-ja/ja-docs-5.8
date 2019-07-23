@@ -372,7 +372,7 @@ HTTPルートと同様にチャンネルルートでも、暗黙あるいは明�
 
     Broadcast::channel('channel', function() {
         // ...
-    }, ['guards' => ['web', 'admin']])
+    }, ['guards' => ['web', 'admin']]);
 
 <a name="defining-channel-classes"></a>
 ### チャンネル名の登録

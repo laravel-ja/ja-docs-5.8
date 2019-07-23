@@ -563,7 +563,7 @@ has many through（〜経由で多数へ紐づく）リレーションは、仲�
     class Image extends Model
     {
         /**
-         * 所有している全imageableモデルの取得
+         * 所有しているimageableモデルの取得
          */
         public function imageable()
         {
@@ -645,7 +645,7 @@ has many through（〜経由で多数へ紐づく）リレーションは、仲�
     class Comment extends Model
     {
         /**
-         * 所有しているcommentableモデルの全取得
+         * 所有しているcommentableモデルの取得
          */
         public function commentable()
         {
@@ -799,6 +799,8 @@ has many through（〜経由で多数へ紐づく）リレーションは、仲�
 
 `morphMap`は、`AppServiceProvider`の`boot`関数で登録できますし、お望みであれば独立したサービスプロバイダを作成し、その中で行うこともできます。
 
+> {note} 既存のアプリケーションへ"morph map"を追加する場合は、データベース中のすべてのmorphable `*_type`カラムの値は完全なクラス名を持っており、"map"名へ変換する必要が起きます。
+
 <a name="querying-relations"></a>
 ## リレーションのクエリ
 
@@ -845,8 +847,10 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 多くの状況では、カッコに挟まれた条件チェックの論理グループにするために、[制約グループ](/docs/{{version}}/queries#parameter-grouping)を使うほうが目的に叶うでしょう。
 
+    use Illuminate\Database\Eloquent\Builder;
+
     $user->posts()
-            ->where(function ($query) {
+            ->where(function (Builder $query) {
                 return $query->where('active', 1)
                              ->orWhere('votes', '>=', 100);
             })
@@ -891,12 +895,12 @@ Eloquentリレーションは全てメソッドとして定義されているた
     use Illuminate\Database\Eloquent\Builder;
 
     // Retrieve posts with at least one comment containing words like foo%...
-    $posts = App\Post::whereHas('comments', function ($query) {
+    $posts = App\Post::whereHas('comments', function (Builder $query) {
         $query->where('content', 'like', 'foo%');
     })->get();
 
     // Retrieve posts with at least ten comments containing words like foo%...
-    $posts = App\Post::whereHas('comments', function ($query) {
+    $posts = App\Post::whereHas('comments', function (Builder $query) {
         $query->where('content', 'like', 'foo%');
     }, '>=', 10)->get();
 
@@ -928,25 +932,34 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 既存の`MorphTo`リレーションへクエリするには、`whereHasMorph`とこれに対応するメソッドを利用してください。
 
+    use Illuminate\Database\Eloquent\Builder;
+
+    // ポストとビデオと関連付いているコメントをtitle like foo%で取得する
     $comments = App\Comment::whereHasMorph(
         'commentable',
         ['App\Post', 'App\Video'],
-        function ($query) {
+        function (Builder $query) {
             $query->where('title', 'like', 'foo%');
         }
     )->get();
 
-    $comments = App\Comment::doesntHaveMorph(
+    // ポストとビデオと関連付いているコメントをtitle not like foo%で取得する
+    $comments = App\Comment::whereDoesntHaveMorph(
         'commentable',
-        ['App\Post', 'App\Video']
+        'App\Post',
+        function (Builder $query) {
+            $query->where('title', 'like', 'foo%');
+        }
     )->get();
 
 関連するモデルに応じて異なった制約を追加するために、`$type`パラメータを使用できます。
 
+    use Illuminate\Database\Eloquent\Builder;
+
     $comments = App\Comment::whereHasMorph(
         'commentable',
         ['App\Post', 'App\Video'],
-        function ($query, $type) {
+        function (Builder $query, $type) {
             $query->where('title', 'like', 'foo%');
 
             if ($type === 'App\Post') {
@@ -957,7 +970,9 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 ポリモーフィックモデルの配列を渡す代わりに`*`をワイルドカードとして指定でき、その場合はデータベースからすべてのポリモーフィックタイプをLaravelは取得します。
 
-    $comments = App\Comment::whereHasMorph('commentable', '*', function ($query) {
+    use Illuminate\Database\Eloquent\Builder;
+
+    $comments = App\Comment::whereHasMorph('commentable', '*', function (Builder $query) {
         $query->where('title', 'like', 'foo%');
     })->get();
 
@@ -974,7 +989,9 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 クエリによる制約を加え、複数のリレーションの件数を取得することも可能です。
 
-    $posts = App\Post::withCount(['votes', 'comments' => function ($query) {
+    use Illuminate\Database\Eloquent\Builder;
+
+    $posts = App\Post::withCount(['votes', 'comments' => function (Builder $query) {
         $query->where('content', 'like', 'foo%');
     }])->get();
 
@@ -983,9 +1000,11 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 同じリレーションに複数の件数を含めるため、リレーション件数結果の別名も付けられます。
 
+    use Illuminate\Database\Eloquent\Builder;
+
     $posts = App\Post::withCount([
         'comments',
-        'comments as pending_comments_count' => function ($query) {
+        'comments as pending_comments_count' => function (Builder $query) {
             $query->where('approved', false);
         }
     ])->get();
@@ -1083,8 +1102,10 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 このモデル定義とリレーションを使用して、`ActivityFeed`モデルインスタンスを取得し、全`parentable`モデルとそれぞれのネストしたリレーションをEagerロードできます。
 
+    use Illuminate\Database\Eloquent\Relations\MorphTo;
+
     $activities = ActivityFeed::query()
-        ->with(['parentable' => function ($morphTo) {
+        ->with(['parentable' => function (MorphTo $morphTo) {
             $morphTo->morphWith([
                 Event::class => ['calendar'],
                 Photo::class => ['tags'],
@@ -1137,13 +1158,17 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 ときにリレーションをEagerロードしたいが、Eagerロードクエリに条件を追加したい場合があります。例を見てください。
 
-    $users = App\User::with(['posts' => function ($query) {
+    use Illuminate\Database\Eloquent\Builder;
+
+    $users = App\User::with(['posts' => function (Builder $query) {
         $query->where('title', 'like', '%first%');
     }])->get();
 
 この例でEloquentは、`title`カラムの内容に`first`という言葉を含むポストのみをEagerロードしています。Eagerロード操作を更にカスタマイズするために、他の[クエリビルダ](/docs/{{version}}/queries)を呼び出すこともできます。
 
-    $users = App\User::with(['posts' => function ($query) {
+    use Illuminate\Database\Eloquent\Builder;
+
+    $users = App\User::with(['posts' => function (Builder $query) {
         $query->orderBy('created_at', 'desc');
     }])->get();
 
@@ -1162,7 +1187,9 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 Eagerロードに追加の制約をかける必要があるなら、ロードしたい関連へ配列のキーを付け渡してください。配列地は、クエリインスタンスを受け取る「クロージャ」でなければなりません。
 
-    $books->load(['author' => function ($query) {
+    use Illuminate\Database\Eloquent\Builder;
+
+    $books->load(['author' => function (Builder $query) {
         $query->orderBy('published_date', 'asc');
     }]);
 

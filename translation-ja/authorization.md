@@ -45,6 +45,10 @@ Laravelは組み込み済みの[認証](/docs/{{version}}/authentication)サー�
     {
         $this->registerPolicies();
 
+        Gate::define('edit-settings', function ($user) {
+            return $user->isAdmin;
+        });
+
         Gate::define('update-post', function ($user, $post) {
             return $user->id == $post->user_id;
         });
@@ -69,6 +73,10 @@ Laravelは組み込み済みの[認証](/docs/{{version}}/authentication)サー�
 
 ゲートを使用しアクションを認可するには、`allows`と`denies`メソッドを使ってください。両メソッドに現在認証中のユーザーを渡す必要はないことに注目しましょう。Laravelが自動的にゲートクロージャにユーザーを渡します。
 
+    if (Gate::allows('edit-settings')) {
+        // 現在のユーザーは設定を変更できる
+    }
+
     if (Gate::allows('update-post', $post)) {
         // 現在のユーザーはこのポストを更新できる
     }
@@ -85,6 +93,16 @@ Laravelは組み込み済みの[認証](/docs/{{version}}/authentication)サー�
 
     if (Gate::forUser($user)->denies('update-post', $post)) {
         // ユーザーはこのポストを更新できない
+    }
+
+`any`と`none`メソッドを使い、複数のアクションの許可を一度に指定できます。
+
+    if (Gate::any(['update-post', 'delete-post'], $post)) {
+        // ユーザーはポストの更新と削除ができる
+    }
+
+    if (Gate::none(['update-post', 'delete-post'], $post)) {
+        // ユーザーはポストの更新と削除ができない
     }
 
 <a name="intercepting-gate-checks"></a>
@@ -435,10 +453,10 @@ Bladeテンプレートを書くとき、指定したアクションを実行で
 
 指定するリスト中の認可アビリティをユーザーが持っているかを判定することもできます。`@canany`ディレクティブを使用します。
 
-    @canany(['update', 'view'])
-        //
-    @elsecanany(['create', 'delete'])
-        //
+    @canany(['update', 'view', 'delete'], $post)
+        // 現在のユーザーはポストとの更新、閲覧、削除ができる
+    @elsecanany(['create'], \App\Post::class)
+        // 現在のユーザーはポストを作成できる
     @endcanany
 
 #### モデルを必要としないアクション
