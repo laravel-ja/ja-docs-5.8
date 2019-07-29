@@ -24,7 +24,7 @@
 
 次にアプリケーション起動のきっかけにより、送信されてきたリクエストをHTTPカーネルかコンソールカーネルのどちらかに送ります。これらのカーネルは、全リクエストフローの中心に位置し動作します。ここでは`app/Http/Kernel.php`にあるHTTPカーネルに焦点を合わせます。
 
-HTTPカーネルは`Illuminate\Foundation\Http\Kernel`クラスを拡張しており、リクエストの実行前に処理されるbootstrappers（起動コード）の配列を定義しています。これらの起動コードはエラー処理、ログ設定、[アプリケーション動作環境の決定](/docs/{{version}}/configuration#environment-configuration)、そのほか実際にリクエストが処理される前に行う必要のあるタスクです。
+HTTPカーネルはIlluminate\Foundation\Http\Kernelクラスを拡張しています。このKernelクラスは、リクエストの実行前に処理されるbootstrappers（起動コード）の配列を定義してます。これらの起動コードはエラー処理、ログ設定、[アプリケーション動作環境の決定](/docs/{{version}}/configuration#environment-configuration)、そのほか実際にリクエストが処理される前に行う必要のあるタスクです。
 
 HTTPカーネルはさらに、アプリケーションによりリクエストが処理される前に通す必要のある、HTTP[ミドルウェア](/docs/{{version}}/middleware)のリストも定義しています。これらのミドルウェアは[HTTPセッション](/docs/{{version}}/session)の読み書き、アプリケーションがメンテナンスモードであるかの決定、[CSRFトークンの確認](/docs/{{version}}/csrf)などを行います。
 
