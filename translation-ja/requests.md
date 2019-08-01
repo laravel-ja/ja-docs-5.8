@@ -278,6 +278,8 @@ Laravelフレームワークが作成するクッキーは全て暗号化され�
     $value = $request->cookie('name');
 
 もしくは、クッキー値にアクセスするために、`Cookie`ファサードも利用できます。
+    
+    use Illuminate\Support\Facades\Cookie;
 
     $value = Cookie::get('name');
 

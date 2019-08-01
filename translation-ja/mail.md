@@ -510,9 +510,11 @@ Markdown MailableではBladeコンポーネントとMarkdown記法が利用で�
 
 #### CSSのカスタマイズ
 
-コンポーネントをエクスポートすると、`resources/views/vendor/mail/html/themes`ディレクトリに、`default.css`ファイルが用意されます。このファイル中のCSSをカスタマイズすれば、Markdownメールメッセージ変換後のHTML形式の中に、インラインCSSとして自動的に取り込まれます。
+コンポーネントをエクスポートすると、`resources/views/vendor/mail/html/themes`ディレクトリに`default.css`ファイルができます。このファイル中のCSSをカスタマイズすれば、Markdownメールメッセージ変換後のHTML形式の中に、インラインCSSとして自動的に取り込まれます。
 
-> {tip} Markdownコンポーネント全体の新しいテーマを作成したい場合は、`html/themes`の中に新しいCSSファイルを記述し、`mail`設定ファイルの`theme`オプションを変更します。
+LaravelのMarkdownコンポーネントの全く新しいテーマを作成したい場合は、`html/themes`ディレクトリの中にCSSファイルを設置してください。CSSファイルに名前をつけ保存したら、`mail`設定ファイルの`theme`オプションを新しいテーマの名前に更新してください。
+
+個別のMailableにカスタムテーマを使いたい場合は、そのMailableの`$theme`プロパティへテーマの名前を送信時にセットしてください。
 
 <a name="sending-mail"></a>
 ## メール送信

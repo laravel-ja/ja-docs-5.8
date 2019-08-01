@@ -1158,17 +1158,13 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 ときにリレーションをEagerロードしたいが、Eagerロードクエリに条件を追加したい場合があります。例を見てください。
 
-    use Illuminate\Database\Eloquent\Builder;
-
-    $users = App\User::with(['posts' => function (Builder $query) {
+    $users = App\User::with(['posts' => function ($query) {
         $query->where('title', 'like', '%first%');
     }])->get();
 
 この例でEloquentは、`title`カラムの内容に`first`という言葉を含むポストのみをEagerロードしています。Eagerロード操作を更にカスタマイズするために、他の[クエリビルダ](/docs/{{version}}/queries)を呼び出すこともできます。
 
-    use Illuminate\Database\Eloquent\Builder;
-
-    $users = App\User::with(['posts' => function (Builder $query) {
+    $users = App\User::with(['posts' => function ($query) {
         $query->orderBy('created_at', 'desc');
     }])->get();
 
@@ -1187,9 +1183,7 @@ Eloquentリレーションは全てメソッドとして定義されているた
 
 Eagerロードに追加の制約をかける必要があるなら、ロードしたい関連へ配列のキーを付け渡してください。配列地は、クエリインスタンスを受け取る「クロージャ」でなければなりません。
 
-    use Illuminate\Database\Eloquent\Builder;
-
-    $books->load(['author' => function (Builder $query) {
+    $books->load(['author' => function ($query) {
         $query->orderBy('published_date', 'asc');
     }]);
 

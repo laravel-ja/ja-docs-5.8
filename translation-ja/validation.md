@@ -806,7 +806,7 @@ _ratio_制約は、横／縦比を表します。`3/2`という指定も、`1.5`
 <a name="rule-image"></a>
 #### image
 
-フィールドで指定されたファイルが画像(jpg、png、bmp、gif、svg)であることをバリデートします。
+フィールドで指定されたファイルが画像(jpg、png、bmp、gif、svg、webp)であることをバリデートします。
 
 <a name="rule-in"></a>
 #### in:foo,bar...
@@ -831,6 +831,8 @@ _ratio_制約は、横／縦比を表します。`3/2`という指定も、`1.5`
 #### integer
 
 フィールドが整数値であることをバリデートします。
+
+> {note} This validation rule does not verify that the input is of the "integer" variable type, only that the input is a string or numeric value that contains an integer.
 
 <a name="rule-ip"></a>
 #### ip

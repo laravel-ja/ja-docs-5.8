@@ -25,7 +25,7 @@ Horizon（水平線、展望）は、Laravelで動作するRedisキューのた�
 <a name="installation"></a>
 ## インストール
 
-> {note} `queue`設定ファイルで、`redis`をキュードライバーへ確実に指定してください。
+> {note} `queue`設定ファイルで、`redis`をキューコネクションへ確実に指定してください。
 
 Composerを使い、LaravelプロジェクトにHorizonをインストールします。
 

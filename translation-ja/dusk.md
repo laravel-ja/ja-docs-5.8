@@ -209,7 +209,7 @@ PHPUnitテストランナが通常受け付ける引数は、`dusk`コマンド�
             $this->browse(function ($browser) use ($user) {
                 $browser->visit('/login')
                         ->type('email', $user->email)
-                        ->type('password', 'secret')
+                        ->type('password', 'password')
                         ->press('Login')
                         ->assertPathIs('/home');
             });

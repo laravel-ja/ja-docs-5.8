@@ -82,6 +82,7 @@ Laravelは[PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/
      * @param  \Closure|string|null  $concrete
      * @param  bool  $shared
      * @return void
+     *     
      * @throws \Exception
      */
     public function bind($abstract, $concrete = null, $shared = false)
