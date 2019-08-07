@@ -184,10 +184,15 @@ Passportを実働サーバへ最初にデプロイするとき、`passport:keys`
         Passport::loadKeysFrom('/secret-keys/oauth');
     }
 
-更に、環境変数からキーをロードすることもできます。
+さらに、`php artisan vendor:publish --tag=passport-config`により、Passportの設定ファイルを公開することもできます。これにより、環境変数から暗号化キーをロードするためのオプションを提供しています。
 
-    PASSPORT_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\n<private key here>\n-----END RSA PRIVATE KEY-----"
-    PASSPORT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\n<public key here>\n-----END PUBLIC KEY-----\n"
+    PASSPORT_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----
+    <private key here>
+    -----END RSA PRIVATE KEY-----"
+
+    PASSPORT_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----
+    <public key here>
+    -----END PUBLIC KEY-----"
 
 <a name="configuration"></a>
 ## 設定

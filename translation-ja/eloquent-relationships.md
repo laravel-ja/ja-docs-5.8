@@ -1344,7 +1344,7 @@ Eloquentは新しいモデルをリレーションに追加するために便利
      */
     public function user()
     {
-        return $this->belongsTo('App\User')->withDefault(function ($user) {
+        return $this->belongsTo('App\User')->withDefault(function ($user, $post) {
             $user->name = 'Guest Author';
         });
     }

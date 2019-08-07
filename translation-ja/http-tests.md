@@ -141,7 +141,7 @@ Laravelはテスト時にセッションを操作するたくさんのヘルパ�
 <a name="testing-json-apis"></a>
 ## JSON APIのテスト
 
-LaravelはJSON APIとレスポンスをテストする数多くのヘルパを用意しています。たとえば、`json`、`get`、`post`、`put`、`patch`、`delete`メソッドはそれぞれのHTTP動詞のリクエストを発生させるために使用します。これらのメソッドには簡単にデータやヘッダを渡せます。手始めに、`/user`に対する`POST`リクエストを作成し、期待したデータが返されることをアサートするテストを書いてみましょう。
+LaravelはJSON APIとレスポンスをテストする数多くのヘルパを用意しています。たとえば、`json`、`get`、`post`、`put`、`patch`、`delete`、`option`メソッドはそれぞれのHTTP動詞のリクエストを発生させるために使用します。これらのメソッドには簡単にデータやヘッダを渡せます。手始めに、`/user`に対する`POST`リクエストを作成し、期待したデータが返されることをアサートするテストを書いてみましょう。
 
     <?php
 
@@ -286,6 +286,7 @@ LaravelはJSON APIとレスポンスをテストする数多くのヘルパを�
 [assertSeeText](#assert-see-text)
 [assertSeeTextInOrder](#assert-see-text-in-order)
 [assertSessionHas](#assert-session-has)
+[assertSessionHasInput](#assert-session-has-input)
 [assertSessionHasAll](#assert-session-has-all)
 [assertSessionHasErrors](#assert-session-has-errors)
 [assertSessionHasErrorsIn](#assert-session-has-errors-in)
@@ -497,6 +498,13 @@ LaravelはJSON APIとレスポンスをテストする数多くのヘルパを�
 セッションが指定したデータを持っていることを宣言。
 
     $response->assertSessionHas($key, $value = null);
+
+<a name="assert-session-has-input"></a>
+#### assertSessionHasInput
+
+そのセッションが指定値をフラッシュデータの入力配列中に持っていることを宣言。
+
+    $response->assertSessionHasInput($key, $value = null);
 
 <a name="assert-session-has-all"></a>
 #### assertSessionHasAll

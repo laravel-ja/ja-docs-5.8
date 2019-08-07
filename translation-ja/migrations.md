@@ -239,10 +239,12 @@ Laravelの`Schema`[ファサード](/docs/{{version}}/facades)は、テーブル
 `$table->mediumInteger('votes');`  |  MEDIUMINTカラム
 `$table->mediumText('description');`  |  MEDIUMTEXTカラム
 `$table->morphs('taggable');`  |  符号なしBIGINTの`taggable_id`と文字列の`taggable_type`を追加
+`$table->uuidMorphs('taggable');`  |  CHAR(36)の`taggable_id`とVARCHAR(255)の`taggable_type` UUIDカラムを追加
 `$table->multiLineString('positions');`  |  MULTILINESTRINGカラム
 `$table->multiPoint('positions');`  |  MULTIPOINTカラム
 `$table->multiPolygon('positions');`  |  MULTIPOLYGONカラム
 `$table->nullableMorphs('taggable');`  |  NULL値可能な`morphs()`カラム
+`$table->nullableUuidMorphs('taggable');`  |  `uuidMorphs()`を追加
 `$table->nullableTimestamps();`  |  `timestamps()`メソッドの別名
 `$table->point('position');`  |  POINTカラム
 `$table->polygon('positions');`  |  POLYGONカラム

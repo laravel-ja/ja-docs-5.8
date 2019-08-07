@@ -95,6 +95,8 @@ Horizonは、`/horizon`でダッシュボードを表示します。デフォル
         });
     }
 
+> {note} LaravelはGateへ自動的に**認証済み**ユーザーを依存注入します。IP制限のような別のHorizonセキュリティ方法をアプリケーションで提供する場合は、Horizonユーザーは「ログイン」している必要はいらないでしょう。そのため、上記の`function ($user)`を`function ($user = null)`へ変更し、Laravelに認証は必要ないと強制的に知らせてください。
+
 <a name="running-horizon"></a>
 ## Horizonの実行
 

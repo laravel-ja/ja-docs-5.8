@@ -719,7 +719,11 @@ Homesteadをカスタマイズすると、Ubuntuはパッケージのオリジ�
 <a name="updating-homestead"></a>
 ## Homesteadの更新
 
-Homesteadの更新を開始する前に、現在の仮想マシンを削除するために、`vagrant destroy`を実行してください。次に、Vagrantボックスを更新するために、`vagrant box update`コマンドを実行してください。
+Homesteadの更新を開始する前に、現在の仮想マシンを削除するために、次のコマンドをHomesteadディレクトリで実行してください。
+
+    vagrant destroy
+
+次に、Vagrantボックスを更新するために、`vagrant box update`コマンドを実行してください。
 
     vagrant box update
 
@@ -735,9 +739,7 @@ Homesteadの更新を開始する前に、現在の仮想マシンを削除す�
 
     composer update
 
-最後に最新のVagrantバージョンを使用するために、Homestead Boxを破棄し、再生成する必要があります。そのために、Homesteadディレクトリで以下のコマンドを実行してください。
-
-    vagrant destroy
+最後に、最新のVagrantバージョンを使用するために、Homestead Boxを再生成する必要があります。Homesteadディレクトリで以下のコマンドを実行してください。
 
     vagrant up
 

@@ -416,7 +416,7 @@ Laravel5.4で非推奨になっていた、`Illuminate\Events\Dispatcher`クラ�
 
 **影響の可能性： 高い**
 
-LaravelのMarkdownメールコンポーネントを`vendor:publish`コマンドでリソース公開している場合は、`/resources/views/vendor/mail/markdown`ディレクトリを`text`へリネームしてください。
+LaravelのMarkdownメールコンポーネントを`vendor:publish`コマンドでリソース公開している場合は、`/resources/views/vendor/mail/markdown`ディレクトリを`/resources/views/vendor/mail/text`へリネームしてください
 
 さらに、`markdownComponentPaths`メソッドは`textComponentPaths`へ[リネームされました](https://github.com/laravel/framework/pull/26938)。このメソッドをオーバーライドしている場合は、親のクラスへ合わせるようにメソッド名を変更してください。
 

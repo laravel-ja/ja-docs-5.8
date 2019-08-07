@@ -710,6 +710,8 @@ Duskはアプリケーションに対する数多くのアサートを提供し�
 [assertDialogOpened](#assert-dialog-opened)
 [assertEnabled](#assert-enabled)
 [assertDisabled](#assert-disabled)
+[assertButtonEnabled](#assert-button-enabled)
+[assertButtonDisabled](#assert-button-disabled)
 [assertFocused](#assert-focused)
 [assertNotFocused](#assert-not-focused)
 [assertVue](#assert-vue)
@@ -1057,6 +1059,20 @@ Duskはアプリケーションに対する数多くのアサートを提供し�
 指定したフィールドが、disabledであることを宣言します。
 
     $browser->assertDisabled($field);
+
+<a name="assert-button-enabled"></a>
+#### assertButtonEnabled
+
+指定したボタンが、enabledであることを宣言します。
+
+    $browser->assertButtonEnabled($button);
+
+<a name="assert-button-disabled"></a>
+#### assertButtonDisabled
+
+指定したボタンが、disabledであることを宣言します。
+
+    $browser->assertButtonDisabled($button);
 
 <a name="assert-focused"></a>
 #### assertFocused
