@@ -244,7 +244,7 @@ Laravelの`Schema`[ファサード](/docs/{{version}}/facades)は、テーブル
 `$table->multiPoint('positions');`  |  MULTIPOINTカラム
 `$table->multiPolygon('positions');`  |  MULTIPOLYGONカラム
 `$table->nullableMorphs('taggable');`  |  NULL値可能な`morphs()`カラム
-`$table->nullableUuidMorphs('taggable');`  |  `uuidMorphs()`を追加
+`$table->nullableUuidMorphs('taggable');`  |  `uuidMorphs()`をNULL値可能で追加
 `$table->nullableTimestamps();`  |  `timestamps()`メソッドの別名
 `$table->point('position');`  |  POINTカラム
 `$table->polygon('positions');`  |  POLYGONカラム
