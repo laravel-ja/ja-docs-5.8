@@ -50,9 +50,9 @@ When using the `local` driver, all file operations are relative to the `root` di
 
     Storage::disk('local')->put('file.txt', 'Contents');
 
-#### Default Permissions
+#### Permissions
 
-The `public` [visibility](#file-visibility) translates to `0755` for directories and `0644` for files. You can modify the default permissions mappings in your `filesystems` configuration file:
+The `public` [visibility](#file-visibility) translates to `0755` for directories and `0644` for files. You can modify the permissions mappings in your `filesystems` configuration file:
 
     'local' => [
         'driver' => 'local',
@@ -334,6 +334,8 @@ You may also use the `putFileAs` method on the `Storage` facade, which will perf
     $path = Storage::putFileAs(
         'avatars', $request->file('avatar'), $request->user()->id
     );
+
+> {note} Unprintable and invalid unicode characters will automatically be removed from file paths. Therefore, you may wish to sanitize your file paths before passing them to Laravel's file storage methods. File paths are normalized using the `League\Flysystem\Util::normalizePath` method.
 
 #### Specifying A Disk
 

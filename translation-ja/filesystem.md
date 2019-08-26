@@ -50,9 +50,9 @@ LaravelはFrank de Jongeさんが作成した拝みたいほど素晴らしい�
 
     Storage::disk('local')->put('file.txt', 'Contents');
 
-#### デフォルトパーミッション
+#### パーミッション
 
-`public`下の[パーミッション](#file-visibility)は、ディレクトリへ`0755`、ファイルへ`0664`を設定します。デフォルトのパーミッションは`filesystems`設定ファイルで変更可能です。
+`public`下の[パーミッション](#file-visibility)は、ディレクトリへ`0755`、ファイルへ`0664`を設定します。パーミッションは`filesystems`設定ファイルで変更可能です。
 
     'local' => [
         'driver' => 'local',
@@ -334,6 +334,8 @@ Webアプリケーションで、ファイルを保存する一般的なケー�
     $path = Storage::putFileAs(
         'avatars', $request->file('avatar'), $request->user()->id
     );
+
+> {note} 印刷できない、または無効なユニコードは自動的にファイルパスから削除されます。そのため、Laravelのファイルストレージメソッドに渡す前に、ファイルパスをサニタライズしましょう。ファイルパスのノーマライズは、`League\Flysystem\Util::normalizePath`メソッドを使います。
 
 #### ディスクの指定
 

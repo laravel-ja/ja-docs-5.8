@@ -626,6 +626,13 @@ JSON配列を長さでクエリするには、`whereJsonLength`を使います�
         ['email' => 'dayle@example.com', 'votes' => 0]
     ]);
 
+`insertOrIgnore`メソッドは、データベースにレコードを挿入する際、重複レコードエラーを無視します。
+
+    DB::table('users')->insertOrIgnore([
+        ['id' => 1, 'email' => 'taylor@example.com'],
+        ['id' => 2, 'email' => 'dayle@example.com']
+    ]);
+
 #### 自動増分ID
 
 テーブルが自動増分IDを持っている場合、`insertGetId`メソッドを使うとレコードを挿入し、そのレコードのIDを返してくれます。

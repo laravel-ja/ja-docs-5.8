@@ -80,7 +80,6 @@ HomesteadはWindowsやMac、Linuxシステム上で実行でき、NginxやPHP、
 - Xdebug
 - XHProf / Tideways / XHGui
 - wp-cli
-- Minio
 </div>
 
 <a name="optional-software"></a>
@@ -142,6 +141,8 @@ VirtualBox/VMwareとVagrantをインストールし終えたら、`laravel/homes
     vagrant box add laravel/homestead
 
 このコマンドが失敗する場合、Vagrantを更新する必要があります。
+
+> {note} Homesteadは定期的に「アルファ版／ベータ版」Boxをテストのためリリースしています。これは`vagrant box add`コマンドと干渉してしまいます。`vagrant box add`の実行で問題が起きたら、`vagrant up`コマンドを実行し、Vagrantが仮想マシンを開始する時点で正しいBoxをダウンロードしてください。
 
 #### Homesteadのインストール
 
@@ -485,7 +486,7 @@ Mailhogを設定したら、ダッシュボードへ`http://localhost:8025`で�
 <a name="configuring-minio"></a>
 ### Minioの設定
 
-MinioはAmazon S3と互換性のあるAPIを持つ、オープンソースなオブジェクトストレージサーバです。Minioをインストールするには、`Homestead.yaml`に以下の設定オプションを加えてください。
+MinioはAmazon S3と互換性のあるAPIを持つ、オープンソースなオブジェクトストレージサーバです。Minioをインストールするには、`Homestead.yaml`に[機能](#installing-optional-features)のセクション中から以下の設定オプションを加えてください。
 
     minio: true
 
@@ -609,14 +610,7 @@ Homesteadは、デフォルトで`1025`ポートをリッスンする、Postfix�
 
 Homesteadは[Xdebug](https://xdebug.org)を使用するステップデバッグをサポートしています。例えば、ブラウザからWebページをロードし、実行中のコードのインスペクションと変更ができるようにPHPをIDEに接続します。
 
-デバッグを有効にするには、Vagrant Boxの中で以下のコマンドを実行してください。
-
-    sudo phpenmod xdebug
-
-    # 使用するPHPバージョンに合わせて次のコマンドを使用してください
-    sudo systemctl restart php7.3-fpm
-
-次に、IDEのデバッグを有効にするための指示に従ってください。最後に、拡張か[bookmarklet](https://www.jetbrains.com/phpstorm/marklets/)を使い、Xdebugを起動するようにブラウザを設定します。
+デフォルトでXdebugは実行されており、接続を待っています。CLIでXdebugを有効にする必要があれば、Vagrant boxの中で`sudo phpenmod xdebug`コマンドを実行してください。次に、IDEのインストラクションに従って、デバッギングを有効にします。最後に、ブラウザでXdebugを起動する拡張か、[bookmarklet](https://www.jetbrains.com/phpstorm/marklets/)を設定してください。
 
 > {note} XdebugはPHPの実行を極端に遅くしてしまいます。Xdebugを無効にするには、Vagrant Boxで`sudo phpdismod xdebug`を実行し、FPMサービスを再起動します。
 
@@ -723,10 +717,6 @@ Homesteadの更新を開始する前に、現在の仮想マシンを削除す�
 
     vagrant destroy
 
-次に、Vagrantボックスを更新するために、`vagrant box update`コマンドを実行してください。
-
-    vagrant box update
-
 次に、Homesteadのソースコードを更新する必要があります。リポジトリをクローンしている場合は、リポジトリをクローンした元のディレクトリで、以下のコマンドを実行してください。
 
     git fetch
@@ -738,6 +728,10 @@ Homesteadの更新を開始する前に、現在の仮想マシンを削除す�
 プロジェクトの`composer.json`ファイルによりHomesteadをインストールしている場合は、`composer.json`ファイルに`"laravel/homestead": "^9"`が含まれていることを確認し、依存コンポーネントをアップデートしてください。
 
     composer update
+
+次に、Vagrantボックスを更新するために、`vagrant box update`コマンドを実行してください。
+
+    vagrant box update
 
 最後に、最新のVagrantバージョンを使用するために、Homestead Boxを再生成する必要があります。Homesteadディレクトリで以下のコマンドを実行してください。
 

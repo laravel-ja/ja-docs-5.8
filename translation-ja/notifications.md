@@ -183,7 +183,7 @@ Laravelの各通知は、（通常、`app/Notifications`ディレクトリに設
 
 この例では、挨拶、テキスト行、アクションの呼び出し、別のテキスト行を登録しています。これらのメソッドは、小さなトランザクションメールをシンプルで素早くフォーマットする、`MailMessage`オブジェクトが提供しています。メールチャンネルはテンプレートにより、メッセージの構成物をきれいでレスポンシブなHTMLメールへ、変換します。平文メールも用意されます。以下は`mail`チャンネルにより生成されたメールの例です。I
 
-<img src="https://laravel.com/assets/img/notification-example.png" width="551" height="596">
+<img src="https://laravel.com/img/docs/notification-example.png" width="551" height="596">
 
 > {tip} メール通知を行うときは、`config/app.php`設定ファイルの`name`値を確実に設定してください。この値は、メール通知メッセージのヘッダとフッタで使用されます。
 
@@ -716,7 +716,7 @@ Slackを通して通知を遅れるようにするには、ComposerでSlackの�
 
 この例では、Slackへ一行のテキストを送っており、以下のようなメッセージが生成されます。
 
-<img src="https://laravel.com/assets/img/basic-slack-notification.png">
+<img src="https://laravel.com/img/docs/basic-slack-notification.png">
 
 #### 送信者と受信者のカスタマイズ
 
@@ -778,7 +778,7 @@ Slackメッセージに「添付」を追加することもできます。添付
 
 上の例は、次のようなSlackメッセージを生成します。
 
-<img src="https://laravel.com/assets/img/basic-slack-attachment.png">
+<img src="https://laravel.com/img/docs/basic-slack-attachment.png">
 
 添付ではさらに、ユーザーに対し表示すべきデータの配列を指定することもできます。指定したデータは簡単に読めるように、テーブルスタイルの形式で表示されます。
 
@@ -808,7 +808,7 @@ Slackメッセージに「添付」を追加することもできます。添付
 
 上の例は、以下のようなSlackメッセージを作成します。
 
-<img src="https://laravel.com/assets/img/slack-fields-attachment.png">
+<img src="https://laravel.com/img/docs/slack-fields-attachment.png">
 
 #### Markdown添付コンテンツ
 

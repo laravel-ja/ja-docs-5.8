@@ -10,6 +10,7 @@
     - [モデルの生成](#creating-models)
     - [モデルの保存](#persisting-models)
     - [リレーション](#relationships)
+- [Using Seeds](#using-seeds)
 - [使用可能なアサーション](#available-assertions)
 
 <a name="introduction"></a>
@@ -173,6 +174,8 @@ Laravelでは、データベースを駆動するアプリケーションのテ�
         'name' => 'Abigail',
     ]);
 
+> {tip} ファクトリーを用いモデルを生成する場合は、[複数代入の保護](/docs/{{version}}/eloquent#mass-assignment)を自動的に無効にします。
+
 <a name="persisting-models"></a>
 ### モデルの保存
 
@@ -206,6 +209,12 @@ Laravelでは、データベースを駆動するアプリケーションのテ�
                     $user->posts()->save(factory(App\Post::class)->make());
                 });
 
+関係を複数持つモデルを生成する場合は、`createMany`メソッドを使用します。
+
+    $user->posts()->createMany(
+        factory(App\Post::class, 3)->make()->toArray()
+    );
+
 #### リレーションと属性クロージャ
 
 クロージャ属性をファクトリ定義の中で使い、モデルとのリレーションを追加することもできます。たとえば、`Post`を作成する時に、新しい`User`インスタンスも作成したい場合は、以下のようになります。
@@ -234,6 +243,41 @@ Laravelでは、データベースを駆動するアプリケーションのテ�
             }
         ];
     });
+
+<a name="using-seeds"></a>
+## シーダの使用
+
+テストでデータベースへ初期値を設定するために、[データベースシーダ](/docs/{{version}}/seeding)を使いたい場合は、`seed`メソッドを使用してください。デフォルトで`seed`メソッドは、他のシーダーを全部実行する`DatabaseSeeder`を返します。もしくは、`seed`メソッドへ特定のシーダクラス名を渡してください。
+
+    <?php
+
+    namespace Tests\Feature;
+
+    use Tests\TestCase;
+    use OrderStatusesTableSeeder;
+    use Illuminate\Foundation\Testing\RefreshDatabase;
+    use Illuminate\Foundation\Testing\WithoutMiddleware;
+
+    class ExampleTest extends TestCase
+    {
+        use RefreshDatabase;
+
+        /**
+         * Test creating a new order.
+         *
+         * @return void
+         */
+        public function testCreatingANewOrder()
+        {
+            // DatabaseSeederを実行
+            $this->seed();
+
+            // シーダを１つ実行
+            $this->seed(OrderStatusesTableSeeder::class);
+
+            // ...
+        }
+    }
 
 <a name="available-assertions"></a>
 ## 使用可能なアサーション

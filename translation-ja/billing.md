@@ -4,11 +4,18 @@
 - [Cashierのアップデート](#upgrading-cashier)
 - [インストール](#installation)
 - [設定](#configuration)
-    - [データベースマイグレーション](#database-migrations)
     - [Billableモデル](#billable-model)
     - [APIキー](#api-keys)
     - [通貨設定](#currency-configuration)
-    - [Webフック](#webhooks)
+- [顧客](#customers)
+    - [顧客の生成](#creating-customers)
+- [支払い方法](#payment-methods)
+    - [支払い方法の保存](#storing-payment-methods)
+    - [支払い方法の取得](#retrieving-payment-methods)
+    - [ユーザーが支払い方法を持っているかの判定](#check-for-a-payment-method)
+    - [デフォルト支払い方法の更新](#updating-the-default-payment-method)
+    - [支払い方法の追加](#adding-payment-methods)
+    - [支払い方法の削除](#deleting-payment-methods)
 - [定期サブスクリプション](#subscriptions)
     - [サブスクリプション作成](#creating-subscriptions)
     - [サブスクリプション状態の確認](#checking-subscription-status)
@@ -19,15 +26,8 @@
     - [サブスクリプションキャンセル](#cancelling-subscriptions)
     - [サブスクリプション再開](#resuming-subscriptions)
 - [サブスクリプションのトレイト](#subscription-trials)
-    - [カードの事前登録あり](#with-credit-card-up-front)
-    - [カードの事前登録なし](#without-credit-card-up-front)
-- [顧客](#customers)
-    - [顧客の生成](#creating-customers)
-- [カード](#cards)
-    - [クレジットカードの取得](#retrieving-credit-cards)
-    - [登録済みカードの判定](#determining-if-a-card-is-on-file)
-    - [クレジットカードの更新](#updating-credit-cards)
-    - [クレジットカードの削除](#deleting-credit-cards)
+    - [支払いの事前登録あり](#with-payment-method-up-front)
+    - [支払いの事前登録なし](#without-payment-method-up-front)
 - [StripeのWebフック処理](#handling-stripe-webhooks)
     - [Webフックハンドラの定義](#defining-webhook-event-handlers)
     - [サブスクリプション不可](#handling-failed-subscriptions)
@@ -38,18 +38,21 @@
     - [払い戻し](#refunding-charges)
 - [インボイス](#invoices)
     - [インボイスPDF生成](#generating-invoice-pdfs)
+- [堅牢な顧客認証 (SCA)](#strong-customer-authentication)
+    - [支払い要求の追加確認](#payments-requiring-additional-confirmation)
+    - [非セッション確立時の支払い通知](#off-session-payment-notifications)
 
 <a name="introduction"></a>
 ## イントロダクション
 
 Laravel Cashierは[Stripe](https://stripe.com)によるサブスクリプション（定期課金）サービスの読みやすく、スラスラと記述できるインターフェイスを提供します。これにより書くのが恐ろしくなるような、サブスクリプション支払いのための決まりきったコードのほとんどが処理できます。基本的なサブスクリプション管理に加え、Cashierはクーポン、サブスクリプションの変更、サブスクリプション数、キャンセル猶予期間、さらにインボイスのPDF発行まで行います。
 
-> {note} サブスクリプションを提供せず、「一回だけ」の支払いを取り扱う場合は、Cashierを使用してはいけません。StripeのSDKを直接使用してください。
+> {note} ブレーキングチェンジを防ぐために、CashierではStripeの固定APIバージョンを使用しています。Cashier10.1では、Stripeの`2019-08-14`付けAPIバージョンを使用しています。Stripeの新機能や機能向上を利用するため、マイナーリリースでもStripe APIのバージョンを更新することがあります。
 
 <a name="upgrading-cashier"></a>
 ## Cashierのアップデート
 
-新しいメジャーバージョンのCashierへアップグレードする場合は、[アップグレードガイド](https://github.com/laravel/cashier/blob/master/UPGRADE.md)を注意深く確認することが重要です。
+新しいバージョンのCashierへアップグレードする場合は、[アップグレードガイド](https://github.com/laravel/cashier/blob/master/UPGRADE.md)を注意深く確認することが重要です。
 
 <a name="installation"></a>
 ## インストール
@@ -58,39 +61,31 @@ Laravel Cashierは[Stripe](https://stripe.com)によるサブスクリプショ�
 
     composer require laravel/cashier
 
+> {note} Stripeの全イベントをCashierで確実に処理するために、[CashierのWebhook処理の準備](#handling-stripe-webhooks)を行なってください。
+
+#### データベースマイグレーション
+
+CashierサービスプロバーダでCashierのデータベースマイグレーションを登録しています。ですから、パッケージをインストールしたら、データベースのマイグレーションを忘れず実行してください。Cashierマイグレーションは`users`テーブルにいくつものカラムを追加し、顧客のサブスクリプションを全て保持するために新しい`subscriptions`テーブルを作成します。
+
+    php artisan migrate
+
+Cashierパッケージに始めから含まれているマイグレーションをオーバーライトしたい場合は、`vendor:publish` Artisanコマンドを使用し公開できます。
+
+    php artisan vendor:publish --tag="cashier-migrations"
+
+Cashierのマイグレーション実行を完全に防ぎたい場合は、Cashierが提供している`ignoreMigrations`を使います。通常、このメソッドは`AppServiceProvider`の`register`メソッドの中で実行すべきです。
+
+    use Laravel\Cashier\Cashier;
+
+    Cashier::ignoreMigrations();
+
 <a name="configuration"></a>
 ## 設定
-
-<a name="database-migrations"></a>
-### データベースマイグレーション
-
-Cashierを使用する前に、[データベースを準備](/docs/{{version}}/migrations)する必要があります。`users`テーブルに、いくつかのカラムを追加し、顧客のサブスクリプション情報すべてを保持する新しい`subscriptions`テーブルを作成します。
-
-    Schema::table('users', function (Blueprint $table) {
-        $table->string('stripe_id')->nullable()->collation('utf8mb4_bin');
-        $table->string('card_brand')->nullable();
-        $table->string('card_last_four', 4)->nullable();
-        $table->timestamp('trial_ends_at')->nullable();
-    });
-
-    Schema::create('subscriptions', function (Blueprint $table) {
-        $table->bigIncrements('id');
-        $table->unsignedBigInteger('user_id');
-        $table->string('name');
-        $table->string('stripe_id')->collation('utf8mb4_bin');
-        $table->string('stripe_plan');
-        $table->integer('quantity');
-        $table->timestamp('trial_ends_at')->nullable();
-        $table->timestamp('ends_at')->nullable();
-        $table->timestamps();
-    });
-
-マイグレーションを作成したら、`migrate` Artisanコマンドを実行します。
 
 <a name="billable-model"></a>
 ### Billableモデル
 
-次に、モデル定義に`Billable`トレイトを追加します。このトレイトは、サブスクリプションの作成、クーポンの適用、クレジットカード情報の更新など、一般的な支払いタスクを実行する様々なメソッドを提供しています。
+Cashierを使い始める前に、モデル定義に`Billable`トレイトを追加します。このトレイトはサブスクリプションの作成やクーポンの適用、支払い情報の更新などのような、共通の支払いタスク実行を提供する数多くのメソッドを提供しています。
 
     use Laravel\Cashier\Billable;
 
@@ -99,34 +94,212 @@ Cashierを使用する前に、[データベースを準備](/docs/{{version}}/m
         use Billable;
     }
 
+CashierはLaravelにLaravelに含まれている`App\User`クラスがBillableモデルであると仮定しています。これを変更する場合は、`.env`ファイルでモデルを指定してください。
+
+    CASHIER_MODEL=App\User
+
+> {note} Laravelの提供する`App\User`モデル以外のモデルを使用する場合は、提供している[マイグレーション](#installation)を公開し、モデルのテーブル名に一致するように変更する必要があります。
+
 <a name="api-keys"></a>
 ### APIキー
 
-最後に、Stripeキーを`services.php`設定ファイルへ設定します。Stripe APIキーはStripeのコントロールパネルから取得します。
+次に、`.env`ファイルの中のStripeキーを設定する必要があります。Stripe APIキーは、Stripeのコントロールパネルから取得できます。
 
-    'stripe' => [
-        'model' => App\User::class,
-        'key' => env('STRIPE_KEY'),
-        'secret' => env('STRIPE_SECRET'),
-        'webhook' => [
-            'secret' => env('STRIPE_WEBHOOK_SECRET'),
-            'tolerance' => env('STRIPE_WEBHOOK_TOLERANCE', 300),
-        ],
-    ],
+    STRIPE_KEY=your-stripe-key
+    STRIPE_SECRET=your-stripe-secret
 
 <a name="currency-configuration"></a>
 ### 通貨設定
 
-Cashierのデフォルト通貨は米ドル(USD)です。サービスプロバイダの一つで、`boot`メソッド中で`Cashier::useCurrency`メソッドを呼び出し、デフォルト通貨を変更可能です。`useCurrency`メソッドは２つの文字列を引数に取ります。通貨と通貨記号です。
+Cashierのデフォルト通貨は米ドル(USD)です。`CASHIER_CURRENCY`環境変数の指定で、デフォルト通貨を変更可能です。
 
-    use Laravel\Cashier\Cashier;
+    CASHIER_CURRENCY=EUR
 
-    Cashier::useCurrency('eur', '€');
+Caishierの通貨設定に付け加え、インボイスで表示する金額のフォーマットをローケルを使い指定することも可能です。Cashierは内部で、通貨のローケルを指定するために、[PHPの`NumberFormatter`クラス](https://www.php.net/manual/en/class.numberformatter.php)を利用しています。
 
-<a name="webhooks"></a>
-### Webフック
+    CASHIER_CURRENCY_LOCALE=nl_BE
 
-CashierがすべてのStripeイベントを確実に処理処理できるように、[CashierのWebフック処理の設定](#handling-stripe-webhooks)を行うことを強くおすすめします。
+> {note} `en`以外のローケルを指定する場合は、サーバ設定で`ext-intl` PHP拡張がインストールされているのを確認してください。
+
+<a name="customers"></a>
+## 顧客
+
+<a name="creating-customers"></a>
+### 顧客の生成
+
+時々サブスクリプションを開始しなくてもStripeで顧客を作成したい場合があります。`createAsStripeCustomer`を使い、作成できます。
+
+    $user->createAsStripeCustomer();
+
+Stripeで顧客を生成しておけば、後からサブスクリプションを開始できます。
+
+<a name="payment-methods"></a>
+## 支払い方法
+
+<a name="storing-payment-methods"></a>
+### 支払い方法の保存
+
+Stripeでサブスクリプションを生成するか「一度だけ」の課金を実行するためには、支払い方法を登録し、IDを取得する必要があります。サブスクリプションのための支払いメソッドか、一回だけの課金ためかによりアプローチが異なるため、以下で両方共にみていきましょう。
+
+#### サブスクリプションの支払い方帆
+
+将来の仕様に備えて、顧客のクレジットカードを登録する場合、顧客の支払いメソッドの詳細を安全に集めるためにStripe Setup Intents APIを使う必要があります。"Setup Intent（意図）"は、Stripeに対し顧客の支払いメソッドを登録する意図を示しています。Cashierの`Billable`トレイトは、新しいSetup Intentを簡単に作成できる`createSetupIntent`を含んでいます。顧客の支払いメソッドの詳細情報を集めるフォームをレンダーしたいルートやコントローラから、このメソッドを呼び出してください。
+
+    return view('update-payment-method', [
+        'intent' => $user->createSetupIntent()
+    ]);
+
+ Setup Intentを作成したらそれをビューに渡し、支払い方法を集める要素にsecretを付け加える必要があります。例えば、このような「支払い方法更新」フォームを考えてください。
+
+    <input id="card-holder-name" type="text">
+
+    <!-- Stripe要素のプレースホルダ -->
+    <div id="card-element"></div>
+
+    <button id="card-button" data-secret="{{ $intent->client_secret }}">
+        Update Payment Method
+    </button>
+
+Stripe.jsライブラリを使い、Stripe要素をフォームに付け加え、顧客の支払いの詳細を安全に収集します。
+
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script>
+        const stripe = Stripe('stripe-public-key');
+
+        const elements = stripe.elements();
+        const cardElement = elements.create('card');
+
+        cardElement.mount('#card-element');
+    </script>
+
+これで[Stripeの`handleCardSetup`メソッド](https://stripe.com/docs/stripe-js/reference#stripe-handle-card-setup)を使用してカードを検証し、Stripeから安全な「支払い方法識別子」を取得できます。
+
+    const cardHolderName = document.getElementById('card-holder-name');
+    const cardButton = document.getElementById('card-button');
+    const clientSecret = cardButton.dataset.secret;
+
+    cardButton.addEventListener('click', async (e) => {
+        const { setupIntent, error } = await stripe.handleCardSetup(
+            clientSecret, cardElement, {
+                payment_method_data: {
+                    billing_details: { name: cardHolderName.value }
+                }
+            }
+        );
+
+        if (error) {
+            // ユーザーに"error.message"を表示する…
+        } else {
+            // カードの検証に成功した…
+        }
+    });
+
+Stripeによりカードが検証されたら、顧客に付け加えた`setupIntent.payment_method`の結果をLaravelアプリケーションへ渡すことができます。支払い方法は[新しい支払い方法を追加](#adding-payment-methods)するのと、[デフォルトの支払い方法を使用](#updating-the-default-payment-method)する、どちらかが選べます。[新しい支払い方法を追加](#adding-payment-methods)の支払いメソッド識別子を即時に使用することもできます。
+
+> {tip} Setup Intentsと顧客支払いの詳細情報の収集に関するより詳しい情報は、[Stripeが提供している概要](https://stripe.com/docs/payments/cards/saving-cards#saving-card-without-payment)をご覧ください。
+
+#### 一回のみの課金に対する支払い方法
+
+顧客の支払いメソッドに対し一回のみの課金を作成する場合、ワンタイムの支払いメソッド識別子を使う必要があるだけで済みます。Stripeの制限により、保存されている顧客のデフォルト支払い方法は使用できません。Stripe.jsライブラリを使用し、顧客に支払い方法の詳細を入力してもらえるようにする必要があります。例として、以降のフォームを考えてみましょう。
+
+    <input id="card-holder-name" type="text">
+
+    <!-- Stripe要素のプレースホルダ -->
+    <div id="card-element"></div>
+
+    <button id="card-button">
+        Process Payment
+    </button>
+
+次に、Stripe.jsライブラリを利用しStripeの要素をフォームへ追加し、顧客の支払い情報詳細を安全に収集します。
+
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script>
+        const stripe = Stripe('stripe-public-key');
+
+        const elements = stripe.elements();
+        const cardElement = elements.create('card');
+
+        cardElement.mount('#card-element');
+    </script>
+
+[Stripeの`createPaymentMethod`メソッド](https://stripe.com/docs/stripe-js/reference#stripe-create-payment-method)を活用し、Stripeによりカードが検証し、安全な「支払い方法識別子」をSrtipeから取得します。
+
+    const cardHolderName = document.getElementById('card-holder-name');
+    const cardButton = document.getElementById('card-button');
+
+    cardButton.addEventListener('click', async (e) => {
+        const { paymentMethod, error } = await stripe.createPaymentMethod(
+            'card', cardElement, {
+                billing_details: { name: cardHolderName.value }
+            }
+        );
+
+        if (error) {
+            // ユーザーに"error.message"を表示する…
+        } else {
+            // カードの検証に成功した…
+        }
+    });
+
+カードの検証が成功すれば、`paymentMethod.id`をLaravelアプリケーションに渡し、[１回限りの支払い](#simple-charge)を処理できます。
+
+<a name="retrieving-payment-methods"></a>
+### 支払い方法の取得
+
+Billableモデルインスタンスの`paymentMethods`メソッドは、`Laravel\Cashier\PaymentMethod`インスタンスのコレクションを返します。
+
+    $paymentMethods = $user->paymentMethods();
+
+デフォルト支払いメソッドを取得する場合は、`defaultPaymentMethod`メソッドを使用してください。
+
+    $paymentMethod = $user->defaultPaymentMethod();
+
+<a name="check-for-a-payment-method"></a>
+### ユーザーが支払い方法を持っているかの判定
+
+Billableモデルが自身のアカウントに付加されている支払いメソッドを持っているかを判定するには、`hasPaymentMethod`メソッドを使用します。
+
+    if ($user->hasPaymentMethod()) {
+        //
+    }
+
+<a name="updating-the-default-payment-method"></a>
+### デフォルト支払い方法の更新
+
+`updateDefaultPaymentMethod`メソッドは顧客のデフォルト支払い方法の情報を更新するために使用します。このメソッドはStripe支払いメソッド識別子を引数に取り、その新しい支払い方法がデフォルト支払い方法として設定されます。
+
+    $user->updateDefaultPaymentMethod($paymentMethod);
+
+その顧客のデフォルト支払い方法情報をStripeの情報と同期したい場合は、`updateDefaultPaymentMethodFromStripe`メソッドを使用してください。
+
+    $user->updateDefaultPaymentMethodFromStripe();
+
+> {note} 顧客のデフォルト支払い方法は、インボイス発行処理と新しいサブスクリプションの生成にだけ使用されます。Stripeの制限により、一回だけの課金には使用されません。
+
+<a name="adding-payment-methods"></a>
+### 支払い方法の追加
+
+新しい支払い方法を追加するには、Billableのユーザーに対し、`addPaymentMethod`を呼び出します。支払いメソッド識別子を渡してください。
+
+    $user->addPaymentMethod($paymentMethod);
+
+> {tip} 支払い方法の識別子の取得方法を学ぶには、[支払い方法保持のドキュメント](#storing-payment-methods)を確認してください。
+
+<a name="deleting-payment-methods"></a>
+### 支払い方法の削除
+
+支払い方法を削除するには、削除したい`Laravel\Cashier\PaymentMethod`インスタンス上の`delete`メソッドを呼び出します。
+
+    $paymentMethod->delete();
+
+`deletePaymentMethods`メソッドは、そのBillableモデルの全支払いメソッド情報を削除します。
+
+    $user->deletePaymentMethods();
+
+> {note} アクティブなサブスクリプションがあるユーザーでは、デフォルト支払いメソッドが削除されないようにする必要があるでしょう。
 
 <a name="subscriptions"></a>
 ## サブスクリプション
@@ -138,17 +311,19 @@ CashierがすべてのStripeイベントを確実に処理処理できるよう�
 
     $user = User::find(1);
 
-    $user->newSubscription('main', 'premium')->create($token);
+    $user->newSubscription('main', 'premium')->create($paymentMethod);
 
 `newSubscription`メソッドの最初の引数は、サブスクリプションの名前です。アプリケーションでサブスクリプションを一つしか取り扱わない場合、`main`か`primary`と名づけましょう。２つ目の引数はユーザーが購入しようとしているサブスクリプションのプランを指定します。この値はStripeのプラン識別子に対応させる必要があります。
 
-`create`メソッドはStripeクレジットカード／ソーストークンを引数にとり、サブスクリプションを開始すると同時に、カスタマーIDと関連する支払い情報をデータベースに保存します。
+`create`メソッドは[Stripeの支払い方法識別子](#storing-payment-methods)、もしくは`PaymentMethod`オブジェクトを引数に取り、サブスクリプションを開始するのと同時に、データベースの顧客IDと他の関連する支払い情報を更新します。
+
+> {note} サブスクリプションの`create()`へ支払いメソッド識別子を直接渡すと、ユーザーの保存済み支払いメソッドへ自動的に追加します。
 
 #### ユーザー詳細情報の指定
 
 ユーザーに関する詳細情報を追加したい場合は、`create`メソッドの第２引数に渡すことができます。
 
-    $user->newSubscription('main', 'monthly')->create($token, [
+    $user->newSubscription('main', 'monthly')->create($paymentMethod, [
         'email' => $email,
     ]);
 
@@ -160,7 +335,7 @@ Stripeがサポートしている追加のフィールドについてのさら�
 
     $user->newSubscription('main', 'monthly')
          ->withCoupon('code')
-         ->create($token);
+         ->create($paymentMethod);
 
 <a name="checking-subscription-status"></a>
 ### サブスクリプション状態の確認
@@ -221,6 +396,29 @@ Stripeがサポートしている追加のフィールドについてのさら�
         //
     }
 
+<a name="incomplete-and-past-due-status"></a>
+#### 不十分と期日超過の状態
+
+サブスクリプション作成後、そのサブクリプションが２つ目の支払いアクションを要求している場合、`incomplete`（不十分）として印がつけられます。サブスクリプションの状態は、Cashierの`subscriptions`データベーステーブルの`stripe_status`カラムに保存されます。
+
+同様に、サブスクリプションの変更時に第２の支払いアクションが要求されている場合は、`past_due`（期日超過）として印がつけられます。サブスクリプションが２つのどちらかである時、顧客が支払いを受領するまで状態は有効になりません。あるサブクリプションに不十分な支払いがあるかを確認する場合は、Billableモデルかサブクリプションインスタンス上の`hasIncompletePayment`メソッドを使用します。
+
+    if ($user->hasIncompletePayment('main')) {
+        //
+    }
+
+    if ($user->subscription('main')->hasIncompletePayment()) {
+        //
+    }
+
+サブクリプションに不完全な支払いがある場合、`latestPayment`（最後の支払い）識別子を渡したCashierの支払い確認ページをそのユーザーへ表示すべきです。この識別子を取得するには、サブクリプションインスタンスの`latestPayment`メソッドが使用できます。
+
+    <a href="{{ route('cashier.payment', $subscription->latestPayment()->id) }}">
+        Please confirm your payment.
+    </a>
+
+> {note} あるサブクリプションに`incomplete`状態がある場合、支払いを確認するまでは変更できません。そのためサブクリプションが`incomplete`状態では、`swap` や`updateQuantity`メソッドは例外を投げます。
+
 <a name="changing-plans"></a>
 ### プラン変更
 
@@ -237,6 +435,12 @@ Stripeがサポートしている追加のフィールドについてのさら�
     $user->subscription('main')
             ->skipTrial()
             ->swap('provider-plan-id');
+
+次の支払いサイクルまで待つ代わりに、プランを変更時即時にインボイスを発行したい場合は、`swapAndInvoice`メソッドを使用します。
+
+    $user = App\User::find(1);
+
+    $user->subscription('main')->swapAndInvoice('provider-plan-id');
 
 <a name="subscription-quantity"></a>
 ### 購入数
@@ -288,8 +492,6 @@ Stripeがサポートしている追加のフィールドについてのさら�
 <a name="subscription-anchor-date"></a>
 ### サブスクリプション課金日付け
 
-> {note} サブスクリプション課金日付けの変更は、Stripeを利用するCashierのみサポートします。
-
 デフォルトで課金日はサブスクリプションが生成された日付け、もしくは使用期間を使っている場合は、使用期間の終了日です。課金日付を変更したい場合は、`anchorBillingCycleOn`メソッドを使用します。
 
     use App\User;
@@ -301,7 +503,7 @@ Stripeがサポートしている追加のフィールドについてのさら�
 
     $user->newSubscription('main', 'premium')
                 ->anchorBillingCycleOn($anchor->startOfDay())
-                ->create($token);
+                ->create($paymentMethod);
 
 サブスクリプションの課金間隔を管理する情報は、[Stripeの課金サイクルのドキュメント](https://stripe.com/docs/billing/subscriptions/billing-cycle)をお読みください。
 
@@ -336,8 +538,8 @@ Stripeがサポートしている追加のフィールドについてのさら�
 <a name="subscription-trials"></a>
 ## サブスクリプションのトレイト
 
-<a name="with-credit-card-up-front"></a>
-### カードの事前登録あり
+<a name="with-payment-method-up-front"></a>
+### 支払いの事前登録あり
 
 顧客へ試用期間を提供し、支払情報を事前に登録してもらう場合、サブスクリプションを作成するときに`trialDays`メソッドを使ってください。
 
@@ -345,7 +547,7 @@ Stripeがサポートしている追加のフィールドについてのさら�
 
     $user->newSubscription('main', 'monthly')
                 ->trialDays(10)
-                ->create($token);
+                ->create($paymentMethod);
 
 このメソッドはデータベースのサブスクリプションレコードへ、試用期間の終了日を設定すると同時に、Stripeへこの期日が過ぎるまで、顧客へ課金を始めないように指示します。`trialDays`メソッドを使用する場合、Stripeでそのプランに対して設定したデフォルトの試用期間はオーバーライドされます。
 
@@ -357,7 +559,7 @@ Stripeがサポートしている追加のフィールドについてのさら�
 
     $user->newSubscription('main', 'monthly')
                 ->trialUntil(Carbon::now()->addDays(10))
-                ->create($token);
+                ->create($paymentMethod);
 
 ユーザーが使用期間中であるかを判定するには、ユーザーインスタンスに対し`onTrial`メソッドを使うか、サブスクリプションインスタンスに対して`onTrial`を使用してください。次の２つの例は、同じ目的を達します。
 
@@ -369,8 +571,8 @@ Stripeがサポートしている追加のフィールドについてのさら�
         //
     }
 
-<a name="without-credit-card-up-front"></a>
-### カードの事前登録なし
+<a name="without-payment-method-up-front"></a>
+### 支払いの事前登録なし
 
 事前にユーザーの支払い方法の情報を登録してもらうことなく、試用期間を提供する場合は、そのユーザーのレコードの`trial_ends_at`に、試用の最終日を設定するだけです。典型的な使い方は、ユーザー登録時に設定する方法でしょう。
 
@@ -397,84 +599,24 @@ Stripeがサポートしている追加のフィールドについてのさら�
 
     $user = User::find(1);
 
-    $user->newSubscription('main', 'monthly')->create($token);
-
-<a name="customers"></a>
-## 顧客
-
-<a name="creating-customers"></a>
-### 顧客の生成
-
-時にサブスクリプションの定期購入を始めなくても、顧客を生成したい場合があります。それには、`createAsStripeCustomer`メソッドを使用します。
-
-    $user->createAsStripeCustomer();
-
-Stripeで作った顧客に対し、後からサブスクリプションの定期購入を開始可能です。
-
-<a name="cards"></a>
-## カード
-
-<a name="retrieving-credit-cards"></a>
-### クレジットカードの取得
-
-Billableなモデルインスタンスの`cards`メソッドは、`Laravel\Cashier\Card`インスタンスのコレクションを返します。
-
-    $cards = $user->cards();
-
-デフォルトカードを取得するには、`defaultCard`メソッドを使用します。
-
-    $card = $user->defaultCard();
-
-<a name="determining-if-a-card-is-on-file"></a>
-### 登録済みカードの判定
-
-顧客のアカウントに紐付けられているクレジットカードがあるかを確認する場合は、`hasCardOnFile`メソッドを使用します。
-
-    if ($user->hasCardOnFile()) {
-        //
-    }
-
-<a name="updating-credit-cards"></a>
-### クレジットカードの更新
-
-顧客のクレジットカード情報を更新するには、`updateCard`メソッドを使用します。このメソッドはStripeトークンを引数に取り、新しいクレジットカードをデフォルトの支払先に設定します。
-
-    $user->updateCard($token);
-
-Stripe側の顧客デフォルトカード情報と同期させるには、`updateCardFromStripe`メソッドを使用します。
-
-    $user->updateCardFromStripe();
-
-<a name="deleting-credit-cards"></a>
-### クレジットカードの削除
-
-カードを削除するには、最初に`cards`メソッドで顧客のカードを取得しておく必要があります。次に、削除したいカードインスタンスに対し、`delete`メソッドを呼び出します。
-
-    foreach ($user->cards() as $card) {
-        $card->delete();
-    }
-
-> {note} デフォルトカードを削除する場合は、データベース上の新しいデフォルトカードを同期させるために、`updateCardFromStripe`メソッドを必ず呼び出してください。
-
-アプリケーションに保存されている全てのカード情報を削除するには、`deleteCards`メソッドを使用します。
-
-    $user->deleteCards();
-
-> {note} ユーザーにアクティブなサブスクリプションがある場合、最後の支払い方法が削除されないように考慮する必要があるでしょう。
+    $user->newSubscription('main', 'monthly')->create($paymentMethod);
 
 <a name="handling-stripe-webhooks"></a>
 ## StripeのWebフック処理
 
-StripeはWebフックにより、アプリケーションへ様々なイベントを通知できます。StripeのWebフックを処理するには、CashierのWebフックコントローラへのルートを定義する必要があります。このコントローラは受信したWebフックリクエストをすべて処理し、正しいコントローラメソッドをディスパッチします。
+> {tip} ローカル環境でWebhooksのテストの手助けをするために、[Laravel Valet](/docs/{{version}}/valet)の`valet share`コマンドが使用できます。
 
-    Route::post(
-        'stripe/webhook',
-        '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
-    );
+StripeはWebフックにより、アプリケーションへ様々なイベントを通知できます。デフォルトで、CashierのWebhookを処理するルートのコントローラは、Cashierのサービスプロバイダで設定されています。このコントローラはWebhookの受信リクエストをすべて処理します。
 
-> {note} ルートを登録したら、Stripeコントロールパネル設定のWebフックURLも、合わせて設定してください。
+デフォルトでこのコントローラは、課金に多く失敗し続ける（Stripeの設定で定義している回数）、顧客の更新、顧客の削除、サブスクリプションの変更、支払い方法の変更があると、自動的にサブスクリプションをキャンセル処理します。しかしながら、すぐに見つけることができるようにこのコントローラを拡張し、どんなWebhookイベントでもお好きに処理できます
 
-このコントローラはデフォルトで、（Stripeの設定により決まる）課金の失敗が多すぎる場合や顧客の変更、顧客の削除、サブスクリプションのアップデート、クレジットカードの変更時に、サブスクリプションを自動的にキャンセル処理します。処理したいWebフックイベントをどれでも処理できるようにするために、このコントローラを拡張する方法は、以降で説明します。
+アプリケーションでStripeのWebhookを処理するためには、StripeのコントロールパネルでWebhook URLを確実に設定してください。Stripeのコントロールパネルで設定する必要のあるWebhookの全リストは、以下のとおりです。
+
+- `customer.subscription.updated`
+- `customer.subscription.deleted`
+- `customer.updated`
+- `customer.deleted`
+- `invoice.payment_action_required`
 
 > {note} Cashierに含まれる、[Webフック署名の確認](/docs/{{version}}/billing#verifying-webhook-signatures)ミドルウェアを使用し、受信リクエストを確実に保護してください。
 
@@ -511,7 +653,7 @@ Cashierは課金の失敗時に、サブスクリプションを自動的にキ�
         }
     }
 
-次に、`routes/web.php`の中で、キャッシャーコントローラへのルートを定義します。
+次に、`routes/web.php`の中で、キャッシャーコントローラへのルートを定義します。これにより、デフォルトのルートが上書きされます。
 
     Route::post(
         'stripe/webhook',
@@ -521,21 +663,14 @@ Cashierは課金の失敗時に、サブスクリプションを自動的にキ�
 <a name="handling-failed-subscriptions"></a>
 ### サブスクリプション不可
 
-顧客のクレジットカードが有効期限切れだったら？　心配いりません。Cashierは顧客のサブスクリプションを簡単にキャンセルできるWebフックを用意しています。前記と同じように、コントローラのルートを指定するだけです。
-
-    Route::post(
-        'stripe/webhook',
-        '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
-    );
-
-これだけです！　課金の失敗はコントローラにより捉えられ、処理されます。コントローラはStripeによりサブスクリプションが不能だと判断されると（通常は課金に３回失敗時）、その顧客のサブスクリプションをキャンセルします。
+顧客のクレジットカードが有効期限切れだったら？　心配いりません。CashierのWebhookコントローラが顧客のサブスクリプションをキャンセルします。失敗した支払いは自動的に捉えられ、コントローラにより処理されます。このコントローラはStripeがサブスクリプションに失敗したと判断した場合、顧客のサブスクリプションを取り消します。（通常、３回の課金失敗）
 
 <a name="verifying-webhook-signatures"></a>
 ### Webフック署名の確認
 
 Webフックを安全にするため、[StripeのWebフック著名](https://stripe.com/docs/webhooks/signatures)が利用できます。便利に利用できるように、Cashierは送信されてきたWebフックリクエストが有効なものか確認するミドルウェアをあらかじめ用意しています。
 
-Webフックの確認を有効にするには、`services`設定ファイルの`stripe.webhook.secret`設定値を確実に設定してください。Webフックの`secret`は、Stripeアカウントダッシュボードで取得できます。
+Webhookの確認を有効にするには、`.env`ファイル中の`STRIPE_WEBHOOK_SECRET`環境変数を確実に設定してください。Stripeアカウントのダッシュボードから取得される、Webhookの`secret`を指定します。
 
 <a name="single-charges"></a>
 ## 一回だけの課金
@@ -545,21 +680,22 @@ Webフックの確認を有効にするには、`services`設定ファイルの`
 
 > {note} `charge`メソッドには**アプリケーションで使用している通貨の最低単位**で金額を指定します。
 
-すでに何かを購入している顧客のクレジットカードに、「一回だけ」の課金をしたい場合は、billableモデルのインスタンスに対し、`charge`メソッドを使います。
+サブスクリプションを購入している顧客の支払いメソッドに対して、「一回だけ」の課金を行いたい場合は、Billableモデルインスタンス上の`charge`メソッドを使用します。第２引数に[支払い方法識別子](#storing-payment-methods)を渡してください。
 
     // Stripeはセント単位で課金する
-    $stripeCharge = $user->charge(100);
+    $stripeCharge = $user->charge(100, $paymentMethod);
 
-`charge`メソッドは第２引数に配列を受け付け、裏で動いているStripeの課金作成に対するオプションを指定できます。課金作成時に使用できるオプションについては、Stripeのドキュメントを参照してください。
+`charge`メソッドは第３引数に配列を受け付け、裏で動いているStripeの課金作成に対するオ
+プションを指定できます。課金作成時に使用できるオプションについては、Stripeのドキュメントを参照してください。
 
-    $user->charge(100, [
+    $user->charge(100, $paymentMethod, [
         'custom_option' => $value,
     ]);
 
-`charge`メソッドは、課金に失敗した場合に例外を投げます。課金に成功すると、メソッドはStripeレスポンスをそのまま返します。
+課金に失敗すると、`charge`メソッドは例外を投げます。課金に成功すれば、メソッドは`Laravel\Cashier\Payment`のインスタンスを返します。
 
     try {
-        $response = $user->charge(100);
+        $payment = $user->charge(100, $paymentMethod);
     } catch (Exception $e) {
         //
     }
@@ -572,7 +708,7 @@ Webフックの確認を有効にするには、`services`設定ファイルの`
     // Stripeはセント単位で課金する
     $user->invoiceFor('One Time Fee', 500);
 
-金額は即時にユーザーのクレジットカードへ課金されます。`invoiceFor`メソッドは第３引数に配列を受け付けます。この配列はインボイスアイテムへの支払いオプションを含みます。第４引数も配列で、インボイス自身に対する支払いオプションを指定します。
+金額は即時にユーザーのデフォルト支払い方法へ課金されます。`invoiceFor`メソッドは第３引数に配列を受け付けます。この配列はインボイスアイテムへの支払いオプションを含みます。第４引数も配列で、インボイス自身に対する支払いオプションを指定します。
 
     $user->invoiceFor('Stickers', 500, [
         'quantity' => 50,
@@ -585,11 +721,11 @@ Webフックの確認を有効にするには、`services`設定ファイルの`
 <a name="refunding-charges"></a>
 ### 払い戻し
 
-Stripeでの課金を払い戻す必要がある場合は、`refund`メソッドを使用します。このメソッドは、Stripe課金IDのみ引数に取ります。
+Stripeでの課金を払い戻す必要がある場合は、`refund`メソッドを使用します。このメソッドの第１引数は、Stripe Payment Intent IDです。
 
-    $stripeCharge = $user->charge(100);
+    $payment = $user->charge(100, $paymentMethod);
 
-    $user->refund($stripeCharge->id);
+    $user->refund($payment->id);
 
 <a name="invoices"></a>
 ## インボイス
@@ -622,7 +758,56 @@ Stripeでの課金を払い戻す必要がある場合は、`refund`メソッド
 
     Route::get('user/invoice/{invoice}', function (Request $request, $invoiceId) {
         return $request->user()->downloadInvoice($invoiceId, [
-            'vendor'  => 'Your Company',
+            'vendor' => 'Your Company',
             'product' => 'Your Product',
         ]);
     });
+
+<a name="strong-customer-authentication"></a>
+## 堅牢な顧客認証
+
+皆さんのビジネスがヨーロッパを基盤とするものであるなら、堅牢な顧客認証 (SCA)規制を守る必要があります。これらのレギュレーションは支払い詐欺を防ぐためにEUにより２０１９年９月に課せられたものです。幸運なことに、StripeとCashierはSCA準拠のアプリケーション構築のために準備をしてきました。
+
+> {note} 始める前に、[StripeのPSD2とSCAのガイド](https://stripe.com/en-be/guides/strong-customer-authentication)と、[新SCA APIのドキュメント](https://stripe.com/docs/strong-customer-authentication)を確認してください。
+
+<a name="payments-requiring-additional-confirmation"></a>
+### 支払い要求の追加確認
+
+SCA規制は支払いの確認と処理を行うため、頻繁に追加の検証を要求しています。これが起きるとCashierは`IncompletePayment`例外を投げ、この追加の検証が必要であるとあなたに知らせます。この例外を捉えたら、処理の方法は２つあります。
+
+最初の方法は、その顧客をCashierに含まれている支払い確認専門ページへリダイレクトする方法です。このページに紐つけたルートは、Cashierのサービスプロバイダで登録済みです。そのため、`IncompletePayment`例外を捉えたら、支払い確認ページへリダイレクトします。
+
+    use Laravel\Cashier\Exceptions\IncompletePayment;
+
+    try {
+        $subscription = $user->newSubscription('default', $planId)
+                                ->create($paymentMethod);
+    } catch (IncompletePayment $exception) {
+        return redirect()->route(
+            'cashier.payment',
+            [$exception->payment->id, 'redirect' => route('home')]
+        );
+    }
+
+支払い確認ページで顧客はクレジットカード情報の入力を再度促され、「３Dセキュア」のような追加のアクションがStripeにより実行されます。支払いが確認されたら、上記のように`redirect`引数で指定されたURLへユーザーはリダイレクトされます。
+
+別の方法として、Stripeに支払いの処理を任せることもできます。この場合、支払い確認ページへリダイレクトする代わりに、Stripeダッシュボードで[Stripeの自動支払いメール](https://dashboard.stripe.com/account/billing/automatic)を瀬一定する必要があります。しかしながら、`IncompletePayment`例外を捉えたら、支払い確認方法の詳細がメールで送られることをユーザーへ知らせる必要があります。
+
+不完全な支払いの例外は、`Billable`のユーザーに対する`charge`、`invoiceFor`、`invoice`メソッドで投げられる可能性があります。スクリプションが処理される時、`SubscriptionBuilder`の`create`メソッドと、`Susbcription`モデルの`incrementAndInvoice`、`swapAndInvoice`メソッドは、例外を投げるでしょう。
+
+#### 不十分と期日超過の状態
+
+支払いが追加の確認を必要とする場合そのサブクリプションは、`stripe_status`データベースカラムにより表される`incomplete`か`past_due`状態になります。Cashierは支払いの確認が完了するとすぐに、Webhookによりその顧客のサブスクリプションが自動的に有効にします。
+
+`incomplete`と`past_due`状態の詳細は、[追加のドキュメント](#incomplete-and-past-due-status)を参照してください。
+
+<a name="off-session-payment-notifications"></a>
+### 非セッション確立時の支払い通知
+
+SCA規制は、サブスクリプションが有効なときにも、時々支払いの詳細を確認することを顧客に求めています。Cashierではセッションが確立していない時に支払いの確認が要求された場合に、顧客へ支払いの通知を送ることができます。例えば、サブスクリプションを更新する時にこれが起きます。Cashierの支払い通知は`CASHIER_PAYMENT_NOTIFICATION`環境変数へ通知クラスをセットすることで有効になります。デフォルトでは、この通知は無効です。もちろん、Cashierにはこの目的に使うための通知クラスが含まれていますが、必要であれば自作の通知クラスを自由に指定できます。
+
+    CASHIER_PAYMENT_NOTIFICATION=Laravel\Cashier\Notifications\ConfirmPayment
+
+非セッション時の支払い確認通知が確実に届くように、[StripeのWebhookが設定されており](#handling-stripe-webhooks)、Stripeのダッシュボードで`invoice.payment_action_required` Webhookが有効になっていることを確認してください。さらに、`Billable`モデルがLaravelの`Illuminate\Notifications\Notifiable`トレイトを使用していることも確認してください。
+
+> {note} 定期課金でなく、顧客が自分で支払った場合でも追加の確認が要求された場合は、その顧客に通知が送られます。残念ながら、Stripeはその支払いが手動や「非セッション時」であることを知る方法がありません。しかし、顧客は支払いを確認した後に支払いページを閲覧したら、「支払いが完了しました」メッセージを確認できます。その顧客は同じ支払いを２度行い、二重に課金されるアクシデントに陥ることを防ぐことができるでしょう。

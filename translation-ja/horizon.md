@@ -65,6 +65,21 @@ Horizonでは３つのバランシング戦略が選択できます。`simple`�
 
 `auto`戦略は、現在のキュー負荷に基づき、それぞれのキューへ割り当てるワーカプロセス数を調整します。たとえば、`notifications`キューに１，０００ジョブが溜まっており、一方で`render`キューが空の場合、Horizonは空になるまで`notifications`キューにより多くのワーカを割り当てます。`balance`オプションへ`false`を設定すると、設定にリストした順番でキューが処理される、Laravelデフォルトの振る舞いが使われます。
 
+`auto`戦略を使う場合、Horizonがスケールアップ／ダウンで使用すべきプロセス数の最小値と最大値をコントロールするために、`minProcesses`と`maxProcesses`設定オプションを定義してください。
+
+    'environments' => [
+        'production' => [
+            'supervisor-1' => [
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'auto',
+                'minProcesses' => 1,
+                'maxProcesses' => 10,
+                'tries' => 3,
+            ],
+        ],
+    ],
+
 #### ジョブの整理
 
 `horizon`設定ファイルで、現在がどのくらいの長さなのか、それと失敗したジョブをどのくらい保持しているかを分数で設定できます。デフォルトでは、現在のジョブは１時間、失敗したジョブは１週間保持されます。

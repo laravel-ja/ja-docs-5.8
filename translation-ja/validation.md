@@ -744,7 +744,21 @@ _ratio_制約は、横／縦比を表します。`3/2`という指定も、`1.5`
 <a name="rule-email"></a>
 #### email
 
-フィールドがメールアドレスとして正しいことをバリデートします。
+フィールドがメールアドレスとして正しいことをバリデートします。内部でこのバリデーションルールはメールアドレスの検証に[`egulias/email-validator`](https://github.com/egulias/EmailValidator)パッケージを使用しています。デフォルトでは`RFCValidation`バリデータが適用されますが、他のバリデーションスタイルも適用可能です。
+
+    'email' => 'email:rfc,dns'
+
+上記の例では、`RFCValidation`と`DNSCheckValidation`バリデーションを適用しています。適用可能なバリデーションスタイルは、次の通りです。
+
+<div class="content-list" markdown="1">
+- `rfc`: `RFCValidation`
+- `strict`: `NoRFCWarningsValidation`
+- `dns`: `DNSCheckValidation`
+- `spoof`: `SpoofCheckValidation`
+- `filter`: `FilterEmailValidation`
+</div>
+
+`filter`バリデーションは内部でPHPの`filter_var`関数を使用しており、Laravel5.8以前の動作を行います。
 
 <a name="rule-ends-with"></a>
 #### ends_with:_foo_,_bar_,...

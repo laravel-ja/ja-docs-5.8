@@ -101,6 +101,7 @@ Laravelは様々な、グローバル「ヘルパ」PHP関数を用意してい�
 [Str::studly](#method-studly-case)
 [Str::title](#method-title-case)
 [Str::uuid](#method-str-uuid)
+[Str::words](#method-str-words)
 [trans](#method-trans)
 [trans_choice](#method-trans-choice)
 
@@ -1123,6 +1124,17 @@ Str::singular`メソッドは複数形を単数形へ変換します。このメ
     use Illuminate\Support\Str;
 
     return (string) Str::uuid();
+
+<a name="method-str-words"></a>
+#### `Str::words()` {#collection-method}
+
+`Str::words`メソッドは、文字列のワード数を制限します。
+
+    use Illuminate\Support\Str;
+
+    return Str::words('Perfectly balanced, as all things should be.', 3, ' >>>');
+
+    // Perfectly balanced, as >>>
 
 <a name="method-trans"></a>
 #### `trans()` {#collection-method}

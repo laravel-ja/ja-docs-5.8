@@ -191,6 +191,15 @@ Laravel MixはWebpack上に構築されているため、Webpackのコンセプ�
     mix.js('resources/js/app.js', 'public/js')
        .sourceMaps();
 
+#### ソースマップのスタイル
+
+Webpackは様々な[ソースマップスタイル](https://webpack.js.org/configuration/devtool/#devtool)を提供しています。Mixはソースマッピングスタイルのデフォルトとして、ブルド時間の早い `eval-source-map`をセットしています。マッピングスタイルを変更したい場合は、 `sourceMaps`メソッドを使用してください。
+
+    let productionSourceMaps = false;
+
+    mix.js('resources/js/app.js', 'public/js')
+       .sourceMaps(productionSourceMaps, 'source-map');
+
 <a name="working-with-scripts"></a>
 ## JavaScriptの操作
 
