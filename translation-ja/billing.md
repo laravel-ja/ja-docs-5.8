@@ -79,6 +79,8 @@ Cashierのマイグレーション実行を完全に防ぎたい場合は、Cash
 
     Cashier::ignoreMigrations();
 
+> {note} StripeはStripeの識別子を保存しておくカラムはケースセンシティブ（大文字小文字区別）にするべきだと勧めています。そのため`stripe_id`カラムには、たとえばMySQLでは`utf8_bin`のように、適切なカラムコレーションを確実に指定してください。詳しい情報は、[Stripeのドキュメント](https://stripe.com/docs/upgrades#what-changes-does-stripe-consider-to-be-backwards-compatible)をお読みください。
+
 <a name="configuration"></a>
 ## 設定
 
@@ -113,7 +115,7 @@ CashierはLaravelにLaravelに含まれている`App\User`クラスがBillable�
 
 Cashierのデフォルト通貨は米ドル(USD)です。`CASHIER_CURRENCY`環境変数の指定で、デフォルト通貨を変更可能です。
 
-    CASHIER_CURRENCY=EUR
+    CASHIER_CURRENCY=eur
 
 Caishierの通貨設定に付け加え、インボイスで表示する金額のフォーマットをローケルを使い指定することも可能です。Cashierは内部で、通貨のローケルを指定するために、[PHPの`NumberFormatter`クラス](https://www.php.net/manual/en/class.numberformatter.php)を利用しています。
 

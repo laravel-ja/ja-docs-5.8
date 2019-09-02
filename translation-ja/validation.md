@@ -693,7 +693,7 @@ Laravelは`TrimStrings`と`ConvertEmptyStringsToNull`ミドルウェアをアプ
 <a name="rule-date-format"></a>
 #### date\_format:_フォーマット_
 
-バリデーションされる値が**フォーマット**定義と一致するか確認します。バリデーション時には`date`か`date_format`の**どちらか**を使用しなくてはならず、両方はできません。
+バリデーションされる値が**フォーマット**定義と一致するか確認します。バリデーション時には`date`か`date_format`の**どちらか**を使用しなくてはならず、両方はできません。このバリデーションはPHPの[DateTime](https://www.php.net/manual/es/class.datetime.php)クラスがサポートするフォーマットをすべてサポートしています。
 
 <a name="rule-different"></a>
 #### different:_フィールド_

@@ -214,7 +214,7 @@ Laravelのファイルシステム統合はRackspaceでも動作します。し�
     $url = Storage::temporaryUrl(
         'file.jpg',
         now()->addMinutes(5),
-        ['ResponseContentType' => 'application/octet-stream'],
+        ['ResponseContentType' => 'application/octet-stream']
     );
 
 #### ローカルURLホストカスタマイズ

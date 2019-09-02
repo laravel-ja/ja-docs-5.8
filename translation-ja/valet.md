@@ -301,4 +301,5 @@ Valetでサポートされていない、他のフレームワークやCMSでPHP
 `valet restart` | Valetデーモンをリスタートします。
 `valet start` | Valetデーモンをスタートします。
 `valet stop` | Valetデーモンを停止します。
+`valet trust` | Valetコマンド実行でパスワード入力をしなくて済むように、BrewとValetへsudoersファイルを追加します。
 `valet uninstall` | Valetデーモンをアンインストールします。

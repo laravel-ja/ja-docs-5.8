@@ -33,7 +33,7 @@
 Laravel TelescopeはLaravelフレームワークのエレガントなデバッグアシスタントです。Telescopeはアプリケーションへ送信されたリクエスト、例外、ログエンティティ、データクエリ、キュージョブ、メール、通知、キャッシュ操作、スケジュールされたタスク、様々なダンプなどを提示します。TelescopeはLaravelローカル開発環境における、素晴らしいコンパニオンです。
 
 <div align="center">
-<img src="/img/telescope.png" width="100%">
+<img src="/img/telescope.png" width="100%"
 </div>
 
 <a name="installation"></a>
@@ -62,8 +62,6 @@ Telescopeをローカル環境でのみ使用する場合は、`--dev`フラグ�
     composer require laravel/telescope --dev
 
 `telescope:install`実行後、`app`設定ファイルから`TelescopeServiceProvider`サービスプロバイダの登録を削除する必要があります。`app`設定ファイルで登録する代わりに、このサービスプロバイダを`AppServiceProvider`の`register`メソッドで登録してください。
-
-    use App\Providers\TelescopeServiceProvider;
 
     /**
      * 全アプリケーションサービスの登録
