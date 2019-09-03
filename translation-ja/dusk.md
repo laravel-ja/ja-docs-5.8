@@ -39,6 +39,7 @@
     - [Codeship](#running-tests-on-codeship)
     - [Heroku CI](#running-tests-on-heroku-ci)
     - [Travis CI](#running-tests-on-travis-ci)
+    - [GitHubアクション](#running-tests-on-github-actions)
 
 <a name="introduction"></a>
 ## イントロダクション
@@ -1455,6 +1456,35 @@ Duskテストを[Heroku CI](https://www.heroku.com/continuous-integration)上で
 
     script:
       - php artisan dusk
+
+<a name="running-tests-on-github-actions"></a>
+### GitHubアクション
+
+Duskのテスト実行に[Githubアクション](https://github.com/features/actions)を使う場合は、以下の設定ファイルを手始めに利用できます。TravisCIと同様に、PHPの組み込みサーバーを起動するために`php artisan serve`コマンドが実行できます。
+
+    name: CI
+    on: [push]
+    jobs:
+
+      dusk-php:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v1
+          - name: Prepare The Environment
+            run: cp .env.example .env
+          - name: Install Composer Dependencies
+            run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+          - name: Generate Application Key
+            run: php artisan key:generate
+          - name: Upgrade Chrome Driver
+            run: php artisan dusk:chrome-driver
+          - name: Start Chrome Driver
+            run: ./vendor/laravel/dusk/bin/chromedriver-linux > /dev/null 2>&1 &
+          - name: Run Laravel Server
+            run: php artisan serve > /dev/null 2>&1 &
+          - name: Run Dusk Tests
+            run: php artisan dusk
+
 
 `.env.testing`ファイルの中で、`APP_URL`値を調整します。
 
