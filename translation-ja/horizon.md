@@ -226,7 +226,6 @@ queueableオブジェクトのタグを任意に定義したい場合は、そ�
 
 > **Note:** Horizonから、SlackかSMS通知を送る設定を行う場合は、[対応するドライバの動作要件](/docs/{{version}}/notifications)についても、確認する必要があります。
 
-
 あるキューが長時間waitしている時に、通知を受け取りたい場合は、`Horizon::routeSlackNotificationsTo`や、`Horizon::routeSlackNotificationsTo`、`Horizon::routeSmsNotificationsTo`メソッドを利用してください。これらのメソッドは、`HorizonServiceProvider`から呼び出すのが良いでしょう。
 
     Horizon::routeMailNotificationsTo('example@example.com');

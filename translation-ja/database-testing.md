@@ -174,7 +174,7 @@ Laravelでは、データベースを駆動するアプリケーションのテ�
         'name' => 'Abigail',
     ]);
 
-> {tip} ファクトリーを用いモデルを生成する場合は、[複数代入の保護](/docs/{{version}}/eloquent#mass-assignment)を自動的に無効にします。
+> {tip} ファクトリを用いモデルを生成する場合は、[複数代入の保護](/docs/{{version}}/eloquent#mass-assignment)を自動的に無効にします。
 
 <a name="persisting-models"></a>
 ### モデルの保存

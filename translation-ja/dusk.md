@@ -1460,7 +1460,7 @@ Duskテストを[Heroku CI](https://www.heroku.com/continuous-integration)上で
 <a name="running-tests-on-github-actions"></a>
 ### GitHubアクション
 
-Duskのテスト実行に[Githubアクション](https://github.com/features/actions)を使う場合は、以下の設定ファイルを手始めに利用できます。TravisCIと同様に、PHPの組み込みサーバーを起動するために`php artisan serve`コマンドが実行できます。
+Duskのテスト実行に[Githubアクション](https://github.com/features/actions)を使う場合は、以下の設定ファイルを手始めに利用できます。TravisCIと同様に、PHPの組み込みサーバを起動するために`php artisan serve`コマンドが実行できます。
 
     name: CI
     on: [push]

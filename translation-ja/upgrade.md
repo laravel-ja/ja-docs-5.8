@@ -495,7 +495,6 @@ Redisキュードライバの"blocking pop"機能の使用が安全になりま�
 
 #### `Illuminate\Routing\UrlGenerator`の`cachedSchema`プロパティ
 
-
 **影響の可能性： とても低い**
 
 Laravel`5.7`で非推奨になっていた、`Illuminate\Routing\UrlGenerator`の`$cachedSchema`プロパティ名が、`$cachedScheme`へ[変更されました](https://github.com/laravel/framework/pull/26728)。

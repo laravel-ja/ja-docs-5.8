@@ -687,8 +687,7 @@ Webhookの確認を有効にするには、`.env`ファイル中の`STRIPE_WEBHO
     // Stripeはセント単位で課金する
     $stripeCharge = $user->charge(100, $paymentMethod);
 
-`charge`メソッドは第３引数に配列を受け付け、裏で動いているStripeの課金作成に対するオ
-プションを指定できます。課金作成時に使用できるオプションについては、Stripeのドキュメントを参照してください。
+`charge`メソッドは第３引数に配列を受け付け、裏で動いているStripeの課金作成に対するオプションを指定できます。課金作成時に使用できるオプションについては、Stripeのドキュメントを参照してください。
 
     $user->charge(100, $paymentMethod, [
         'custom_option' => $value,

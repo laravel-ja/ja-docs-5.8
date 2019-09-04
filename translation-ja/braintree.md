@@ -121,7 +121,7 @@ Cashierを使用する前に、[データベースを準備](/docs/{{version}}/m
         'private_key' => env('BRAINTREE_PRIVATE_KEY'),
     ],
 
-それから、`AppServiceProvider`サービスプロバイダーの`boot`メソッドへ、以下のBraintree SDKの呼び出しを追加します。
+それから、`AppServiceProvider`サービスプロバイダの`boot`メソッドへ、以下のBraintree SDKの呼び出しを追加します。
 
     \Braintree_Configuration::environment(config('services.braintree.environment'));
     \Braintree_Configuration::merchantId(config('services.braintree.merchant_id'));

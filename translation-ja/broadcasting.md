@@ -616,8 +616,7 @@ Echoの`listen`メソッドにより、参加イベントをリッスンでき�
 <a name="client-events"></a>
 ## クライアントイベント
 
-> {tip} [Pusherチャンネル](https://pusher.com/channels)を使用する場合、クライアントイベントを送信するた
-めに、[application dashboard](https://dashboard.pusher.com/)の"App Settings"にある、"Client Events"オプションを有効にしてください。
+> {tip} [Pusherチャンネル](https://pusher.com/channels)を使用する場合、クライアントイベントを送信するために、[application dashboard](https://dashboard.pusher.com/)の"App Settings"にある、"Client Events"オプションを有効にしてください。
 
 Laravelアプリケーションに全く関係ないイベントを他の接続クライアントへブロードキャストしたい場合もあるでしょう。これは特にアプリケーションユーザーへ他のユーザーがキーボードをタイプしているメッセージをページで表示するための「タイプ中」通知のような場合に便利です。
 

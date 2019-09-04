@@ -146,7 +146,7 @@ VirtualBox/VMwareとVagrantをインストールし終えたら、`laravel/homes
 
 #### Homesteadのインストール
 
-ホストマシーンへリポジトリをクローンし、Homesteadをインストールできます。自分の「ホーム」ディレクトリの中の`Homestead`フォルダへリポジトリをクローンするのことは、自分のLaravel（とPHP）の全プロジェクトをホストしておくHomestead Boxを用意するのだと考えてください。
+ホストマシンへリポジトリをクローンし、Homesteadをインストールできます。自分の「ホーム」ディレクトリの中の`Homestead`フォルダへリポジトリをクローンするのことは、自分のLaravel（とPHP）の全プロジェクトをホストしておくHomestead Boxを用意するのだと考えてください。
 
     git clone https://github.com/laravel/homestead.git ~/Homestead
 
@@ -183,7 +183,7 @@ Homesteadリポジトリをクローンしたら、`Homestead.yaml`設定ファ�
 
 > {note} Windowsユーザーはパスを`~/`記法を使わず、代わりにたとえば`C:\Users\user\Code\project1`のように、プロジェクトのフルパスを使ってください。
 
-`~/code`フォルダーへ常に個別プロジェクトをマップする代わりに、別々にマップすべきでしょう。仮想マシンへあるフォルダーをマップすると、そのフォルダー中の**すべて**のファイルによるディスクＩＯをトラックし続けます。これにより、フォルダーの中に莫大なファイルが存在する場合に、パフォーマンスの問題が起きます。
+`~/code`フォルダへ常に個別プロジェクトをマップする代わりに、別々にマップすべきでしょう。仮想マシンへあるフォルダをマップすると、そのフォルダ中の**すべて**のファイルによるディスクＩＯをトラックし続けます。これにより、フォルダの中に莫大なファイルが存在する場合に、パフォーマンスの問題が起きます。
 
     folders:
         - map: ~/code/project1
@@ -192,7 +192,7 @@ Homesteadリポジトリをクローンしたら、`Homestead.yaml`設定ファ�
         - map: ~/code/project2
           to: /home/vagrant/project2
 
-> {note} Homesteadを使用する場合、`.`（カレントディレクトリ）をマウントしないでください。そうすると、Vagrantはカレントフォルダーを`/vagrant`へマップしない状況が起き、オプションの機能が壊れ、プロビジョン中に予期せぬ結果が起きます。
+> {note} Homesteadを使用する場合、`.`（カレントディレクトリ）をマウントしないでください。そうすると、Vagrantはカレントフォルダを`/vagrant`へマップしない状況が起き、オプションの機能が壊れ、プロビジョン中に予期せぬ結果が起きます。
 
 [NFS](https://www.vagrantup.com/v2/synced-folders/nfs.html)を有効にするには、同期するフォルダにフラグを指定するだけです。
 
@@ -623,7 +623,7 @@ PHP CLIアプリケーションをデバッグするには、Vagrant Box内で�
 
 #### Xdebugの自動スタート
 
-Webサーバーへのリクエストを生成する機能テストのデバッグの場合、デバッグを開始するためにカスタムヘッダーやクッキーを付与するようにテストを変更するよりは、自動的に起動するほうが簡単です。Xdebugを自動的に起動するように強制するには、Vagrant Boxの中で以下のように`/etc/php/7.#/fpm/conf.d/20-xdebug.ini`を変更してください。
+Webサーバへのリクエストを生成する機能テストのデバッグの場合、デバッグを開始するためにカスタムヘッダやクッキーを付与するようにテストを変更するよりは、自動的に起動するほうが簡単です。Xdebugを自動的に起動するように強制するには、Vagrant Boxの中で以下のように`/etc/php/7.#/fpm/conf.d/20-xdebug.ini`を変更してください。
 
     ; Homestead.ymlで別のIPアドレスのサブセットを指定している場合は、このアドレスを合わせてください
     xdebug.remote_host = 192.168.10.1
@@ -645,7 +645,7 @@ Blackfireを有効にするためには、Homestead設定ファイルの"feature
             client_id: "client_id"
             client_token: "client_value"
 
-Blackfireサーバー設定項目とクライアント設定項目には、[ユーザーアカウントが必要です](https://blackfire.io/signup)。BlackfireはCLIツールやブラウザー拡張を含んだ、アプリケーションのプロファイルに使用する様々なオプションを用意しています。[詳細についてはBlackfireのドキュメント](https://blackfire.io/docs/cookbooks/index)をご覧ください。
+Blackfireサーバ設定項目とクライアント設定項目には、[ユーザーアカウントが必要です](https://blackfire.io/signup)。BlackfireはCLIツールやブラウザー拡張を含んだ、アプリケーションのプロファイルに使用する様々なオプションを用意しています。[詳細についてはBlackfireのドキュメント](https://blackfire.io/docs/cookbooks/index)をご覧ください。
 
 ### XHGuiを使用した、PHPパフォーマンスのプロファイリング
 
@@ -706,7 +706,7 @@ Homesteadをカスタマイズすると、Ubuntuはパッケージのオリジ�
         -o Dpkg::Options::="--force-confold" \
         install your-package
 
-### ユーザによるカスタマイズ
+### ユーザーによるカスタマイズ
 
 チームの設定でHomesteadを使用している場合でも、自分の個人的な開発スタイルに合うようにHomesteadを調整したくなることでしょう。`Homestead.yaml`が含まれるHomesteadのルートディレクトリに、`user-customizations.sh`を作成してください。このファイルの中で、好きなようにカスタマイズを行なってください。ただし、この`user-customizations.sh`はバージョンコントロールに含めてはいけません。
 
