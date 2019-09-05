@@ -19,7 +19,7 @@ Horizon（水平線、展望）は、Laravelで動作するRedisキューのた�
 一つのシンプルな設定ファイルにすべてのワーカ設定を保存するため、チーム全体がコラボレート可能なソースコントロール下に、設定を保持できます。
 
 <p align="center">
-<img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1537195039/photos/Test.png" width="600" height="481">
+<img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1537195039/photos/Test.png">
 </p>
 
 <a name="installation"></a>
@@ -55,7 +55,7 @@ Horizonの新しいメジャーバージョンへアップグレードする場�
 
 Horizonのアセットを公開すると、`config/horizon.php`に一番重要な設定ファイルが設置されます。この設定ファイルにより、ワーカのオプションを設置します。各オプションにはその目的が説明されていますので、ファイル全体をしっかりと確認してください。
 
-> {note} You should ensure that the `environments` portion of your `horizon` configuration file contains an entry for each environment on which you plan to run Horizon.
+> {note} Horizonを実行する予定の環境ごとのエントリーを`horizon`設定ファイルの`environments`部分へ確実に含めてください。
 
 #### バランスオプション
 
