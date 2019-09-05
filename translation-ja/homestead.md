@@ -582,7 +582,7 @@ Homestead6から、同一仮想マシン上での複数PHPバージョンをサ�
     php7.2 artisan list
     php7.3 artisan list
 
-You may also update the default CLI version by issuing the following commands from within your Homestead virtual machine:
+Homestead仮想マシンの中で、以下のコマンドを実行することにより、デフォルトCLIバージョンを変更することも可能です。
 
     php56
     php70
