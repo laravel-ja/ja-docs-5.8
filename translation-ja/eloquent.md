@@ -481,7 +481,7 @@ Eloquentの`all`メソッドはモデルテーブルの全レコードを結果�
     // nameで取得するか、インスタンス化する
     $flight = App\Flight::firstOrNew(['name' => 'Flight 10']);
 
-    // Retrieve by name, or instantiate with the name, delayed, and arrival_time attributes...
+    // nameで取得するか、name、delayed、arrival_time属性でインスタンス化する
     $flight = App\Flight::firstOrNew(
         ['name' => 'Flight 10'],
         ['delayed' => 1, 'arrival_time' => '11:30']
@@ -544,7 +544,7 @@ Eloquentの`all`メソッドはモデルテーブルの全レコードを結果�
         use SoftDeletes;
     }
 
-> {tip} The `SoftDeletes` trait will automatically cast the `deleted_at` attribute to a `DateTime` / `Carbon` instance for you.
+> {tip} `SoftDeletes`トレイトは自動的に`deleted_at`属性を`DateTime`/`Carbon`インスタンスへ変換します。
 
 データベーステーブルにも`deleted_at`カラムを追加する必要があります。Laravel[スキーマビルダ](/docs/{{version}}/migrations)にはこのカラムを作成するメソッドが存在しています。
 
