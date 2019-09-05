@@ -20,9 +20,9 @@
     - [存在しないリレーションのクエリ](#querying-relationship-absence)
     - [ポリモーフィックリレーションのクエリ](#querying-polymorphic-relationships)
     - [関連するモデルのカウント](#counting-related-models)
-- [Eagerローディング](#eager-loading)
+- [Eagerロード](#eager-loading)
     - [制約Eager Loads](#constraining-eager-loads)
-    - [遅延Eagerローディング](#lazy-eager-loading)
+    - [遅延Eagerロード](#lazy-eager-loading)
 - [関連したモデルの挿入／更新](#inserting-and-updating-related-models)
     - [saveメソッド](#the-save-method)
     - [createメソッド](#the-create-method)
@@ -1171,7 +1171,7 @@ Eloquentリレーションは全てメソッドとして定義されているた
 > {note} `limit`と`take`クエリビルダメソッドは、Eagerロードの制約時には使用できません。
 
 <a name="lazy-eager-loading"></a>
-### 遅延Eagerローディング
+### 遅延Eagerロード
 
 既に親のモデルを取得した後に、リレーションをEagerロードする必要がある場合もあるでしょう。たとえば、どの関連しているモデルをロードするかを動的に決める場合に便利です。
 
