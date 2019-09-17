@@ -846,7 +846,7 @@ _ratio_制約は、横／縦比を表します。`3/2`という指定も、`1.5`
 
 フィールドが整数値であることをバリデートします。
 
-> {note} This validation rule does not verify that the input is of the "integer" variable type, only that the input is a string or numeric value that contains an integer.
+> {note} このバリデーションルールは入力が「整数」変数型であるのかを検証するわけではありません。ただ入力が整数で構成された文字列か数値であることを確認します。
 
 <a name="rule-ip"></a>
 #### ip
